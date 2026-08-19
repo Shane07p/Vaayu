@@ -1,0 +1,51 @@
+[project]
+name = "vaayu-ml"
+version = "0.1.0"
+description = "VAAYU models: nowcast, forecast, attribution, and the validation protocol"
+# Pinned below 3.12 deliberately. uv fetches this interpreter, so the host
+# Python version does not matter.
+requires-python = ">=3.11,<3.12"
+dependencies = [
+    "numpy>=2.1",
+    "pandas>=2.2",
+    "geopandas>=1.0",
+    "scikit-learn>=1.5",
+    "xgboost>=2.1",
+    "lightgbm>=4.5",
+    "shap>=0.46",
+    # File backend only, no tracking server. Populates model_run provenance
+    # without adding infrastructure.
+    "mlflow>=2.18",
+    "sqlalchemy>=2.0",
+    "geoalchemy2>=0.15",
+    "psycopg[binary]>=3.2",
+    "pyarrow>=18.0",
+]
+
+# Deliberately absent, see docs/superpowers/specs/...-design.md section 9.3:
+#   PySPLIT - needs a compiled HYSPLIT binary and multi-GB GDAS files.
+#             Replaced by ml.trajectory, a numpy wind-field back-trajectory.
+#   xarray  - Earth Engine reduceRegions returns tabular output directly.
+
+[project.optional-dependencies]
+# Opt-in. The cost of tuning is trial wall-clock time, not authoring time.
+tune = ["optuna>=4.1"]
+dev = ["pytest>=8.3", "ruff>=0.8"]
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/vaayu_ml"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py311"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "N", "UP", "B", "SIM"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["src"]

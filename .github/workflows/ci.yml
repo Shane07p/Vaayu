@@ -1,0 +1,86 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  backend:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with:
+          java-version: "21"
+          distribution: temurin
+          cache: maven
+      - name: Build and test
+        working-directory: backend
+        run: mvn -B verify
+
+  python:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        package: [ingestion, ml]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v4
+        with:
+          enable-cache: true
+      - name: Sync
+        working-directory: ${{ matrix.package }}
+        run: uv sync --extra dev
+      - name: Lint
+        working-directory: ${{ matrix.package }}
+        run: uv run ruff check .
+      - name: Test
+        working-directory: ${{ matrix.package }}
+        run: uv run pytest -v
+
+  web:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 11
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: pnpm
+          cache-dependency-path: web/pnpm-lock.yaml
+      - name: Install
+        working-directory: web
+        run: pnpm install --frozen-lockfile
+      - name: Lint
+        working-directory: web
+        run: pnpm lint
+      - name: Build
+        working-directory: web
+        run: pnpm build
+
+  # The job that matters most: proves the stack boots with no API keys present.
+  compose:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Boot the stack with no API keys
+        run: |
+          cp .env.example .env
+          docker compose up --build -d postgres backend
+      - name: Wait for backend health
+        run: |
+          for i in $(seq 1 30); do
+            if curl -sf http://localhost:8080/actuator/health | grep -q '"status":"UP"'; then
+              echo "backend healthy"; exit 0
+            fi
+            sleep 10
+          done
+          docker compose logs
+          exit 1
+      - name: Tear down
+        if: always()
+        run: docker compose down -v

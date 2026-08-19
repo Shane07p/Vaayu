@@ -1,0 +1,49 @@
+services:
+  postgres:
+    image: postgis/postgis:16-3.4
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB:-vaayu}
+      POSTGRES_USER: ${POSTGRES_USER:-vaayu}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-vaayu}
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+      - ./infra/postgres/init.sql:/docker-entrypoint-initdb.d/00-init.sql:ro
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-vaayu} -d ${POSTGRES_DB:-vaayu}"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  backend:
+    build: ./backend
+    depends_on:
+      postgres:
+        condition: service_healthy
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/${POSTGRES_DB:-vaayu}
+      POSTGRES_USER: ${POSTGRES_USER:-vaayu}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-vaayu}
+      CONSOLE_SHARED_SECRET: ${CONSOLE_SHARED_SECRET:-dev-only-not-a-real-secret}
+    ports:
+      - "8080:8080"
+    healthcheck:
+      test: ["CMD", "sh", "-c", "wget -qO- http://localhost:8080/actuator/health | grep -q UP"]
+      interval: 10s
+      timeout: 5s
+      retries: 12
+      start_period: 40s
+
+  web:
+    build: ./web
+    depends_on:
+      backend:
+        condition: service_healthy
+    environment:
+      NEXT_PUBLIC_API_URL: http://localhost:8080
+    ports:
+      - "3000:3000"
+
+volumes:
+  pgdata:

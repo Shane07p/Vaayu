@@ -1,0 +1,53 @@
+[project]
+name = "vaayu-ingestion"
+version = "0.1.0"
+description = "VAAYU data ingestion: CPCB, OpenAQ, FIRMS, Open-Meteo, Earth Engine"
+# Pinned below 3.12 deliberately. uv fetches this interpreter, so the host
+# Python version does not matter.
+requires-python = ">=3.11,<3.12"
+dependencies = [
+    "httpx>=0.27",
+    "pydantic>=2.9",
+    "pydantic-settings>=2.6",
+    "pandas>=2.2",
+    "geopandas>=1.0",
+    "rasterio>=1.4",
+    # Python writing to PostGIS is the entire contract with the Java service.
+    "sqlalchemy>=2.0",
+    "geoalchemy2>=0.15",
+    "psycopg[binary]>=3.2",
+    "earthengine-api>=1.4",
+    "google-cloud-bigquery>=3.27",
+    "pyarrow>=18.0",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=8.3",
+    "pytest-httpx>=0.31",
+    "ruff>=0.8",
+]
+
+[project.scripts]
+vaayu-cpcb = "ingestion.cpcb:main"
+vaayu-openaq = "ingestion.openaq:main"
+vaayu-firms = "ingestion.firms:main"
+vaayu-openmeteo = "ingestion.openmeteo:main"
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/ingestion"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py311"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "N", "UP", "B", "SIM"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["src"]

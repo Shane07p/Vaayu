@@ -1,0 +1,52 @@
+# Graded Response Action Plan thresholds.
+#
+# Read at runtime, never hardcoded. Statutory thresholds change: GRAP was last
+# revised on 21 November 2025, and CAQM Direction 95 dates from 1 October 2025.
+# Verify against CAQM's current schedule before any deployment.
+#
+# Source: docs/TECHNICAL.md section 7.1
+
+grap:
+  revision: "2025-11-21"
+  statutory-basis-template: "CAQM GRAP Schedule (rev. %s), Stage %s"
+
+  stages:
+    - stage: "I"
+      label: "Poor"
+      min-aqi: 201
+      max-aqi: 300
+      mandated-actions:
+        - dust_suppression
+        - anti_smog_guns
+        - mechanised_road_sweeping
+        - open_burning_enforcement
+
+    - stage: "II"
+      label: "Very Poor"
+      min-aqi: 301
+      max-aqi: 400
+      mandated-actions:
+        - intensified_dust_control
+        - parking_surcharge
+        - augmented_public_transport
+        - dg_set_restrictions
+
+    - stage: "III"
+      label: "Severe"
+      min-aqi: 401
+      max-aqi: 450
+      mandated-actions:
+        - halt_non_essential_construction
+        - bs3_petrol_bs4_diesel_lmv_curbs
+        - close_brick_kilns
+        - close_stone_crushers
+
+    - stage: "IV"
+      label: "Severe+"
+      min-aqi: 451
+      max-aqi: 9999
+      mandated-actions:
+        - truck_entry_restrictions
+        - construction_stoppage
+        - staggered_office_timings
+        - school_measures

@@ -1,0 +1,53 @@
+spring:
+  application:
+    name: vaayu-api
+
+  datasource:
+    url: ${SPRING_DATASOURCE_URL:jdbc:postgresql://localhost:5432/vaayu}
+    username: ${POSTGRES_USER:vaayu}
+    password: ${POSTGRES_PASSWORD:vaayu}
+
+  jpa:
+    hibernate:
+      # validate, never create or update. Flyway owns the schema, because the
+      # Python side depends on it too. Hibernate must never alter a table.
+      ddl-auto: validate
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+    open-in-view: false
+
+  flyway:
+    enabled: true
+    locations: classpath:db/migration
+    baseline-on-migrate: false
+
+  cache:
+    type: caffeine
+    caffeine:
+      spec: maximumSize=1000,expireAfterWrite=5m
+
+vaayu:
+  console:
+    # Stub auth only. Not an identity provider. Replace before any deployment.
+    shared-secret: ${CONSOLE_SHARED_SECRET:dev-only-not-a-real-secret}
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,prometheus
+  endpoint:
+    health:
+      show-details: always
+
+springdoc:
+  swagger-ui:
+    path: /swagger-ui.html
+
+server:
+  port: 8080
+
+logging:
+  level:
+    org.flywaydb: INFO
