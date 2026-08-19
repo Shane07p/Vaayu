@@ -44,7 +44,8 @@ public class ReadQueryService {
     public List<GridPredictionResponse> grid(double minLon, double minLat, double maxLon, double maxLat) {
         return jdbc.query(
                 """
-                SELECT g.id AS grid_cell_id, g.code, p.ts, p.pm25_q10, p.pm25_q50,
+                SELECT g.id AS grid_cell_id, g.code, ST_X(g.centroid::geometry) AS lon,
+                       ST_Y(g.centroid::geometry) AS lat, p.ts, p.pm25_q10, p.pm25_q50,
                        p.pm25_q90, p.coverage_fraction, p.model_version, p.source
                 FROM grid_cell g
                 JOIN LATERAL (
@@ -56,7 +57,8 @@ public class ReadQueryService {
                 """,
                 Map.of("minLon", minLon, "minLat", minLat, "maxLon", maxLon, "maxLat", maxLat),
                 (rs, row) -> new GridPredictionResponse(
-                        rs.getLong("grid_cell_id"), rs.getString("code"), timestamp(rs, "ts"),
+                        rs.getLong("grid_cell_id"), rs.getString("code"), rs.getDouble("lon"),
+                        rs.getDouble("lat"), timestamp(rs, "ts"),
                         rs.getDouble("pm25_q10"), rs.getDouble("pm25_q50"), rs.getDouble("pm25_q90"),
                         rs.getDouble("coverage_fraction"), rs.getString("model_version"),
                         rs.getString("source")));

@@ -37,3 +37,15 @@ export const fetchWorklist = (receptor = "DELHI-NCR") =>
   get(`/api/v1/worklist?receptor=${receptor}`, z.array(worklistItemSchema));
 
 export const fetchAlerts = () => get("/api/v1/alerts", z.array(alertSchema));
+
+export async function submitCitizenReport(latitude: number, longitude: number) {
+  const response = await fetch(`${BASE_URL}/api/v1/public/reports`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ latitude, longitude }),
+  });
+  if (!response.ok) {
+    throw new Error(`Could not submit report (${response.status})`);
+  }
+  return z.object({ id: z.number(), status: z.string(), submittedAt: z.string() }).parse(await response.json());
+}

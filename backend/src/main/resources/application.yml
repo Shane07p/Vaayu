@@ -31,6 +31,8 @@ spring:
       spec: maximumSize=1000,expireAfterWrite=5m
 
 vaayu:
+  web:
+    allowed-origin: ${WEB_ALLOWED_ORIGIN:http://localhost:3000}
   console:
     # Stub auth only. Not an identity provider. Replace before any deployment.
     shared-secret: ${CONSOLE_SHARED_SECRET:dev-only-not-a-real-secret}

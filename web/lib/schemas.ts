@@ -23,6 +23,8 @@ export const stationSchema = z.object({
 export const gridPredictionSchema = z.object({
   gridCellId: z.number(),
   code: z.string(),
+  lon: z.number(),
+  lat: z.number(),
   ts: z.string(),
   pm25Q10: z.number(),
   pm25Q50: z.number(),
