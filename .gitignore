@@ -1,0 +1,25 @@
+# Java
+target/
+*.class
+
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+.uv/
+mlruns/
+
+# Node
+node_modules/
+.next/
+out/
+
+# Secrets — never commit
+.env
+secrets/
+*-sa.json
+
+# OS / IDE
+.DS_Store
+.idea/
+.vscode/
