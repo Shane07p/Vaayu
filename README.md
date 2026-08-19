@@ -13,16 +13,15 @@ attribution — wired into India's existing GRAP and stubble-burning enforcement
 - [What we are building, in plain language](docs/OVERVIEW.md)
 - [Technical reference: architecture, data sources, validation protocol](docs/TECHNICAL.md)
 - [Source research: accuracy ceilings, prior art, failure modes](docs/RESEARCH.md)
-- [Scaffold design spec](docs/superpowers/specs/2026-08-19-vaayu-monorepo-scaffold-design.md)
 
 ## Layout
 
 | Directory | Stack | Owner |
 |---|---|---|
-| `backend/` | Java 21 · Spring Boot · Maven | Member 1 |
+| `backend/` | Java 21 · Spring Boot 3.4 · Maven | Member 1 |
 | `ingestion/` | Python 3.11 · uv | Member 2 |
 | `ml/` | Python 3.11 · uv | Member 3 |
-| `web/` | Next.js 15 · pnpm | Member 4 |
+| `web/` | Next.js 16 · React 19 · pnpm | Member 4 |
 | `infra/` | Docker Compose, Cloud Run definitions | shared |
 
 ## Architecture in one paragraph
@@ -57,6 +56,21 @@ make test    # all four suites
 make fmt     # format python + web
 make down    # tear down, remove volumes
 ```
+
+### Working on one component directly
+
+Only needed if you want to run a component outside Docker.
+
+| Component | Toolchain | Commands |
+|---|---|---|
+| `backend/` | JDK 21 | `./mvnw test`, `./mvnw spring-boot:run` |
+| `ingestion/` | [uv](https://docs.astral.sh/uv/) | `uv sync --extra dev`, `uv run pytest` |
+| `ml/` | uv | `uv sync --extra dev`, `uv run pytest` |
+| `web/` | Node 22+, pnpm 11 | `pnpm install`, `pnpm dev` |
+
+uv fetches Python 3.11 itself, so your system Python version does not matter.
+The Maven build targets Java 21 regardless of which JDK you have installed.
+Node must be 22 or newer — pnpm 11 does not run on Node 20.
 
 ## Data modes
 
