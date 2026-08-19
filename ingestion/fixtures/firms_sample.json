@@ -1,0 +1,17 @@
+[
+  {
+    "latitude": "31.6340",
+    "longitude": "74.8723",
+    "brightness": "335.4",
+    "scan": "0.5",
+    "track": "0.4",
+    "acq_date": "2026-08-19",
+    "acq_time": "0836",
+    "satellite": "N",
+    "confidence": "n",
+    "version": "2.0NRT",
+    "bright_t31": "299.5",
+    "frp": "17.4",
+    "daynight": "D"
+  }
+]

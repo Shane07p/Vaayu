@@ -1,0 +1,9 @@
+[
+  {
+    "id": 8118,
+    "name": "New Delhi US Embassy",
+    "locality": "New Delhi",
+    "country": {"code": "IN", "name": "India"},
+    "coordinates": {"latitude": 28.5921, "longitude": 77.2279}
+  }
+]
