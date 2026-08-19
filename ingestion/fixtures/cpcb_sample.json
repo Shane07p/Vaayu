@@ -1,0 +1,38 @@
+[
+  {
+    "station": "Anand Vihar, Delhi - DPCC",
+    "city": "Delhi",
+    "state": "Delhi",
+    "latitude": "28.6469",
+    "longitude": "77.3152",
+    "pollutant_id": "PM2.5",
+    "pollutant_min": "112",
+    "pollutant_max": "186",
+    "pollutant_avg": "148",
+    "last_update": "19-08-2026 09:00:00"
+  },
+  {
+    "station": "R K Puram, Delhi - DPCC",
+    "city": "Delhi",
+    "state": "Delhi",
+    "latitude": "28.5631",
+    "longitude": "77.1855",
+    "pollutant_id": "PM2.5",
+    "pollutant_min": "94",
+    "pollutant_max": "151",
+    "pollutant_avg": "121",
+    "last_update": "19-08-2026 09:00:00"
+  },
+  {
+    "station": "Sector-51, Gurugram - HSPCB",
+    "city": "Gurugram",
+    "state": "Haryana",
+    "latitude": "28.4211",
+    "longitude": "77.0688",
+    "pollutant_id": "PM10",
+    "pollutant_min": "180",
+    "pollutant_max": "265",
+    "pollutant_avg": "222",
+    "last_update": "19-08-2026 09:00:00"
+  }
+]
