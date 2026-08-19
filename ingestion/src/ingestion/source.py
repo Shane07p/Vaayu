@@ -4,7 +4,7 @@ One code path serves both modes. With the source's API key absent, committed
 fixtures are read and the run is recorded as ``FIXTURE``. With the key present
 the live endpoint is called and the run is recorded as ``LIVE``.
 
-A live call that fails raises :class:`SourceUnavailable`. It never falls back to
+A live call that fails raises :class:`SourceUnavailableError`. It never falls back to
 fixtures: presenting cached values as fresh telemetry would be fabricating
 evidence, which is the failure mode this project most wants to avoid.
 """
@@ -18,7 +18,7 @@ from pathlib import Path
 FIXTURE_DIR = Path(__file__).resolve().parents[2] / "fixtures"
 
 
-class SourceUnavailable(RuntimeError):
+class SourceUnavailableError(RuntimeError):
     """Raised when a live upstream call fails.
 
     Never caught and downgraded into fixture data. Callers should record an
@@ -54,7 +54,7 @@ class Source(ABC):
         try:
             return self._fetch_live()
         except Exception as exc:  # noqa: BLE001 - re-raised as a typed error
-            raise SourceUnavailable(
+            raise SourceUnavailableError(
                 f"{self.name}: upstream call failed ({exc}). "
                 f"Not falling back to fixtures."
             ) from exc

@@ -13,6 +13,10 @@ dependencies = [
     "xgboost>=2.1",
     "lightgbm>=4.5",
     "shap>=0.46",
+    # Pinned explicitly. shap pulls numba, and without a floor here the resolver
+    # backtracks to llvmlite 0.36, which refuses to build on anything above
+    # Python 3.9. numba 0.61 is the first release supporting numpy 2.1.
+    "numba>=0.61",
     # File backend only, no tracking server. Populates model_run provenance
     # without adding infrastructure.
     "mlflow>=2.18",
