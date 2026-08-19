@@ -1,4 +1,7 @@
 spring:
+  config:
+    import: classpath:grap-rules.yaml
+
   application:
     name: vaayu-api
 
