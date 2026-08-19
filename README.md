@@ -16,13 +16,13 @@ attribution — wired into India's existing GRAP and stubble-burning enforcement
 
 ## Layout
 
-| Directory | Stack | Owner |
-|---|---|---|
-| `backend/` | Java 21 · Spring Boot 3.4 · Maven | Member 1 |
-| `ingestion/` | Python 3.11 · uv | Member 2 |
-| `ml/` | Python 3.11 · uv | Member 3 |
-| `web/` | Next.js 16 · React 19 · pnpm | Member 4 |
-| `infra/` | Docker Compose, Cloud Run definitions | shared |
+| Directory | Stack |
+|---|---|
+| `backend/` | Java 21 · Spring Boot 3.4 · Maven |
+| `ingestion/` | Python 3.11 · uv |
+| `ml/` | Python 3.11 · uv |
+| `web/` | Next.js 16 · React 19 · pnpm |
+| `infra/` | Docker Compose, Cloud Run definitions |
 
 ## Architecture in one paragraph
 
