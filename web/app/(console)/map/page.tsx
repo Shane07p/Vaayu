@@ -1,11 +1,6 @@
-import dynamic from "next/dynamic";
+import { MapShell } from "@/components/map-shell";
 import { fetchGrid, fetchStations, fetchWorklist } from "@/lib/api";
 import type { GridPrediction, Station, WorklistItem } from "@/lib/schemas";
-
-const DataMap = dynamic(() => import("@/components/data-map").then((module) => module.DataMap), {
-  ssr: false,
-  loading: () => <div className="h-[560px] animate-pulse rounded-lg bg-slate-200" />,
-});
 
 export default async function MapPage() {
   let grid: GridPrediction[] = [];
@@ -27,7 +22,7 @@ export default async function MapPage() {
       <p className="text-sm text-slate-600">
         Teal points have higher satellite coverage; amber points indicate lower coverage and should be read with more uncertainty. Black points are monitors; red points are ranked fire clusters.
       </p>
-      {grid.length ? <DataMap grid={grid} stations={stations} worklist={worklist} /> : <p className="rounded border border-amber-300 bg-amber-50 p-4 text-sm">No current map estimate is available. The service will not fill the map with stale observations.</p>}
+      {grid.length ? <MapShell grid={grid} stations={stations} worklist={worklist} /> : <p className="rounded border border-amber-300 bg-amber-50 p-4 text-sm">No current map estimate is available. The service will not fill the map with stale observations.</p>}
     </main>
   );
 }
