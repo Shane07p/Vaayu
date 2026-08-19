@@ -1,0 +1,19 @@
+# Normalise line endings so a Windows checkout does not break Linux/CI.
+* text=auto eol=lf
+
+# These break outright with CRLF.
+Makefile        text eol=lf
+*.sh            text eol=lf
+mvnw            text eol=lf
+Dockerfile      text eol=lf
+*.sql           text eol=lf
+
+# Windows-only files keep CRLF.
+*.cmd           text eol=crlf
+*.bat           text eol=crlf
+mvnw.cmd        text eol=crlf
+
+# Binary.
+*.png binary
+*.jpg binary
+*.zip binary
