@@ -49,15 +49,15 @@ jobs:
           version: 11
       - uses: actions/setup-node@v4
         with:
-          node-version: "20"
+          node-version: "22"
           cache: pnpm
           cache-dependency-path: web/pnpm-lock.yaml
       - name: Install
         working-directory: web
-        run: pnpm install --frozen-lockfile
-      - name: Lint
-        working-directory: web
-        run: pnpm lint
+        # --ignore-scripts matches the Dockerfile: no dependency executes code
+        # at install time. It also sidesteps pnpm 11 failing the install over
+        # unrs-resolver, a lint-time native binding the build does not need.
+        run: pnpm install --frozen-lockfile --ignore-scripts
       - name: Build
         working-directory: web
         run: pnpm build

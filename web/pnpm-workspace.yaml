@@ -1,2 +1,10 @@
-allowBuilds:
-  '@vaadin/vaadin-usage-statistics': set this to true or false
+# pnpm 10+ reads settings from here rather than from package.json.
+#
+# Explicit allowlist for install-time build scripts. pnpm blocks postinstall by
+# default and errors on any script it has not been told about, which is the
+# posture we want: a dependency may only run code at install time if it is
+# named here.
+#
+# unrs-resolver is the native binding eslint-config-next resolves imports with.
+onlyBuiltDependencies:
+  - unrs-resolver
