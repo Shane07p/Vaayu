@@ -2,7 +2,6 @@
 
 import { useEffect, useRef } from "react";
 import * as maplibregl from "maplibre-gl";
-import type { FeatureCollection } from "geojson";
 import type { GridPrediction, Station, WorklistItem } from "@/lib/schemas";
 
 type DataMapProps = {
@@ -11,10 +10,21 @@ type DataMapProps = {
   worklist: WorklistItem[];
 };
 
+type PointFeature = {
+  type: "Feature";
+  geometry: { type: "Point"; coordinates: [number, number] };
+  properties: Record<string, string | number | boolean | null>;
+};
+
+type PointFeatureCollection = {
+  type: "FeatureCollection";
+  features: PointFeature[];
+};
+
 function pointFeatures(items: GridPrediction[], color: (item: GridPrediction) => string) {
   return items.map((item) => ({
     type: "Feature" as const,
-    geometry: { type: "Point" as const, coordinates: [item.lon, item.lat] },
+    geometry: { type: "Point" as const, coordinates: [item.lon, item.lat] as [number, number] },
     properties: {
       color: color(item),
       radius: 5 + Math.round(item.coverageFraction * 8),
@@ -23,7 +33,7 @@ function pointFeatures(items: GridPrediction[], color: (item: GridPrediction) =>
   }));
 }
 
-function featureCollection(features: FeatureCollection["features"]): FeatureCollection {
+function featureCollection(features: PointFeature[]): PointFeatureCollection {
   return { type: "FeatureCollection", features };
 }
 
@@ -51,7 +61,10 @@ export function DataMap({ grid, stations, worklist }: DataMapProps) {
         type: "geojson",
         data: featureCollection(stations.map((station) => ({
           type: "Feature" as const,
-          geometry: { type: "Point" as const, coordinates: [station.lon, station.lat] },
+          geometry: {
+            type: "Point" as const,
+            coordinates: [station.lon, station.lat] as [number, number],
+          },
           properties: {},
         }))),
       });
@@ -60,7 +73,10 @@ export function DataMap({ grid, stations, worklist }: DataMapProps) {
         type: "geojson",
         data: featureCollection(worklist.map((item) => ({
           type: "Feature" as const,
-          geometry: { type: "Point" as const, coordinates: [item.lon, item.lat] },
+          geometry: {
+            type: "Point" as const,
+            coordinates: [item.lon, item.lat] as [number, number],
+          },
           properties: {},
         }))),
       });
