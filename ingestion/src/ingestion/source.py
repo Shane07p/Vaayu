@@ -55,8 +55,7 @@ class Source(ABC):
             return self._fetch_live()
         except Exception as exc:  # noqa: BLE001 - re-raised as a typed error
             raise SourceUnavailableError(
-                f"{self.name}: upstream call failed ({exc}). "
-                f"Not falling back to fixtures."
+                f"{self.name}: upstream call failed ({exc}). Not falling back to fixtures."
             ) from exc
 
     def _fetch_fixture(self) -> list[dict]:

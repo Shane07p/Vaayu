@@ -37,7 +37,10 @@ def test_openaq_uses_v3_results_and_does_not_call_live_without_a_key():
 
 
 def test_firms_parses_csv_live_response(monkeypatch: pytest.MonkeyPatch):
-    csv_text = "latitude,longitude,acq_date,acq_time\n31.6,74.8,2026-08-19,0836\n"
+    # The real FIRMS CSV always carries a confidence column, and fetch() now
+    # drops detections that are not high or nominal confidence. The stub needs
+    # the column for the same reason the live feed has it.
+    csv_text = "latitude,longitude,acq_date,acq_time,confidence\n31.6,74.8,2026-08-19,0836,h\n"
     monkeypatch.setattr(httpx, "get", lambda *args, **kwargs: StubResponse(text=csv_text))
     assert FirmsSource("key").fetch()[0]["latitude"] == "31.6"
 

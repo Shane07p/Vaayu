@@ -8,6 +8,8 @@ __pycache__/
 .venv/
 .uv/
 mlruns/
+.pytest_cache/
+.ruff_cache/
 
 # Node
 node_modules/
@@ -26,3 +28,4 @@ secrets/
 
 # Local planning artefacts, not part of the deliverable
 docs/superpowers/
+implementation_plan*.md

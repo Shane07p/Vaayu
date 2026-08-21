@@ -1,0 +1,4002 @@
+[
+  {
+    "grid_cell_code": "SEED-GRID-0-0",
+    "ts": "2026-08-21T13:00:00+00:00",
+    "aod_047": 1.2479,
+    "aod_055": 0.7934,
+    "aod_uncertainty": 0.1193,
+    "column_wv": 2.248,
+    "coverage_fraction": 0.767,
+    "qa_passed": true
+  },
+  {
+    "grid_cell_code": "SEED-GRID-0-1",
+    "ts": "2026-08-21T13:00:00+00:00",
+    "aod_047": 0.4431,
+    "aod_055": 1.2468,
+    "aod_uncertainty": 0.221,
+    "column_wv": 2.063,
+    "coverage_fraction": 0.942,
+    "qa_passed": true
+  },
+  {
+    "grid_cell_code": "SEED-GRID-0-2",
+    "ts": "2026-08-21T13:00:00+00:00",
+    "aod_047": 0.5648,
+    "aod_055": 0.7298,
+    "aod_uncertainty": 0.153,
+    "column_wv": 1.519,
+    "coverage_fraction": 0.618,
+    "qa_passed": true
+  },
+  {
+    "grid_cell_code": "SEED-GRID-0-3",
+    "ts": "2026-08-21T13:00:00+00:00",
+    "aod_047": 0.543,
+    "aod_055": 0.5263,
+    "aod_uncertainty": 0.186,
+    "column_wv": 1.656,
+    "coverage_fraction": 0.763,
+    "qa_passed": true
+  },
+  {
+    "grid_cell_code": "SEED-GRID-0-4",
+    "ts": "2026-08-21T13:00:00+00:00",
+    "aod_047": 0.8328,
+    "aod_055": 0.9052,
+    "aod_uncertainty": 0.1066,
+    "column_wv": 1.218,
+    "coverage_fraction": 0.672,
+    "qa_passed": true
+  },
+  {
+    "grid_cell_code": "SEED-GRID-0-5",
+    "ts": "2026-08-21T13:00:00+00:00",
+    "aod_047": 1.4719,
+    "aod_055": 1.2961,
+    "aod_uncertainty": 0.103,
+    "column_wv": 2.243,
+    "coverage_fraction": 0.963,
+    "qa_passed": true
+  },
+  {
+    "grid_cell_code": "SEED-GRID-0-6",
+    "ts": "2026-08-21T13:00:00+00:00",
+    "aod_047": 0.4768,
+    "aod_055": 1.175,
+    "aod_uncertainty": 0.1996,
+    "column_wv": 1.99,
+    "coverage_fraction": 0.924,
+    "qa_passed": true
+  },
+  {
+    "grid_cell_code": "SEED-GRID-0-7",
+    "ts": "2026-08-21T13:00:00+00:00",
+    "aod_047": 1.0786,
+    "aod_055": 1.0278,
+    "aod_uncertainty": 0.1578,
+    "column_wv": 1.892,
+    "coverage_fraction": 0.797,
+    "qa_passed": true
+  },
+  {
+    "grid_cell_code": "SEED-GRID-0-8",
+    "ts": "2026-08-21T13:00:00+00:00",
+    "aod_047": 1.1908,
+    "aod_055": 0.3342,
+    "aod_uncertainty": 0.2472,
+    "column_wv": 1.392,
+    "coverage_fraction": 0.969,
+    "qa_passed": true
+  },
+  {
+    "grid_cell_code": "SEED-GRID-0-9",
+    "ts": "2026-08-21T13:00:00+00:00",
+    "aod_047": 1.2945,
+    "aod_055": 1.2412,
+    "aod_uncertainty": 0.0701,
+    "column_wv": 1.717,
+    "coverage_fraction": 0.993,
+    "qa_passed": true
+  },
+  {
+    "grid_cell_code": "SEED-GRID-0-10",
+    "ts": "2026-08-21T13:00:00+00:00",
+    "aod_047": 1.0018,
+    "aod_055": 1.2618,
+    "aod_uncertainty": 0.0833,
+    "column_wv": 1.44,
+    "coverage_fraction": 0.942,
+    "qa_passed": true
+  },
+  {
+    "grid_cell_code": "SEED-GRID-0-11",
+    "ts": "2026-08-21T13:00:00+00:00",
+    "aod_047": 1.4196,
+    "aod_055": 0.4997,
+    "aod_uncertainty": 0.1531,
+    "column_wv": 0.815,
+    "coverage_fraction": 0.676,
+    "qa_passed": true
+  },
+  {
+    "grid_cell_code": "SEED-GRID-0-12",
+    "ts": "2026-08-21T13:00:00+00:00",
+    "aod_047": 0.4741,
+    "aod_055": 0.5832,
+    "aod_uncertainty": 0.2128,
+    "column_wv": 1.381,
+    "coverage_fraction": 0.961,
+    "qa_passed": true
+  },
+  {
+    "grid_cell_code": "SEED-GRID-0-13",
+    "ts": "2026-08-21T13:00:00+00:00",
+    "aod_047": 1.4373,
+    "aod_055": 0.4815,
+    "aod_uncertainty": 0.1352,
+    "column_wv": 1.593,
+    "coverage_fraction": 0.83,
+    "qa_passed": true
+  },
+  {
+    "grid_cell_code": "SEED-GRID-0-14",
+    "ts": "2026-08-21T13:00:00+00:00",
+    "aod_047": 1.1732,
+    "aod_055": 0.7809,
+    "aod_uncertainty": 0.1405,
+    "column_wv": 1.551,
+    "coverage_fraction": 0.733,
+    "qa_passed": true
+  },
+  {
+    "grid_cell_code": "SEED-GRID-0-15",
+    "ts": "2026-08-21T13:00:00+00:00",
+    "aod_047": 1.0208,
+    "aod_055": 0.4924,
+    "aod_uncertainty": 0.0941,
+    "column_wv": 2.014,
+    "coverage_fraction": 0.811,
+    "qa_passed": true
+  },
+  {
+    "grid_cell_code": "SEED-GRID-0-16",
+    "ts": "2026-08-21T13:00:00+00:00",
+    "aod_047": 0.9672,
+    "aod_055": 0.8769,
+    "aod_uncertainty": 0.2326,
+    "column_wv": 1.529,
+    "coverage_fraction": 0.731,
+    "qa_passed": true
+  },
+  {
+    "grid_cell_code": "SEED-GRID-0-17",
+    "ts": "2026-08-21T13:00:00+00:00",
+    "aod_047": 0.9826,
+    "aod_055": 1.0679,
+    "aod_uncertainty": 0.0626,
+    "column_wv": 2.197,
+    "coverage_fraction": 0.909,
+    "qa_passed": true
+  },
+  {
+    "grid_cell_code": "SEED-GRID-0-18",
+    "ts": "2026-08-21T13:00:00+00:00",
+    "aod_047": 1.1108,
+    "aod_055": 0.3636,
+    "aod_uncertainty": 0.1217,
+    "column_wv": 2.113,
+    "coverage_fraction": 0.945,
+    "qa_passed": true
+  },
+  {
+    "grid_cell_code": "SEED-GRID-0-19",
+    "ts": "2026-08-21T13:00:00+00:00",
+    "aod_047": 0.9587,
+    "aod_055": 1.1313,
+    "aod_uncertainty": 0.0688,
+    "column_wv": 0.947,
+    "coverage_fraction": 0.987,
+    "qa_passed": true
+  },
+  {
+    "grid_cell_code": "SEED-GRID-1-0",
+    "ts": "2026-08-21T13:00:00+00:00",
+    "aod_047": 0.4649,
+    "aod_055": 0.4186,
+    "aod_uncertainty": 0.1482,
+    "column_wv": 1.482,
+    "coverage_fraction": 0.892,
+    "qa_passed": true
+  },
+  {
+    "grid_cell_code": "SEED-GRID-1-1",
+    "ts": "2026-08-21T13:00:00+00:00",
+    "aod_047": 0.5046,
+    "aod_055": 0.8657,
+    "aod_uncertainty": 0.0601,
+    "column_wv": 1.374,
+    "coverage_fraction": 0.551,
+    "qa_passed": true
+  },
+  {
+    "grid_cell_code": "SEED-GRID-1-2",
+    "ts": "2026-08-21T13:00:00+00:00",
+    "aod_047": 0.7301,
+    "aod_055": 1.2378,
+    "aod_uncertainty": 0.2411,
+    "column_wv": 1.629,
+    "coverage_fraction": 0.966,
+    "qa_passed": true
+  },
+  {
+    "grid_cell_code": "SEED-GRID-1-3",
+    "ts": "2026-08-21T13:00:00+00:00",
+    "aod_047": 0.921,
+    "aod_055": 1.2249,
+    "aod_uncertainty": 0.1128,
+    "column_wv": 2.25,
+    "coverage_fraction": 0.91,
+    "qa_passed": true
+  },
+  {
+    "grid_cell_code": "SEED-GRID-1-4",
+    "ts": "2026-08-21T13:00:00+00:00",
+    "aod_047": 1.4529,
+    "aod_055": 0.6952,
+    "aod_uncertainty": 0.0984,
+    "column_wv": 1.292,
+    "coverage_fraction": 0.645,
+    "qa_passed": true
+  },
+  {
+    "grid_cell_code": "SEED-GRID-1-5",
+    "ts": "2026-08-21T13:00:00+00:00",
+    "aod_047": 0.5703,
+    "aod_055": 0.3366,
+    "aod_uncertainty": 0.1759,
+    "column_wv": 1.079,
+    "coverage_fraction": 0.847,
+    "qa_passed": true
+  },
+  {
+    "grid_cell_code": "SEED-GRID-1-6",
+    "ts": "2026-08-21T13:00:00+00:00",
+    "aod_047": 1.2484,
+    "aod_055": 1.224,
+    "aod_uncertainty": 0.1419,
+    "column_wv": 1.745,
+    "coverage_fraction": 0.891,
+    "qa_passed": true
+  },
+  {
+    "grid_cell_code": "SEED-GRID-1-7",
+    "ts": "2026-08-21T13:00:00+00:00",
+    "aod_047": 1.2554,
+    "aod_055": 0.7641,
+    "aod_uncertainty": 0.2416,
+    "column_wv": 1.618,
+    "coverage_fraction": 0.981,
+    "qa_passed": true
+  },
+  {
+    "grid_cell_code": "SEED-GRID-1-8",
+    "ts": "2026-08-21T13:00:00+00:00",
+    "aod_047": 1.2532,
+    "aod_055": 1.1392,
+    "aod_uncertainty": 0.1438,
+    "column_wv": 1.098,
+    "coverage_fraction": 0.919,
+    "qa_passed": true
+  },
+  {
+    "grid_cell_code": "SEED-GRID-1-9",
+    "ts": "2026-08-21T13:00:00+00:00",
+    "aod_047": 1.3488,
+    "aod_055": 0.8746,
+    "aod_uncertainty": 0.1358,
+    "column_wv": 0.963,
+    "coverage_fraction": 0.6,
+    "qa_passed": true
+  },
+  {
+    "grid_cell_code": "SEED-GRID-1-10",
+    "ts": "2026-08-21T13:00:00+00:00",
+    "aod_047": 0.902,
+    "aod_055": 0.7427,
+    "aod_uncertainty": 0.2196,
+    "column_wv": 2.195,
+    "coverage_fraction": 0.725,
+    "qa_passed": true
+  },
+  {
+    "grid_cell_code": "SEED-GRID-1-11",
+    "ts": "2026-08-21T13:00:00+00:00",
+    "aod_047": 1.241,
+    "aod_055": 0.3739,
+    "aod_uncertainty": 0.1191,
+    "column_wv": 1.214,
+    "coverage_fraction": 0.767,
+    "qa_passed": true
+  },
+  {
+    "grid_cell_code": "SEED-GRID-1-12",
+    "ts": "2026-08-21T13:00:00+00:00",
+    "aod_047": 1.4815,
+    "aod_055": 0.3727,
+    "aod_uncertainty": 0.1116,
+    "column_wv": 1.741,
+    "coverage_fraction": 0.893,
+    "qa_passed": true
+  },
+  {
+    "grid_cell_code": "SEED-GRID-1-13",
+    "ts": "2026-08-21T13:00:00+00:00",
+    "aod_047": 0.4418,
+    "aod_055": 0.399,
+    "aod_uncertainty": 0.1105,
+    "column_wv": 1.511,
+    "coverage_fraction": 0.614,
+    "qa_passed": true
+  },
+  {
+    "grid_cell_code": "SEED-GRID-1-14",
+    "ts": "2026-08-21T13:00:00+00:00",
+    "aod_047": 1.1745,
+    "aod_055": 1.0143,
+    "aod_uncertainty": 0.2005,
+    "column_wv": 0.827,
+    "coverage_fraction": 0.76,
+    "qa_passed": true
+  },
+  {
+    "grid_cell_code": "SEED-GRID-1-15",
+    "ts": "2026-08-21T13:00:00+00:00",
+    "aod_047": 1.4008,
+    "aod_055": 0.8663,
+    "aod_uncertainty": 0.233,
+    "column_wv": 1.759,
+    "coverage_fraction": 0.742,
+    "qa_passed": true
+  },
+  {
+    "grid_cell_code": "SEED-GRID-1-16",
+    "ts": "2026-08-21T13:00:00+00:00",
+    "aod_047": 0.9802,
+    "aod_055": 0.6617,
+    "aod_uncertainty": 0.1989,
+    "column_wv": 1.628,
+    "coverage_fraction": 0.552,
+    "qa_passed": true
+  },
+  {
+    "grid_cell_code": "SEED-GRID-1-17",
+    "ts": "2026-08-21T13:00:00+00:00",
+    "aod_047": 1.1733,
+    "aod_055": 0.3098,
+    "aod_uncertainty": 0.1735,
+    "column_wv": 1.831,
+    "coverage_fraction": 0.584,
+    "qa_passed": true
+  },
+  {
+    "grid_cell_code": "SEED-GRID-1-18",
+    "ts": "2026-08-21T13:00:00+00:00",
+    "aod_047": 0.6776,
+    "aod_055": 0.4614,
+    "aod_uncertainty": 0.0785,
+    "column_wv": 1.803,
+    "coverage_fraction": 0.819,
+    "qa_passed": true
+  },
+  {
+    "grid_cell_code": "SEED-GRID-1-19",
+    "ts": "2026-08-21T13:00:00+00:00",
+    "aod_047": 1.3347,
+    "aod_055": 1.0042,
+    "aod_uncertainty": 0.1746,
+    "column_wv": 2.272,
+    "coverage_fraction": 0.774,
+    "qa_passed": true
+  },
+  {
+    "grid_cell_code": "SEED-GRID-2-0",
+    "ts": "2026-08-21T13:00:00+00:00",
+    "aod_047": 1.2296,
+    "aod_055": 1.2351,
+    "aod_uncertainty": 0.1278,
+    "column_wv": 2.034,
+    "coverage_fraction": 0.805,
+    "qa_passed": true
+  },
+  {
+    "grid_cell_code": "SEED-GRID-2-1",
+    "ts": "2026-08-21T13:00:00+00:00",
+    "aod_047": 1.1865,
+    "aod_055": 0.8629,
+    "aod_uncertainty": 0.0587,
+    "column_wv": 1.68,
+    "coverage_fraction": 0.99,
+    "qa_passed": true
+  },
+  {
+    "grid_cell_code": "SEED-GRID-2-2",
+    "ts": "2026-08-21T13:00:00+00:00",
+    "aod_047": 0.4176,
+    "aod_055": 0.5166,
+    "aod_uncertainty": 0.1126,
+    "column_wv": 2.106,
+    "coverage_fraction": 0.896,
+    "qa_passed": true
+  },
+  {
+    "grid_cell_code": "SEED-GRID-2-3",
+    "ts": "2026-08-21T13:00:00+00:00",
+    "aod_047": 1.1218,
+    "aod_055": 0.9537,
+    "aod_uncertainty": 0.2426,
+    "column_wv": 2.075,
+    "coverage_fraction": 0.676,
+    "qa_passed": true
+  },
+  {
+    "grid_cell_code": "SEED-GRID-2-4",
+    "ts": "2026-08-21T13:00:00+00:00",
+    "aod_047": 1.1947,
+    "aod_055": 1.0958,
+    "aod_uncertainty": 0.0607,
+    "column_wv": 2.191,
+    "coverage_fraction": 0.879,
+    "qa_passed": true
+  },
+  {
+    "grid_cell_code": "SEED-GRID-2-5",
+    "ts": "2026-08-21T13:00:00+00:00",
+    "aod_047": 1.0824,
+    "aod_055": 0.3056,
+    "aod_uncertainty": 0.1227,
+    "column_wv": 1.273,
+    "coverage_fraction": 0.974,
+    "qa_passed": true
+  },
+  {
+    "grid_cell_code": "SEED-GRID-2-6",
+    "ts": "2026-08-21T13:00:00+00:00",
+    "aod_047": 1.1963,
+    "aod_055": 0.3169,
+    "aod_uncertainty": 0.1877,
+    "column_wv": 2.284,
+    "coverage_fraction": 0.889,
+    "qa_passed": true
+  },
+  {
+    "grid_cell_code": "SEED-GRID-2-7",
+    "ts": "2026-08-21T13:00:00+00:00",
+    "aod_047": 1.3417,
+    "aod_055": 0.597,
+    "aod_uncertainty": 0.1087,
+    "column_wv": 1.508,
+    "coverage_fraction": 0.921,
+    "qa_passed": true
+  },
+  {
+    "grid_cell_code": "SEED-GRID-2-8",
+    "ts": "2026-08-21T13:00:00+00:00",
+    "aod_047": 0.5742,
+    "aod_055": 1.224,
+    "aod_uncertainty": 0.1615,
+    "column_wv": 2.092,
+    "coverage_fraction": 0.767,
+    "qa_passed": true
+  },
+  {
+    "grid_cell_code": "SEED-GRID-2-9",
+    "ts": "2026-08-21T13:00:00+00:00",
+    "aod_047": 1.1968,
+    "aod_055": 0.6513,
+    "aod_uncertainty": 0.1938,
+    "column_wv": 1.006,
+    "coverage_fraction": 0.551,
+    "qa_passed": true
+  },
+  {
+    "grid_cell_code": "SEED-GRID-2-10",
+    "ts": "2026-08-21T13:00:00+00:00",
+    "aod_047": 1.4477,
+    "aod_055": 1.0796,
+    "aod_uncertainty": 0.0692,
+    "column_wv": 1.842,
+    "coverage_fraction": 0.677,
+    "qa_passed": true
+  },
+  {
+    "grid_cell_code": "SEED-GRID-2-11",
+    "ts": "2026-08-21T13:00:00+00:00",
+    "aod_047": 0.767,
+    "aod_055": 1.2174,
+    "aod_uncertainty": 0.2084,
+    "column_wv": 1.782,
+    "coverage_fraction": 0.562,
+    "qa_passed": true
+  },
+  {
+    "grid_cell_code": "SEED-GRID-2-12",
+    "ts": "2026-08-21T13:00:00+00:00",
+    "aod_047": 0.8956,
+    "aod_055": 0.5578,
+    "aod_uncertainty": 0.1567,
+    "column_wv": 1.656,
+    "coverage_fraction": 0.751,
+    "qa_passed": true
+  },
+  {
+    "grid_cell_code": "SEED-GRID-2-13",
+    "ts": "2026-08-21T13:00:00+00:00",
+    "aod_047": 0.8615,
+    "aod_055": 0.4466,
+    "aod_uncertainty": 0.0613,
+    "column_wv": 1.245,
+    "coverage_fraction": 0.929,
+    "qa_passed": true
+  },
+  {
+    "grid_cell_code": "SEED-GRID-2-14",
+    "ts": "2026-08-21T13:00:00+00:00",
+    "aod_047": 1.227,
+    "aod_055": 0.8942,
+    "aod_uncertainty": 0.0515,
+    "column_wv": 1.399,
+    "coverage_fraction": 0.623,
+    "qa_passed": true
+  },
+  {
+    "grid_cell_code": "SEED-GRID-2-15",
+    "ts": "2026-08-21T13:00:00+00:00",
+    "aod_047": 1.2643,
+    "aod_055": 0.648,
+    "aod_uncertainty": 0.1021,
+    "column_wv": 2.136,
+    "coverage_fraction": 0.702,
+    "qa_passed": true
+  },
+  {
+    "grid_cell_code": "SEED-GRID-2-16",
+    "ts": "2026-08-21T13:00:00+00:00",
+    "aod_047": 0.4315,
+    "aod_055": 0.8255,
+    "aod_uncertainty": 0.1596,
+    "column_wv": 1.2,
+    "coverage_fraction": 0.598,
+    "qa_passed": true
+  },
+  {
+    "grid_cell_code": "SEED-GRID-2-17",
+    "ts": "2026-08-21T13:00:00+00:00",
+    "aod_047": 0.4402,
+    "aod_055": 0.7442,
+    "aod_uncertainty": 0.1334,
+    "column_wv": 1.397,
+    "coverage_fraction": 0.581,
+    "qa_passed": true
+  },
+  {
+    "grid_cell_code": "SEED-GRID-2-18",
+    "ts": "2026-08-21T13:00:00+00:00",
+    "aod_047": 1.189,
+    "aod_055": 0.945,
+    "aod_uncertainty": 0.1316,
+    "column_wv": 2.013,
+    "coverage_fraction": 0.99,
+    "qa_passed": true
+  },
+  {
+    "grid_cell_code": "SEED-GRID-2-19",
+    "ts": "2026-08-21T13:00:00+00:00",
+    "aod_047": 0.5918,
+    "aod_055": 0.6109,
+    "aod_uncertainty": 0.1641,
+    "column_wv": 1.796,
+    "coverage_fraction": 0.647,
+    "qa_passed": true
+  },
+  {
+    "grid_cell_code": "SEED-GRID-3-0",
+    "ts": "2026-08-21T13:00:00+00:00",
+    "aod_047": 0.7102,
+    "aod_055": 1.1795,
+    "aod_uncertainty": 0.2303,
+    "column_wv": 1.022,
+    "coverage_fraction": 0.581,
+    "qa_passed": true
+  },
+  {
+    "grid_cell_code": "SEED-GRID-3-1",
+    "ts": "2026-08-21T13:00:00+00:00",
+    "aod_047": 1.401,
+    "aod_055": 0.5458,
+    "aod_uncertainty": 0.0839,
+    "column_wv": 1.071,
+    "coverage_fraction": 0.695,
+    "qa_passed": true
+  },
+  {
+    "grid_cell_code": "SEED-GRID-3-2",
+    "ts": "2026-08-21T13:00:00+00:00",
+    "aod_047": 1.0884,
+    "aod_055": 1.0245,
+    "aod_uncertainty": 0.1797,
+    "column_wv": 1.697,
+    "coverage_fraction": 0.798,
+    "qa_passed": true
+  },
+  {
+    "grid_cell_code": "SEED-GRID-3-3",
+    "ts": "2026-08-21T13:00:00+00:00",
+    "aod_047": 1.3542,
+    "aod_055": 1.1958,
+    "aod_uncertainty": 0.1273,
+    "column_wv": 1.21,
+    "coverage_fraction": 0.805,
+    "qa_passed": true
+  },
+  {
+    "grid_cell_code": "SEED-GRID-3-4",
+    "ts": "2026-08-21T13:00:00+00:00",
+    "aod_047": 0.9698,
+    "aod_055": 0.7182,
+    "aod_uncertainty": 0.1548,
+    "column_wv": 1.218,
+    "coverage_fraction": 0.734,
+    "qa_passed": true
+  },
+  {
+    "grid_cell_code": "SEED-GRID-3-5",
+    "ts": "2026-08-21T13:00:00+00:00",
+    "aod_047": 1.3139,
+    "aod_055": 0.5828,
+    "aod_uncertainty": 0.1089,
+    "column_wv": 1.394,
+    "coverage_fraction": 0.954,
+    "qa_passed": true
+  },
+  {
+    "grid_cell_code": "SEED-GRID-3-6",
+    "ts": "2026-08-21T13:00:00+00:00",
+    "aod_047": 0.6644,
+    "aod_055": 0.3403,
+    "aod_uncertainty": 0.0953,
+    "column_wv": 2.282,
+    "coverage_fraction": 0.656,
+    "qa_passed": true
+  },
+  {
+    "grid_cell_code": "SEED-GRID-3-7",
+    "ts": "2026-08-21T13:00:00+00:00",
+    "aod_047": 1.1393,
+    "aod_055": 0.3361,
+    "aod_uncertainty": 0.1259,
+    "column_wv": 0.984,
+    "coverage_fraction": 0.901,
+    "qa_passed": true
+  },
+  {
+    "grid_cell_code": "SEED-GRID-3-8",
+    "ts": "2026-08-21T13:00:00+00:00",
+    "aod_047": 0.9723,
+    "aod_055": 1.0736,
+    "aod_uncertainty": 0.1823,
+    "column_wv": 2.372,
+    "coverage_fraction": 0.941,
+    "qa_passed": true
+  },
+  {
+    "grid_cell_code": "SEED-GRID-3-9",
+    "ts": "2026-08-21T13:00:00+00:00",
+    "aod_047": 0.4332,
+    "aod_055": 1.2911,
+    "aod_uncertainty": 0.2328,
+    "column_wv": 1.537,
+    "coverage_fraction": 0.637,
+    "qa_passed": true
+  },
+  {
+    "grid_cell_code": "SEED-GRID-3-10",
+    "ts": "2026-08-21T13:00:00+00:00",
+    "aod_047": 0.8507,
+    "aod_055": 0.9673,
+    "aod_uncertainty": 0.1588,
+    "column_wv": 1.743,
+    "coverage_fraction": 0.758,
+    "qa_passed": true
+  },
+  {
+    "grid_cell_code": "SEED-GRID-3-11",
+    "ts": "2026-08-21T13:00:00+00:00",
+    "aod_047": 0.448,
+    "aod_055": 0.4529,
+    "aod_uncertainty": 0.2177,
+    "column_wv": 1.391,
+    "coverage_fraction": 0.984,
+    "qa_passed": true
+  },
+  {
+    "grid_cell_code": "SEED-GRID-3-12",
+    "ts": "2026-08-21T13:00:00+00:00",
+    "aod_047": 0.8188,
+    "aod_055": 1.115,
+    "aod_uncertainty": 0.1375,
+    "column_wv": 1.642,
+    "coverage_fraction": 0.942,
+    "qa_passed": true
+  },
+  {
+    "grid_cell_code": "SEED-GRID-3-13",
+    "ts": "2026-08-21T13:00:00+00:00",
+    "aod_047": 0.668,
+    "aod_055": 0.619,
+    "aod_uncertainty": 0.2484,
+    "column_wv": 1.838,
+    "coverage_fraction": 0.943,
+    "qa_passed": true
+  },
+  {
+    "grid_cell_code": "SEED-GRID-3-14",
+    "ts": "2026-08-21T13:00:00+00:00",
+    "aod_047": 0.6727,
+    "aod_055": 0.9546,
+    "aod_uncertainty": 0.142,
+    "column_wv": 1.629,
+    "coverage_fraction": 0.884,
+    "qa_passed": true
+  },
+  {
+    "grid_cell_code": "SEED-GRID-3-15",
+    "ts": "2026-08-21T13:00:00+00:00",
+    "aod_047": 1.0516,
+    "aod_055": 0.7128,
+    "aod_uncertainty": 0.0638,
+    "column_wv": 2.341,
+    "coverage_fraction": 0.989,
+    "qa_passed": true
+  },
+  {
+    "grid_cell_code": "SEED-GRID-3-16",
+    "ts": "2026-08-21T13:00:00+00:00",
+    "aod_047": 0.781,
+    "aod_055": 0.9722,
+    "aod_uncertainty": 0.2479,
+    "column_wv": 1.05,
+    "coverage_fraction": 0.749,
+    "qa_passed": true
+  },
+  {
+    "grid_cell_code": "SEED-GRID-3-17",
+    "ts": "2026-08-21T13:00:00+00:00",
+    "aod_047": 1.2685,
+    "aod_055": 0.4223,
+    "aod_uncertainty": 0.0806,
+    "column_wv": 1.906,
+    "coverage_fraction": 0.708,
+    "qa_passed": true
+  },
+  {
+    "grid_cell_code": "SEED-GRID-3-18",
+    "ts": "2026-08-21T13:00:00+00:00",
+    "aod_047": 0.4536,
+    "aod_055": 0.8886,
+    "aod_uncertainty": 0.2021,
+    "column_wv": 1.881,
+    "coverage_fraction": 0.899,
+    "qa_passed": true
+  },
+  {
+    "grid_cell_code": "SEED-GRID-3-19",
+    "ts": "2026-08-21T13:00:00+00:00",
+    "aod_047": 0.8942,
+    "aod_055": 0.9397,
+    "aod_uncertainty": 0.1197,
+    "column_wv": 0.859,
+    "coverage_fraction": 0.827,
+    "qa_passed": true
+  },
+  {
+    "grid_cell_code": "SEED-GRID-4-0",
+    "ts": "2026-08-21T13:00:00+00:00",
+    "aod_047": 1.145,
+    "aod_055": 0.5489,
+    "aod_uncertainty": 0.081,
+    "column_wv": 2.023,
+    "coverage_fraction": 0.728,
+    "qa_passed": true
+  },
+  {
+    "grid_cell_code": "SEED-GRID-4-1",
+    "ts": "2026-08-21T13:00:00+00:00",
+    "aod_047": 1.3909,
+    "aod_055": 1.1055,
+    "aod_uncertainty": 0.1982,
+    "column_wv": 0.907,
+    "coverage_fraction": 0.791,
+    "qa_passed": true
+  },
+  {
+    "grid_cell_code": "SEED-GRID-4-2",
+    "ts": "2026-08-21T13:00:00+00:00",
+    "aod_047": 0.9109,
+    "aod_055": 0.4086,
+    "aod_uncertainty": 0.113,
+    "column_wv": 1.21,
+    "coverage_fraction": 0.905,
+    "qa_passed": true
+  },
+  {
+    "grid_cell_code": "SEED-GRID-4-3",
+    "ts": "2026-08-21T13:00:00+00:00",
+    "aod_047": 1.3786,
+    "aod_055": 0.9337,
+    "aod_uncertainty": 0.1889,
+    "column_wv": 2.016,
+    "coverage_fraction": 0.928,
+    "qa_passed": true
+  },
+  {
+    "grid_cell_code": "SEED-GRID-4-4",
+    "ts": "2026-08-21T13:00:00+00:00",
+    "aod_047": 0.5725,
+    "aod_055": 0.7549,
+    "aod_uncertainty": 0.2175,
+    "column_wv": 1.512,
+    "coverage_fraction": 0.611,
+    "qa_passed": true
+  },
+  {
+    "grid_cell_code": "SEED-GRID-4-5",
+    "ts": "2026-08-21T13:00:00+00:00",
+    "aod_047": 0.5349,
+    "aod_055": 0.9693,
+    "aod_uncertainty": 0.1958,
+    "column_wv": 1.362,
+    "coverage_fraction": 0.611,
+    "qa_passed": true
+  },
+  {
+    "grid_cell_code": "SEED-GRID-4-6",
+    "ts": "2026-08-21T13:00:00+00:00",
+    "aod_047": 1.2118,
+    "aod_055": 0.3201,
+    "aod_uncertainty": 0.1954,
+    "column_wv": 1.324,
+    "coverage_fraction": 0.979,
+    "qa_passed": true
+  },
+  {
+    "grid_cell_code": "SEED-GRID-4-7",
+    "ts": "2026-08-21T13:00:00+00:00",
+    "aod_047": 1.2581,
+    "aod_055": 1.2496,
+    "aod_uncertainty": 0.0964,
+    "column_wv": 1.156,
+    "coverage_fraction": 0.834,
+    "qa_passed": true
+  },
+  {
+    "grid_cell_code": "SEED-GRID-4-8",
+    "ts": "2026-08-21T13:00:00+00:00",
+    "aod_047": 1.1486,
+    "aod_055": 1.0946,
+    "aod_uncertainty": 0.1036,
+    "column_wv": 1.714,
+    "coverage_fraction": 0.997,
+    "qa_passed": true
+  },
+  {
+    "grid_cell_code": "SEED-GRID-4-9",
+    "ts": "2026-08-21T13:00:00+00:00",
+    "aod_047": 1.2677,
+    "aod_055": 1.0783,
+    "aod_uncertainty": 0.1735,
+    "column_wv": 0.99,
+    "coverage_fraction": 0.633,
+    "qa_passed": true
+  },
+  {
+    "grid_cell_code": "SEED-GRID-4-10",
+    "ts": "2026-08-21T13:00:00+00:00",
+    "aod_047": 0.5625,
+    "aod_055": 0.3847,
+    "aod_uncertainty": 0.1756,
+    "column_wv": 2.374,
+    "coverage_fraction": 0.753,
+    "qa_passed": true
+  },
+  {
+    "grid_cell_code": "SEED-GRID-4-11",
+    "ts": "2026-08-21T13:00:00+00:00",
+    "aod_047": 0.8335,
+    "aod_055": 0.8935,
+    "aod_uncertainty": 0.2243,
+    "column_wv": 1.629,
+    "coverage_fraction": 0.823,
+    "qa_passed": true
+  },
+  {
+    "grid_cell_code": "SEED-GRID-4-12",
+    "ts": "2026-08-21T13:00:00+00:00",
+    "aod_047": 1.4322,
+    "aod_055": 0.4815,
+    "aod_uncertainty": 0.2251,
+    "column_wv": 1.133,
+    "coverage_fraction": 0.66,
+    "qa_passed": true
+  },
+  {
+    "grid_cell_code": "SEED-GRID-4-13",
+    "ts": "2026-08-21T13:00:00+00:00",
+    "aod_047": 1.0425,
+    "aod_055": 0.4342,
+    "aod_uncertainty": 0.1487,
+    "column_wv": 1.344,
+    "coverage_fraction": 0.9,
+    "qa_passed": true
+  },
+  {
+    "grid_cell_code": "SEED-GRID-4-14",
+    "ts": "2026-08-21T13:00:00+00:00",
+    "aod_047": 1.4674,
+    "aod_055": 0.3723,
+    "aod_uncertainty": 0.1332,
+    "column_wv": 1.318,
+    "coverage_fraction": 0.806,
+    "qa_passed": true
+  },
+  {
+    "grid_cell_code": "SEED-GRID-4-15",
+    "ts": "2026-08-21T13:00:00+00:00",
+    "aod_047": 0.5353,
+    "aod_055": 1.1217,
+    "aod_uncertainty": 0.2424,
+    "column_wv": 1.554,
+    "coverage_fraction": 0.841,
+    "qa_passed": true
+  },
+  {
+    "grid_cell_code": "SEED-GRID-4-16",
+    "ts": "2026-08-21T13:00:00+00:00",
+    "aod_047": 1.0921,
+    "aod_055": 0.5171,
+    "aod_uncertainty": 0.1515,
+    "column_wv": 1.182,
+    "coverage_fraction": 0.594,
+    "qa_passed": true
+  },
+  {
+    "grid_cell_code": "SEED-GRID-4-17",
+    "ts": "2026-08-21T13:00:00+00:00",
+    "aod_047": 1.2242,
+    "aod_055": 0.4572,
+    "aod_uncertainty": 0.1585,
+    "column_wv": 1.004,
+    "coverage_fraction": 0.916,
+    "qa_passed": true
+  },
+  {
+    "grid_cell_code": "SEED-GRID-4-18",
+    "ts": "2026-08-21T13:00:00+00:00",
+    "aod_047": 1.3295,
+    "aod_055": 0.8724,
+    "aod_uncertainty": 0.1711,
+    "column_wv": 1.524,
+    "coverage_fraction": 0.733,
+    "qa_passed": true
+  },
+  {
+    "grid_cell_code": "SEED-GRID-4-19",
+    "ts": "2026-08-21T13:00:00+00:00",
+    "aod_047": 0.8469,
+    "aod_055": 0.7712,
+    "aod_uncertainty": 0.1489,
+    "column_wv": 1.501,
+    "coverage_fraction": 0.727,
+    "qa_passed": true
+  },
+  {
+    "grid_cell_code": "SEED-GRID-5-0",
+    "ts": "2026-08-21T13:00:00+00:00",
+    "aod_047": 0.5035,
+    "aod_055": 0.574,
+    "aod_uncertainty": 0.1962,
+    "column_wv": 1.202,
+    "coverage_fraction": 0.689,
+    "qa_passed": true
+  },
+  {
+    "grid_cell_code": "SEED-GRID-5-1",
+    "ts": "2026-08-21T13:00:00+00:00",
+    "aod_047": 1.4194,
+    "aod_055": 0.9284,
+    "aod_uncertainty": 0.1279,
+    "column_wv": 1.947,
+    "coverage_fraction": 0.91,
+    "qa_passed": true
+  },
+  {
+    "grid_cell_code": "SEED-GRID-5-2",
+    "ts": "2026-08-21T13:00:00+00:00",
+    "aod_047": 0.8054,
+    "aod_055": 0.6713,
+    "aod_uncertainty": 0.1915,
+    "column_wv": 1.028,
+    "coverage_fraction": 0.672,
+    "qa_passed": true
+  },
+  {
+    "grid_cell_code": "SEED-GRID-5-3",
+    "ts": "2026-08-21T13:00:00+00:00",
+    "aod_047": 0.431,
+    "aod_055": 1.002,
+    "aod_uncertainty": 0.0952,
+    "column_wv": 1.199,
+    "coverage_fraction": 0.943,
+    "qa_passed": true
+  },
+  {
+    "grid_cell_code": "SEED-GRID-5-4",
+    "ts": "2026-08-21T13:00:00+00:00",
+    "aod_047": 0.8878,
+    "aod_055": 1.2732,
+    "aod_uncertainty": 0.138,
+    "column_wv": 1.912,
+    "coverage_fraction": 0.553,
+    "qa_passed": true
+  },
+  {
+    "grid_cell_code": "SEED-GRID-5-5",
+    "ts": "2026-08-21T13:00:00+00:00",
+    "aod_047": 0.4121,
+    "aod_055": 0.5212,
+    "aod_uncertainty": 0.0672,
+    "column_wv": 2.283,
+    "coverage_fraction": 0.823,
+    "qa_passed": true
+  },
+  {
+    "grid_cell_code": "SEED-GRID-5-6",
+    "ts": "2026-08-21T13:00:00+00:00",
+    "aod_047": 0.51,
+    "aod_055": 0.3176,
+    "aod_uncertainty": 0.2125,
+    "column_wv": 1.591,
+    "coverage_fraction": 0.734,
+    "qa_passed": true
+  },
+  {
+    "grid_cell_code": "SEED-GRID-5-7",
+    "ts": "2026-08-21T13:00:00+00:00",
+    "aod_047": 1.4374,
+    "aod_055": 0.8323,
+    "aod_uncertainty": 0.2178,
+    "column_wv": 1.857,
+    "coverage_fraction": 0.792,
+    "qa_passed": true
+  },
+  {
+    "grid_cell_code": "SEED-GRID-5-8",
+    "ts": "2026-08-21T13:00:00+00:00",
+    "aod_047": 0.9656,
+    "aod_055": 0.5497,
+    "aod_uncertainty": 0.2016,
+    "column_wv": 1.52,
+    "coverage_fraction": 0.917,
+    "qa_passed": true
+  },
+  {
+    "grid_cell_code": "SEED-GRID-5-9",
+    "ts": "2026-08-21T13:00:00+00:00",
+    "aod_047": 0.8561,
+    "aod_055": 1.0877,
+    "aod_uncertainty": 0.0656,
+    "column_wv": 1.53,
+    "coverage_fraction": 0.926,
+    "qa_passed": true
+  },
+  {
+    "grid_cell_code": "SEED-GRID-5-10",
+    "ts": "2026-08-21T13:00:00+00:00",
+    "aod_047": 1.3498,
+    "aod_055": 1.131,
+    "aod_uncertainty": 0.1449,
+    "column_wv": 1.65,
+    "coverage_fraction": 0.813,
+    "qa_passed": true
+  },
+  {
+    "grid_cell_code": "SEED-GRID-5-11",
+    "ts": "2026-08-21T13:00:00+00:00",
+    "aod_047": 0.9008,
+    "aod_055": 0.374,
+    "aod_uncertainty": 0.1678,
+    "column_wv": 2.154,
+    "coverage_fraction": 0.57,
+    "qa_passed": true
+  },
+  {
+    "grid_cell_code": "SEED-GRID-5-12",
+    "ts": "2026-08-21T13:00:00+00:00",
+    "aod_047": 0.8799,
+    "aod_055": 1.0252,
+    "aod_uncertainty": 0.0613,
+    "column_wv": 1.676,
+    "coverage_fraction": 0.609,
+    "qa_passed": true
+  },
+  {
+    "grid_cell_code": "SEED-GRID-5-13",
+    "ts": "2026-08-21T13:00:00+00:00",
+    "aod_047": 0.8032,
+    "aod_055": 0.9991,
+    "aod_uncertainty": 0.2427,
+    "column_wv": 0.926,
+    "coverage_fraction": 0.858,
+    "qa_passed": true
+  },
+  {
+    "grid_cell_code": "SEED-GRID-5-14",
+    "ts": "2026-08-21T13:00:00+00:00",
+    "aod_047": 0.7446,
+    "aod_055": 0.6083,
+    "aod_uncertainty": 0.2224,
+    "column_wv": 0.986,
+    "coverage_fraction": 0.822,
+    "qa_passed": true
+  },
+  {
+    "grid_cell_code": "SEED-GRID-5-15",
+    "ts": "2026-08-21T13:00:00+00:00",
+    "aod_047": 1.0307,
+    "aod_055": 0.4211,
+    "aod_uncertainty": 0.0692,
+    "column_wv": 1.083,
+    "coverage_fraction": 0.613,
+    "qa_passed": true
+  },
+  {
+    "grid_cell_code": "SEED-GRID-5-16",
+    "ts": "2026-08-21T13:00:00+00:00",
+    "aod_047": 0.9406,
+    "aod_055": 0.3553,
+    "aod_uncertainty": 0.1499,
+    "column_wv": 1.74,
+    "coverage_fraction": 0.571,
+    "qa_passed": true
+  },
+  {
+    "grid_cell_code": "SEED-GRID-5-17",
+    "ts": "2026-08-21T13:00:00+00:00",
+    "aod_047": 1.4549,
+    "aod_055": 0.664,
+    "aod_uncertainty": 0.2099,
+    "column_wv": 1.177,
+    "coverage_fraction": 0.817,
+    "qa_passed": true
+  },
+  {
+    "grid_cell_code": "SEED-GRID-5-18",
+    "ts": "2026-08-21T13:00:00+00:00",
+    "aod_047": 0.5588,
+    "aod_055": 0.9682,
+    "aod_uncertainty": 0.0681,
+    "column_wv": 1.66,
+    "coverage_fraction": 0.833,
+    "qa_passed": true
+  },
+  {
+    "grid_cell_code": "SEED-GRID-5-19",
+    "ts": "2026-08-21T13:00:00+00:00",
+    "aod_047": 0.4008,
+    "aod_055": 1.2948,
+    "aod_uncertainty": 0.1074,
+    "column_wv": 1.83,
+    "coverage_fraction": 0.698,
+    "qa_passed": true
+  },
+  {
+    "grid_cell_code": "SEED-GRID-6-0",
+    "ts": "2026-08-21T13:00:00+00:00",
+    "aod_047": 1.2608,
+    "aod_055": 0.3523,
+    "aod_uncertainty": 0.0773,
+    "column_wv": 2.089,
+    "coverage_fraction": 0.709,
+    "qa_passed": true
+  },
+  {
+    "grid_cell_code": "SEED-GRID-6-1",
+    "ts": "2026-08-21T13:00:00+00:00",
+    "aod_047": 0.8978,
+    "aod_055": 0.5026,
+    "aod_uncertainty": 0.1481,
+    "column_wv": 2.32,
+    "coverage_fraction": 0.873,
+    "qa_passed": true
+  },
+  {
+    "grid_cell_code": "SEED-GRID-6-2",
+    "ts": "2026-08-21T13:00:00+00:00",
+    "aod_047": 0.6015,
+    "aod_055": 0.5413,
+    "aod_uncertainty": 0.1831,
+    "column_wv": 1.8,
+    "coverage_fraction": 0.603,
+    "qa_passed": true
+  },
+  {
+    "grid_cell_code": "SEED-GRID-6-3",
+    "ts": "2026-08-21T13:00:00+00:00",
+    "aod_047": 0.5891,
+    "aod_055": 0.5238,
+    "aod_uncertainty": 0.108,
+    "column_wv": 2.366,
+    "coverage_fraction": 0.867,
+    "qa_passed": true
+  },
+  {
+    "grid_cell_code": "SEED-GRID-6-4",
+    "ts": "2026-08-21T13:00:00+00:00",
+    "aod_047": 0.4365,
+    "aod_055": 1.1482,
+    "aod_uncertainty": 0.0648,
+    "column_wv": 1.397,
+    "coverage_fraction": 0.929,
+    "qa_passed": true
+  },
+  {
+    "grid_cell_code": "SEED-GRID-6-5",
+    "ts": "2026-08-21T13:00:00+00:00",
+    "aod_047": 0.6451,
+    "aod_055": 1.0937,
+    "aod_uncertainty": 0.1569,
+    "column_wv": 1.683,
+    "coverage_fraction": 0.827,
+    "qa_passed": true
+  },
+  {
+    "grid_cell_code": "SEED-GRID-6-6",
+    "ts": "2026-08-21T13:00:00+00:00",
+    "aod_047": 1.1021,
+    "aod_055": 0.9641,
+    "aod_uncertainty": 0.1035,
+    "column_wv": 1.401,
+    "coverage_fraction": 0.868,
+    "qa_passed": true
+  },
+  {
+    "grid_cell_code": "SEED-GRID-6-7",
+    "ts": "2026-08-21T13:00:00+00:00",
+    "aod_047": 0.6278,
+    "aod_055": 0.5671,
+    "aod_uncertainty": 0.2315,
+    "column_wv": 1.628,
+    "coverage_fraction": 0.613,
+    "qa_passed": true
+  },
+  {
+    "grid_cell_code": "SEED-GRID-6-8",
+    "ts": "2026-08-21T13:00:00+00:00",
+    "aod_047": 0.7067,
+    "aod_055": 1.1141,
+    "aod_uncertainty": 0.0649,
+    "column_wv": 1.232,
+    "coverage_fraction": 0.695,
+    "qa_passed": true
+  },
+  {
+    "grid_cell_code": "SEED-GRID-6-9",
+    "ts": "2026-08-21T13:00:00+00:00",
+    "aod_047": 0.9806,
+    "aod_055": 0.5931,
+    "aod_uncertainty": 0.1251,
+    "column_wv": 1.779,
+    "coverage_fraction": 0.87,
+    "qa_passed": true
+  },
+  {
+    "grid_cell_code": "SEED-GRID-6-10",
+    "ts": "2026-08-21T13:00:00+00:00",
+    "aod_047": 0.8048,
+    "aod_055": 0.5143,
+    "aod_uncertainty": 0.1808,
+    "column_wv": 1.657,
+    "coverage_fraction": 0.983,
+    "qa_passed": true
+  },
+  {
+    "grid_cell_code": "SEED-GRID-6-11",
+    "ts": "2026-08-21T13:00:00+00:00",
+    "aod_047": 0.8295,
+    "aod_055": 1.217,
+    "aod_uncertainty": 0.0879,
+    "column_wv": 1.309,
+    "coverage_fraction": 0.853,
+    "qa_passed": true
+  },
+  {
+    "grid_cell_code": "SEED-GRID-6-12",
+    "ts": "2026-08-21T13:00:00+00:00",
+    "aod_047": 1.1491,
+    "aod_055": 1.2502,
+    "aod_uncertainty": 0.1307,
+    "column_wv": 1.176,
+    "coverage_fraction": 0.754,
+    "qa_passed": true
+  },
+  {
+    "grid_cell_code": "SEED-GRID-6-13",
+    "ts": "2026-08-21T13:00:00+00:00",
+    "aod_047": 1.3927,
+    "aod_055": 1.2667,
+    "aod_uncertainty": 0.0911,
+    "column_wv": 1.343,
+    "coverage_fraction": 0.876,
+    "qa_passed": true
+  },
+  {
+    "grid_cell_code": "SEED-GRID-6-14",
+    "ts": "2026-08-21T13:00:00+00:00",
+    "aod_047": 0.9239,
+    "aod_055": 0.9696,
+    "aod_uncertainty": 0.2062,
+    "column_wv": 1.482,
+    "coverage_fraction": 0.822,
+    "qa_passed": true
+  },
+  {
+    "grid_cell_code": "SEED-GRID-6-15",
+    "ts": "2026-08-21T13:00:00+00:00",
+    "aod_047": 0.5052,
+    "aod_055": 0.928,
+    "aod_uncertainty": 0.105,
+    "column_wv": 1.415,
+    "coverage_fraction": 0.739,
+    "qa_passed": true
+  },
+  {
+    "grid_cell_code": "SEED-GRID-6-16",
+    "ts": "2026-08-21T13:00:00+00:00",
+    "aod_047": 0.4936,
+    "aod_055": 0.3221,
+    "aod_uncertainty": 0.1701,
+    "column_wv": 1.123,
+    "coverage_fraction": 0.933,
+    "qa_passed": true
+  },
+  {
+    "grid_cell_code": "SEED-GRID-6-17",
+    "ts": "2026-08-21T13:00:00+00:00",
+    "aod_047": 0.8723,
+    "aod_055": 0.4344,
+    "aod_uncertainty": 0.1518,
+    "column_wv": 1.138,
+    "coverage_fraction": 0.96,
+    "qa_passed": true
+  },
+  {
+    "grid_cell_code": "SEED-GRID-6-18",
+    "ts": "2026-08-21T13:00:00+00:00",
+    "aod_047": 0.7429,
+    "aod_055": 0.3847,
+    "aod_uncertainty": 0.1669,
+    "column_wv": 1.791,
+    "coverage_fraction": 0.737,
+    "qa_passed": true
+  },
+  {
+    "grid_cell_code": "SEED-GRID-6-19",
+    "ts": "2026-08-21T13:00:00+00:00",
+    "aod_047": 0.5424,
+    "aod_055": 0.8458,
+    "aod_uncertainty": 0.1057,
+    "column_wv": 0.986,
+    "coverage_fraction": 0.931,
+    "qa_passed": true
+  },
+  {
+    "grid_cell_code": "SEED-GRID-7-0",
+    "ts": "2026-08-21T13:00:00+00:00",
+    "aod_047": 0.439,
+    "aod_055": 0.7553,
+    "aod_uncertainty": 0.2227,
+    "column_wv": 1.404,
+    "coverage_fraction": 0.887,
+    "qa_passed": true
+  },
+  {
+    "grid_cell_code": "SEED-GRID-7-1",
+    "ts": "2026-08-21T13:00:00+00:00",
+    "aod_047": 1.4551,
+    "aod_055": 0.7692,
+    "aod_uncertainty": 0.1403,
+    "column_wv": 2.139,
+    "coverage_fraction": 0.998,
+    "qa_passed": true
+  },
+  {
+    "grid_cell_code": "SEED-GRID-7-2",
+    "ts": "2026-08-21T13:00:00+00:00",
+    "aod_047": 1.0455,
+    "aod_055": 0.9156,
+    "aod_uncertainty": 0.1016,
+    "column_wv": 1.453,
+    "coverage_fraction": 0.745,
+    "qa_passed": true
+  },
+  {
+    "grid_cell_code": "SEED-GRID-7-3",
+    "ts": "2026-08-21T13:00:00+00:00",
+    "aod_047": 1.0393,
+    "aod_055": 0.3079,
+    "aod_uncertainty": 0.229,
+    "column_wv": 0.843,
+    "coverage_fraction": 0.782,
+    "qa_passed": true
+  },
+  {
+    "grid_cell_code": "SEED-GRID-7-4",
+    "ts": "2026-08-21T13:00:00+00:00",
+    "aod_047": 1.442,
+    "aod_055": 0.6817,
+    "aod_uncertainty": 0.241,
+    "column_wv": 1.978,
+    "coverage_fraction": 0.995,
+    "qa_passed": true
+  },
+  {
+    "grid_cell_code": "SEED-GRID-7-5",
+    "ts": "2026-08-21T13:00:00+00:00",
+    "aod_047": 1.3116,
+    "aod_055": 0.5419,
+    "aod_uncertainty": 0.2301,
+    "column_wv": 1.493,
+    "coverage_fraction": 0.657,
+    "qa_passed": true
+  },
+  {
+    "grid_cell_code": "SEED-GRID-7-6",
+    "ts": "2026-08-21T13:00:00+00:00",
+    "aod_047": 1.31,
+    "aod_055": 0.6344,
+    "aod_uncertainty": 0.1268,
+    "column_wv": 1.246,
+    "coverage_fraction": 0.91,
+    "qa_passed": true
+  },
+  {
+    "grid_cell_code": "SEED-GRID-7-7",
+    "ts": "2026-08-21T13:00:00+00:00",
+    "aod_047": 1.1639,
+    "aod_055": 0.7552,
+    "aod_uncertainty": 0.0595,
+    "column_wv": 1.244,
+    "coverage_fraction": 0.84,
+    "qa_passed": true
+  },
+  {
+    "grid_cell_code": "SEED-GRID-7-8",
+    "ts": "2026-08-21T13:00:00+00:00",
+    "aod_047": 0.6139,
+    "aod_055": 0.6982,
+    "aod_uncertainty": 0.167,
+    "column_wv": 1.167,
+    "coverage_fraction": 0.653,
+    "qa_passed": true
+  },
+  {
+    "grid_cell_code": "SEED-GRID-7-9",
+    "ts": "2026-08-21T13:00:00+00:00",
+    "aod_047": 1.1714,
+    "aod_055": 0.6644,
+    "aod_uncertainty": 0.1628,
+    "column_wv": 2.12,
+    "coverage_fraction": 0.554,
+    "qa_passed": true
+  },
+  {
+    "grid_cell_code": "SEED-GRID-7-10",
+    "ts": "2026-08-21T13:00:00+00:00",
+    "aod_047": 0.5305,
+    "aod_055": 0.5176,
+    "aod_uncertainty": 0.1979,
+    "column_wv": 2.107,
+    "coverage_fraction": 0.779,
+    "qa_passed": true
+  },
+  {
+    "grid_cell_code": "SEED-GRID-7-11",
+    "ts": "2026-08-21T13:00:00+00:00",
+    "aod_047": 0.9386,
+    "aod_055": 0.4795,
+    "aod_uncertainty": 0.0611,
+    "column_wv": 2.191,
+    "coverage_fraction": 0.967,
+    "qa_passed": true
+  },
+  {
+    "grid_cell_code": "SEED-GRID-7-12",
+    "ts": "2026-08-21T13:00:00+00:00",
+    "aod_047": 0.599,
+    "aod_055": 0.8373,
+    "aod_uncertainty": 0.0817,
+    "column_wv": 0.966,
+    "coverage_fraction": 0.685,
+    "qa_passed": true
+  },
+  {
+    "grid_cell_code": "SEED-GRID-7-13",
+    "ts": "2026-08-21T13:00:00+00:00",
+    "aod_047": 0.8791,
+    "aod_055": 0.8651,
+    "aod_uncertainty": 0.2402,
+    "column_wv": 2.22,
+    "coverage_fraction": 0.905,
+    "qa_passed": true
+  },
+  {
+    "grid_cell_code": "SEED-GRID-7-14",
+    "ts": "2026-08-21T13:00:00+00:00",
+    "aod_047": null,
+    "aod_055": null,
+    "aod_uncertainty": null,
+    "column_wv": null,
+    "coverage_fraction": 0.0,
+    "qa_passed": false
+  },
+  {
+    "grid_cell_code": "SEED-GRID-7-15",
+    "ts": "2026-08-21T13:00:00+00:00",
+    "aod_047": null,
+    "aod_055": null,
+    "aod_uncertainty": null,
+    "column_wv": null,
+    "coverage_fraction": 0.0,
+    "qa_passed": false
+  },
+  {
+    "grid_cell_code": "SEED-GRID-7-16",
+    "ts": "2026-08-21T13:00:00+00:00",
+    "aod_047": null,
+    "aod_055": null,
+    "aod_uncertainty": null,
+    "column_wv": null,
+    "coverage_fraction": 0.0,
+    "qa_passed": false
+  },
+  {
+    "grid_cell_code": "SEED-GRID-7-17",
+    "ts": "2026-08-21T13:00:00+00:00",
+    "aod_047": null,
+    "aod_055": null,
+    "aod_uncertainty": null,
+    "column_wv": null,
+    "coverage_fraction": 0.0,
+    "qa_passed": false
+  },
+  {
+    "grid_cell_code": "SEED-GRID-7-18",
+    "ts": "2026-08-21T13:00:00+00:00",
+    "aod_047": null,
+    "aod_055": null,
+    "aod_uncertainty": null,
+    "column_wv": null,
+    "coverage_fraction": 0.0,
+    "qa_passed": false
+  },
+  {
+    "grid_cell_code": "SEED-GRID-7-19",
+    "ts": "2026-08-21T13:00:00+00:00",
+    "aod_047": null,
+    "aod_055": null,
+    "aod_uncertainty": null,
+    "column_wv": null,
+    "coverage_fraction": 0.0,
+    "qa_passed": false
+  },
+  {
+    "grid_cell_code": "SEED-GRID-8-0",
+    "ts": "2026-08-21T13:00:00+00:00",
+    "aod_047": 1.3797,
+    "aod_055": 1.1811,
+    "aod_uncertainty": 0.1616,
+    "column_wv": 1.878,
+    "coverage_fraction": 0.6,
+    "qa_passed": true
+  },
+  {
+    "grid_cell_code": "SEED-GRID-8-1",
+    "ts": "2026-08-21T13:00:00+00:00",
+    "aod_047": 1.1707,
+    "aod_055": 0.3447,
+    "aod_uncertainty": 0.161,
+    "column_wv": 1.537,
+    "coverage_fraction": 0.637,
+    "qa_passed": true
+  },
+  {
+    "grid_cell_code": "SEED-GRID-8-2",
+    "ts": "2026-08-21T13:00:00+00:00",
+    "aod_047": 1.0957,
+    "aod_055": 0.8514,
+    "aod_uncertainty": 0.127,
+    "column_wv": 1.438,
+    "coverage_fraction": 0.707,
+    "qa_passed": true
+  },
+  {
+    "grid_cell_code": "SEED-GRID-8-3",
+    "ts": "2026-08-21T13:00:00+00:00",
+    "aod_047": 1.0718,
+    "aod_055": 0.4744,
+    "aod_uncertainty": 0.1728,
+    "column_wv": 1.219,
+    "coverage_fraction": 0.901,
+    "qa_passed": true
+  },
+  {
+    "grid_cell_code": "SEED-GRID-8-4",
+    "ts": "2026-08-21T13:00:00+00:00",
+    "aod_047": 0.645,
+    "aod_055": 0.427,
+    "aod_uncertainty": 0.1418,
+    "column_wv": 1.818,
+    "coverage_fraction": 0.985,
+    "qa_passed": true
+  },
+  {
+    "grid_cell_code": "SEED-GRID-8-5",
+    "ts": "2026-08-21T13:00:00+00:00",
+    "aod_047": 1.2097,
+    "aod_055": 0.5358,
+    "aod_uncertainty": 0.0909,
+    "column_wv": 1.527,
+    "coverage_fraction": 0.677,
+    "qa_passed": true
+  },
+  {
+    "grid_cell_code": "SEED-GRID-8-6",
+    "ts": "2026-08-21T13:00:00+00:00",
+    "aod_047": 0.8908,
+    "aod_055": 0.5326,
+    "aod_uncertainty": 0.2082,
+    "column_wv": 1.053,
+    "coverage_fraction": 0.807,
+    "qa_passed": true
+  },
+  {
+    "grid_cell_code": "SEED-GRID-8-7",
+    "ts": "2026-08-21T13:00:00+00:00",
+    "aod_047": 1.3993,
+    "aod_055": 1.0795,
+    "aod_uncertainty": 0.1316,
+    "column_wv": 2.333,
+    "coverage_fraction": 0.764,
+    "qa_passed": true
+  },
+  {
+    "grid_cell_code": "SEED-GRID-8-8",
+    "ts": "2026-08-21T13:00:00+00:00",
+    "aod_047": 0.9841,
+    "aod_055": 0.6436,
+    "aod_uncertainty": 0.086,
+    "column_wv": 2.226,
+    "coverage_fraction": 0.909,
+    "qa_passed": true
+  },
+  {
+    "grid_cell_code": "SEED-GRID-8-9",
+    "ts": "2026-08-21T13:00:00+00:00",
+    "aod_047": 0.721,
+    "aod_055": 1.033,
+    "aod_uncertainty": 0.1049,
+    "column_wv": 1.45,
+    "coverage_fraction": 0.764,
+    "qa_passed": true
+  },
+  {
+    "grid_cell_code": "SEED-GRID-8-10",
+    "ts": "2026-08-21T13:00:00+00:00",
+    "aod_047": 1.1248,
+    "aod_055": 0.3288,
+    "aod_uncertainty": 0.0752,
+    "column_wv": 1.258,
+    "coverage_fraction": 0.677,
+    "qa_passed": true
+  },
+  {
+    "grid_cell_code": "SEED-GRID-8-11",
+    "ts": "2026-08-21T13:00:00+00:00",
+    "aod_047": 0.807,
+    "aod_055": 1.2375,
+    "aod_uncertainty": 0.1966,
+    "column_wv": 2.079,
+    "coverage_fraction": 0.756,
+    "qa_passed": true
+  },
+  {
+    "grid_cell_code": "SEED-GRID-8-12",
+    "ts": "2026-08-21T13:00:00+00:00",
+    "aod_047": 0.5017,
+    "aod_055": 0.7777,
+    "aod_uncertainty": 0.1857,
+    "column_wv": 2.217,
+    "coverage_fraction": 0.987,
+    "qa_passed": true
+  },
+  {
+    "grid_cell_code": "SEED-GRID-8-13",
+    "ts": "2026-08-21T13:00:00+00:00",
+    "aod_047": 1.4381,
+    "aod_055": 1.2597,
+    "aod_uncertainty": 0.0607,
+    "column_wv": 2.295,
+    "coverage_fraction": 0.647,
+    "qa_passed": true
+  },
+  {
+    "grid_cell_code": "SEED-GRID-8-14",
+    "ts": "2026-08-21T13:00:00+00:00",
+    "aod_047": null,
+    "aod_055": null,
+    "aod_uncertainty": null,
+    "column_wv": null,
+    "coverage_fraction": 0.0,
+    "qa_passed": false
+  },
+  {
+    "grid_cell_code": "SEED-GRID-8-15",
+    "ts": "2026-08-21T13:00:00+00:00",
+    "aod_047": null,
+    "aod_055": null,
+    "aod_uncertainty": null,
+    "column_wv": null,
+    "coverage_fraction": 0.0,
+    "qa_passed": false
+  },
+  {
+    "grid_cell_code": "SEED-GRID-8-16",
+    "ts": "2026-08-21T13:00:00+00:00",
+    "aod_047": null,
+    "aod_055": null,
+    "aod_uncertainty": null,
+    "column_wv": null,
+    "coverage_fraction": 0.0,
+    "qa_passed": false
+  },
+  {
+    "grid_cell_code": "SEED-GRID-8-17",
+    "ts": "2026-08-21T13:00:00+00:00",
+    "aod_047": null,
+    "aod_055": null,
+    "aod_uncertainty": null,
+    "column_wv": null,
+    "coverage_fraction": 0.0,
+    "qa_passed": false
+  },
+  {
+    "grid_cell_code": "SEED-GRID-8-18",
+    "ts": "2026-08-21T13:00:00+00:00",
+    "aod_047": null,
+    "aod_055": null,
+    "aod_uncertainty": null,
+    "column_wv": null,
+    "coverage_fraction": 0.0,
+    "qa_passed": false
+  },
+  {
+    "grid_cell_code": "SEED-GRID-8-19",
+    "ts": "2026-08-21T13:00:00+00:00",
+    "aod_047": null,
+    "aod_055": null,
+    "aod_uncertainty": null,
+    "column_wv": null,
+    "coverage_fraction": 0.0,
+    "qa_passed": false
+  },
+  {
+    "grid_cell_code": "SEED-GRID-9-0",
+    "ts": "2026-08-21T13:00:00+00:00",
+    "aod_047": 1.354,
+    "aod_055": 1.2103,
+    "aod_uncertainty": 0.0612,
+    "column_wv": 0.92,
+    "coverage_fraction": 0.834,
+    "qa_passed": true
+  },
+  {
+    "grid_cell_code": "SEED-GRID-9-1",
+    "ts": "2026-08-21T13:00:00+00:00",
+    "aod_047": 0.5768,
+    "aod_055": 1.1503,
+    "aod_uncertainty": 0.1281,
+    "column_wv": 1.114,
+    "coverage_fraction": 0.799,
+    "qa_passed": true
+  },
+  {
+    "grid_cell_code": "SEED-GRID-9-2",
+    "ts": "2026-08-21T13:00:00+00:00",
+    "aod_047": 1.4481,
+    "aod_055": 0.9744,
+    "aod_uncertainty": 0.2184,
+    "column_wv": 1.055,
+    "coverage_fraction": 0.906,
+    "qa_passed": true
+  },
+  {
+    "grid_cell_code": "SEED-GRID-9-3",
+    "ts": "2026-08-21T13:00:00+00:00",
+    "aod_047": 0.9943,
+    "aod_055": 1.0126,
+    "aod_uncertainty": 0.0604,
+    "column_wv": 1.49,
+    "coverage_fraction": 0.661,
+    "qa_passed": true
+  },
+  {
+    "grid_cell_code": "SEED-GRID-9-4",
+    "ts": "2026-08-21T13:00:00+00:00",
+    "aod_047": 1.2686,
+    "aod_055": 1.1538,
+    "aod_uncertainty": 0.2456,
+    "column_wv": 1.147,
+    "coverage_fraction": 0.643,
+    "qa_passed": true
+  },
+  {
+    "grid_cell_code": "SEED-GRID-9-5",
+    "ts": "2026-08-21T13:00:00+00:00",
+    "aod_047": 1.0096,
+    "aod_055": 0.9289,
+    "aod_uncertainty": 0.1252,
+    "column_wv": 0.8,
+    "coverage_fraction": 0.836,
+    "qa_passed": true
+  },
+  {
+    "grid_cell_code": "SEED-GRID-9-6",
+    "ts": "2026-08-21T13:00:00+00:00",
+    "aod_047": 1.2134,
+    "aod_055": 0.3199,
+    "aod_uncertainty": 0.2236,
+    "column_wv": 1.149,
+    "coverage_fraction": 0.972,
+    "qa_passed": true
+  },
+  {
+    "grid_cell_code": "SEED-GRID-9-7",
+    "ts": "2026-08-21T13:00:00+00:00",
+    "aod_047": 0.9017,
+    "aod_055": 0.3599,
+    "aod_uncertainty": 0.1775,
+    "column_wv": 2.082,
+    "coverage_fraction": 0.763,
+    "qa_passed": true
+  },
+  {
+    "grid_cell_code": "SEED-GRID-9-8",
+    "ts": "2026-08-21T13:00:00+00:00",
+    "aod_047": 0.6833,
+    "aod_055": 1.0799,
+    "aod_uncertainty": 0.2351,
+    "column_wv": 2.348,
+    "coverage_fraction": 0.889,
+    "qa_passed": true
+  },
+  {
+    "grid_cell_code": "SEED-GRID-9-9",
+    "ts": "2026-08-21T13:00:00+00:00",
+    "aod_047": 1.4987,
+    "aod_055": 1.2889,
+    "aod_uncertainty": 0.1307,
+    "column_wv": 1.029,
+    "coverage_fraction": 0.56,
+    "qa_passed": true
+  },
+  {
+    "grid_cell_code": "SEED-GRID-9-10",
+    "ts": "2026-08-21T13:00:00+00:00",
+    "aod_047": 0.8547,
+    "aod_055": 0.4926,
+    "aod_uncertainty": 0.1859,
+    "column_wv": 1.507,
+    "coverage_fraction": 0.588,
+    "qa_passed": true
+  },
+  {
+    "grid_cell_code": "SEED-GRID-9-11",
+    "ts": "2026-08-21T13:00:00+00:00",
+    "aod_047": 0.8654,
+    "aod_055": 0.4833,
+    "aod_uncertainty": 0.1938,
+    "column_wv": 2.238,
+    "coverage_fraction": 0.947,
+    "qa_passed": true
+  },
+  {
+    "grid_cell_code": "SEED-GRID-9-12",
+    "ts": "2026-08-21T13:00:00+00:00",
+    "aod_047": 0.6991,
+    "aod_055": 1.0724,
+    "aod_uncertainty": 0.0525,
+    "column_wv": 1.027,
+    "coverage_fraction": 0.803,
+    "qa_passed": true
+  },
+  {
+    "grid_cell_code": "SEED-GRID-9-13",
+    "ts": "2026-08-21T13:00:00+00:00",
+    "aod_047": 0.7688,
+    "aod_055": 0.4925,
+    "aod_uncertainty": 0.0807,
+    "column_wv": 1.697,
+    "coverage_fraction": 0.606,
+    "qa_passed": true
+  },
+  {
+    "grid_cell_code": "SEED-GRID-9-14",
+    "ts": "2026-08-21T13:00:00+00:00",
+    "aod_047": null,
+    "aod_055": null,
+    "aod_uncertainty": null,
+    "column_wv": null,
+    "coverage_fraction": 0.0,
+    "qa_passed": false
+  },
+  {
+    "grid_cell_code": "SEED-GRID-9-15",
+    "ts": "2026-08-21T13:00:00+00:00",
+    "aod_047": null,
+    "aod_055": null,
+    "aod_uncertainty": null,
+    "column_wv": null,
+    "coverage_fraction": 0.0,
+    "qa_passed": false
+  },
+  {
+    "grid_cell_code": "SEED-GRID-9-16",
+    "ts": "2026-08-21T13:00:00+00:00",
+    "aod_047": null,
+    "aod_055": null,
+    "aod_uncertainty": null,
+    "column_wv": null,
+    "coverage_fraction": 0.0,
+    "qa_passed": false
+  },
+  {
+    "grid_cell_code": "SEED-GRID-9-17",
+    "ts": "2026-08-21T13:00:00+00:00",
+    "aod_047": null,
+    "aod_055": null,
+    "aod_uncertainty": null,
+    "column_wv": null,
+    "coverage_fraction": 0.0,
+    "qa_passed": false
+  },
+  {
+    "grid_cell_code": "SEED-GRID-9-18",
+    "ts": "2026-08-21T13:00:00+00:00",
+    "aod_047": null,
+    "aod_055": null,
+    "aod_uncertainty": null,
+    "column_wv": null,
+    "coverage_fraction": 0.0,
+    "qa_passed": false
+  },
+  {
+    "grid_cell_code": "SEED-GRID-9-19",
+    "ts": "2026-08-21T13:00:00+00:00",
+    "aod_047": null,
+    "aod_055": null,
+    "aod_uncertainty": null,
+    "column_wv": null,
+    "coverage_fraction": 0.0,
+    "qa_passed": false
+  },
+  {
+    "grid_cell_code": "SEED-GRID-10-0",
+    "ts": "2026-08-21T13:00:00+00:00",
+    "aod_047": 0.4473,
+    "aod_055": 0.6888,
+    "aod_uncertainty": 0.1699,
+    "column_wv": 1.524,
+    "coverage_fraction": 0.81,
+    "qa_passed": true
+  },
+  {
+    "grid_cell_code": "SEED-GRID-10-1",
+    "ts": "2026-08-21T13:00:00+00:00",
+    "aod_047": 0.9943,
+    "aod_055": 0.4683,
+    "aod_uncertainty": 0.0514,
+    "column_wv": 1.048,
+    "coverage_fraction": 0.783,
+    "qa_passed": true
+  },
+  {
+    "grid_cell_code": "SEED-GRID-10-2",
+    "ts": "2026-08-21T13:00:00+00:00",
+    "aod_047": 0.5047,
+    "aod_055": 0.8635,
+    "aod_uncertainty": 0.1981,
+    "column_wv": 1.094,
+    "coverage_fraction": 0.75,
+    "qa_passed": true
+  },
+  {
+    "grid_cell_code": "SEED-GRID-10-3",
+    "ts": "2026-08-21T13:00:00+00:00",
+    "aod_047": 1.3579,
+    "aod_055": 1.1432,
+    "aod_uncertainty": 0.1423,
+    "column_wv": 1.267,
+    "coverage_fraction": 0.761,
+    "qa_passed": true
+  },
+  {
+    "grid_cell_code": "SEED-GRID-10-4",
+    "ts": "2026-08-21T13:00:00+00:00",
+    "aod_047": 0.8281,
+    "aod_055": 0.5535,
+    "aod_uncertainty": 0.1799,
+    "column_wv": 1.738,
+    "coverage_fraction": 0.965,
+    "qa_passed": true
+  },
+  {
+    "grid_cell_code": "SEED-GRID-10-5",
+    "ts": "2026-08-21T13:00:00+00:00",
+    "aod_047": 0.4709,
+    "aod_055": 1.2386,
+    "aod_uncertainty": 0.1954,
+    "column_wv": 1.521,
+    "coverage_fraction": 0.934,
+    "qa_passed": true
+  },
+  {
+    "grid_cell_code": "SEED-GRID-10-6",
+    "ts": "2026-08-21T13:00:00+00:00",
+    "aod_047": 1.4454,
+    "aod_055": 0.833,
+    "aod_uncertainty": 0.0644,
+    "column_wv": 1.319,
+    "coverage_fraction": 0.768,
+    "qa_passed": true
+  },
+  {
+    "grid_cell_code": "SEED-GRID-10-7",
+    "ts": "2026-08-21T13:00:00+00:00",
+    "aod_047": 0.962,
+    "aod_055": 0.7838,
+    "aod_uncertainty": 0.1952,
+    "column_wv": 2.398,
+    "coverage_fraction": 0.992,
+    "qa_passed": true
+  },
+  {
+    "grid_cell_code": "SEED-GRID-10-8",
+    "ts": "2026-08-21T13:00:00+00:00",
+    "aod_047": 0.4728,
+    "aod_055": 0.7579,
+    "aod_uncertainty": 0.2012,
+    "column_wv": 1.642,
+    "coverage_fraction": 0.758,
+    "qa_passed": true
+  },
+  {
+    "grid_cell_code": "SEED-GRID-10-9",
+    "ts": "2026-08-21T13:00:00+00:00",
+    "aod_047": 1.3859,
+    "aod_055": 1.1584,
+    "aod_uncertainty": 0.1136,
+    "column_wv": 2.132,
+    "coverage_fraction": 0.786,
+    "qa_passed": true
+  },
+  {
+    "grid_cell_code": "SEED-GRID-10-10",
+    "ts": "2026-08-21T13:00:00+00:00",
+    "aod_047": 0.8238,
+    "aod_055": 0.9353,
+    "aod_uncertainty": 0.2454,
+    "column_wv": 1.897,
+    "coverage_fraction": 0.908,
+    "qa_passed": true
+  },
+  {
+    "grid_cell_code": "SEED-GRID-10-11",
+    "ts": "2026-08-21T13:00:00+00:00",
+    "aod_047": 0.5123,
+    "aod_055": 0.8887,
+    "aod_uncertainty": 0.2469,
+    "column_wv": 2.03,
+    "coverage_fraction": 0.861,
+    "qa_passed": true
+  },
+  {
+    "grid_cell_code": "SEED-GRID-10-12",
+    "ts": "2026-08-21T13:00:00+00:00",
+    "aod_047": 1.2627,
+    "aod_055": 0.8148,
+    "aod_uncertainty": 0.055,
+    "column_wv": 0.835,
+    "coverage_fraction": 0.567,
+    "qa_passed": true
+  },
+  {
+    "grid_cell_code": "SEED-GRID-10-13",
+    "ts": "2026-08-21T13:00:00+00:00",
+    "aod_047": 0.6806,
+    "aod_055": 0.8242,
+    "aod_uncertainty": 0.2337,
+    "column_wv": 0.966,
+    "coverage_fraction": 0.914,
+    "qa_passed": true
+  },
+  {
+    "grid_cell_code": "SEED-GRID-10-14",
+    "ts": "2026-08-21T13:00:00+00:00",
+    "aod_047": null,
+    "aod_055": null,
+    "aod_uncertainty": null,
+    "column_wv": null,
+    "coverage_fraction": 0.0,
+    "qa_passed": false
+  },
+  {
+    "grid_cell_code": "SEED-GRID-10-15",
+    "ts": "2026-08-21T13:00:00+00:00",
+    "aod_047": null,
+    "aod_055": null,
+    "aod_uncertainty": null,
+    "column_wv": null,
+    "coverage_fraction": 0.0,
+    "qa_passed": false
+  },
+  {
+    "grid_cell_code": "SEED-GRID-10-16",
+    "ts": "2026-08-21T13:00:00+00:00",
+    "aod_047": null,
+    "aod_055": null,
+    "aod_uncertainty": null,
+    "column_wv": null,
+    "coverage_fraction": 0.0,
+    "qa_passed": false
+  },
+  {
+    "grid_cell_code": "SEED-GRID-10-17",
+    "ts": "2026-08-21T13:00:00+00:00",
+    "aod_047": null,
+    "aod_055": null,
+    "aod_uncertainty": null,
+    "column_wv": null,
+    "coverage_fraction": 0.0,
+    "qa_passed": false
+  },
+  {
+    "grid_cell_code": "SEED-GRID-10-18",
+    "ts": "2026-08-21T13:00:00+00:00",
+    "aod_047": null,
+    "aod_055": null,
+    "aod_uncertainty": null,
+    "column_wv": null,
+    "coverage_fraction": 0.0,
+    "qa_passed": false
+  },
+  {
+    "grid_cell_code": "SEED-GRID-10-19",
+    "ts": "2026-08-21T13:00:00+00:00",
+    "aod_047": null,
+    "aod_055": null,
+    "aod_uncertainty": null,
+    "column_wv": null,
+    "coverage_fraction": 0.0,
+    "qa_passed": false
+  },
+  {
+    "grid_cell_code": "SEED-GRID-11-0",
+    "ts": "2026-08-21T13:00:00+00:00",
+    "aod_047": 1.1536,
+    "aod_055": 0.9298,
+    "aod_uncertainty": 0.1466,
+    "column_wv": 1.612,
+    "coverage_fraction": 0.573,
+    "qa_passed": true
+  },
+  {
+    "grid_cell_code": "SEED-GRID-11-1",
+    "ts": "2026-08-21T13:00:00+00:00",
+    "aod_047": 0.6446,
+    "aod_055": 0.5563,
+    "aod_uncertainty": 0.1077,
+    "column_wv": 0.851,
+    "coverage_fraction": 0.7,
+    "qa_passed": true
+  },
+  {
+    "grid_cell_code": "SEED-GRID-11-2",
+    "ts": "2026-08-21T13:00:00+00:00",
+    "aod_047": 1.4698,
+    "aod_055": 0.8946,
+    "aod_uncertainty": 0.05,
+    "column_wv": 2.254,
+    "coverage_fraction": 0.572,
+    "qa_passed": true
+  },
+  {
+    "grid_cell_code": "SEED-GRID-11-3",
+    "ts": "2026-08-21T13:00:00+00:00",
+    "aod_047": 0.4736,
+    "aod_055": 0.4014,
+    "aod_uncertainty": 0.137,
+    "column_wv": 2.158,
+    "coverage_fraction": 0.906,
+    "qa_passed": true
+  },
+  {
+    "grid_cell_code": "SEED-GRID-11-4",
+    "ts": "2026-08-21T13:00:00+00:00",
+    "aod_047": 0.6306,
+    "aod_055": 0.5504,
+    "aod_uncertainty": 0.0554,
+    "column_wv": 1.24,
+    "coverage_fraction": 0.636,
+    "qa_passed": true
+  },
+  {
+    "grid_cell_code": "SEED-GRID-11-5",
+    "ts": "2026-08-21T13:00:00+00:00",
+    "aod_047": 1.166,
+    "aod_055": 1.0604,
+    "aod_uncertainty": 0.0814,
+    "column_wv": 1.365,
+    "coverage_fraction": 0.652,
+    "qa_passed": true
+  },
+  {
+    "grid_cell_code": "SEED-GRID-11-6",
+    "ts": "2026-08-21T13:00:00+00:00",
+    "aod_047": 0.9393,
+    "aod_055": 0.7112,
+    "aod_uncertainty": 0.0702,
+    "column_wv": 1.307,
+    "coverage_fraction": 0.804,
+    "qa_passed": true
+  },
+  {
+    "grid_cell_code": "SEED-GRID-11-7",
+    "ts": "2026-08-21T13:00:00+00:00",
+    "aod_047": 0.925,
+    "aod_055": 0.4052,
+    "aod_uncertainty": 0.1709,
+    "column_wv": 1.206,
+    "coverage_fraction": 0.933,
+    "qa_passed": true
+  },
+  {
+    "grid_cell_code": "SEED-GRID-11-8",
+    "ts": "2026-08-21T13:00:00+00:00",
+    "aod_047": 1.2803,
+    "aod_055": 0.7734,
+    "aod_uncertainty": 0.0701,
+    "column_wv": 1.869,
+    "coverage_fraction": 0.658,
+    "qa_passed": true
+  },
+  {
+    "grid_cell_code": "SEED-GRID-11-9",
+    "ts": "2026-08-21T13:00:00+00:00",
+    "aod_047": 0.5795,
+    "aod_055": 0.9272,
+    "aod_uncertainty": 0.2064,
+    "column_wv": 1.718,
+    "coverage_fraction": 0.975,
+    "qa_passed": true
+  },
+  {
+    "grid_cell_code": "SEED-GRID-11-10",
+    "ts": "2026-08-21T13:00:00+00:00",
+    "aod_047": 0.4797,
+    "aod_055": 1.1203,
+    "aod_uncertainty": 0.1125,
+    "column_wv": 1.702,
+    "coverage_fraction": 0.708,
+    "qa_passed": true
+  },
+  {
+    "grid_cell_code": "SEED-GRID-11-11",
+    "ts": "2026-08-21T13:00:00+00:00",
+    "aod_047": 0.4601,
+    "aod_055": 0.9071,
+    "aod_uncertainty": 0.0875,
+    "column_wv": 2.135,
+    "coverage_fraction": 0.789,
+    "qa_passed": true
+  },
+  {
+    "grid_cell_code": "SEED-GRID-11-12",
+    "ts": "2026-08-21T13:00:00+00:00",
+    "aod_047": 0.8894,
+    "aod_055": 0.6058,
+    "aod_uncertainty": 0.2056,
+    "column_wv": 2.01,
+    "coverage_fraction": 0.776,
+    "qa_passed": true
+  },
+  {
+    "grid_cell_code": "SEED-GRID-11-13",
+    "ts": "2026-08-21T13:00:00+00:00",
+    "aod_047": 1.0033,
+    "aod_055": 1.0677,
+    "aod_uncertainty": 0.1974,
+    "column_wv": 1.244,
+    "coverage_fraction": 0.7,
+    "qa_passed": true
+  },
+  {
+    "grid_cell_code": "SEED-GRID-11-14",
+    "ts": "2026-08-21T13:00:00+00:00",
+    "aod_047": null,
+    "aod_055": null,
+    "aod_uncertainty": null,
+    "column_wv": null,
+    "coverage_fraction": 0.0,
+    "qa_passed": false
+  },
+  {
+    "grid_cell_code": "SEED-GRID-11-15",
+    "ts": "2026-08-21T13:00:00+00:00",
+    "aod_047": null,
+    "aod_055": null,
+    "aod_uncertainty": null,
+    "column_wv": null,
+    "coverage_fraction": 0.0,
+    "qa_passed": false
+  },
+  {
+    "grid_cell_code": "SEED-GRID-11-16",
+    "ts": "2026-08-21T13:00:00+00:00",
+    "aod_047": null,
+    "aod_055": null,
+    "aod_uncertainty": null,
+    "column_wv": null,
+    "coverage_fraction": 0.0,
+    "qa_passed": false
+  },
+  {
+    "grid_cell_code": "SEED-GRID-11-17",
+    "ts": "2026-08-21T13:00:00+00:00",
+    "aod_047": null,
+    "aod_055": null,
+    "aod_uncertainty": null,
+    "column_wv": null,
+    "coverage_fraction": 0.0,
+    "qa_passed": false
+  },
+  {
+    "grid_cell_code": "SEED-GRID-11-18",
+    "ts": "2026-08-21T13:00:00+00:00",
+    "aod_047": null,
+    "aod_055": null,
+    "aod_uncertainty": null,
+    "column_wv": null,
+    "coverage_fraction": 0.0,
+    "qa_passed": false
+  },
+  {
+    "grid_cell_code": "SEED-GRID-11-19",
+    "ts": "2026-08-21T13:00:00+00:00",
+    "aod_047": null,
+    "aod_055": null,
+    "aod_uncertainty": null,
+    "column_wv": null,
+    "coverage_fraction": 0.0,
+    "qa_passed": false
+  },
+  {
+    "grid_cell_code": "SEED-GRID-12-0",
+    "ts": "2026-08-21T13:00:00+00:00",
+    "aod_047": 1.1198,
+    "aod_055": 0.4763,
+    "aod_uncertainty": 0.0887,
+    "column_wv": 1.129,
+    "coverage_fraction": 0.787,
+    "qa_passed": true
+  },
+  {
+    "grid_cell_code": "SEED-GRID-12-1",
+    "ts": "2026-08-21T13:00:00+00:00",
+    "aod_047": 0.9155,
+    "aod_055": 0.8366,
+    "aod_uncertainty": 0.0577,
+    "column_wv": 1.682,
+    "coverage_fraction": 0.563,
+    "qa_passed": true
+  },
+  {
+    "grid_cell_code": "SEED-GRID-12-2",
+    "ts": "2026-08-21T13:00:00+00:00",
+    "aod_047": 1.1607,
+    "aod_055": 0.8001,
+    "aod_uncertainty": 0.1651,
+    "column_wv": 1.981,
+    "coverage_fraction": 0.803,
+    "qa_passed": true
+  },
+  {
+    "grid_cell_code": "SEED-GRID-12-3",
+    "ts": "2026-08-21T13:00:00+00:00",
+    "aod_047": 0.5187,
+    "aod_055": 0.8714,
+    "aod_uncertainty": 0.0597,
+    "column_wv": 1.584,
+    "coverage_fraction": 0.555,
+    "qa_passed": true
+  },
+  {
+    "grid_cell_code": "SEED-GRID-12-4",
+    "ts": "2026-08-21T13:00:00+00:00",
+    "aod_047": 0.5842,
+    "aod_055": 0.509,
+    "aod_uncertainty": 0.1191,
+    "column_wv": 1.173,
+    "coverage_fraction": 0.731,
+    "qa_passed": true
+  },
+  {
+    "grid_cell_code": "SEED-GRID-12-5",
+    "ts": "2026-08-21T13:00:00+00:00",
+    "aod_047": 0.6119,
+    "aod_055": 0.4752,
+    "aod_uncertainty": 0.1381,
+    "column_wv": 1.237,
+    "coverage_fraction": 0.905,
+    "qa_passed": true
+  },
+  {
+    "grid_cell_code": "SEED-GRID-12-6",
+    "ts": "2026-08-21T13:00:00+00:00",
+    "aod_047": 1.4112,
+    "aod_055": 1.182,
+    "aod_uncertainty": 0.1893,
+    "column_wv": 0.92,
+    "coverage_fraction": 0.931,
+    "qa_passed": true
+  },
+  {
+    "grid_cell_code": "SEED-GRID-12-7",
+    "ts": "2026-08-21T13:00:00+00:00",
+    "aod_047": 1.311,
+    "aod_055": 0.5103,
+    "aod_uncertainty": 0.0953,
+    "column_wv": 1.964,
+    "coverage_fraction": 0.819,
+    "qa_passed": true
+  },
+  {
+    "grid_cell_code": "SEED-GRID-12-8",
+    "ts": "2026-08-21T13:00:00+00:00",
+    "aod_047": 1.3489,
+    "aod_055": 0.7847,
+    "aod_uncertainty": 0.0848,
+    "column_wv": 0.981,
+    "coverage_fraction": 0.926,
+    "qa_passed": true
+  },
+  {
+    "grid_cell_code": "SEED-GRID-12-9",
+    "ts": "2026-08-21T13:00:00+00:00",
+    "aod_047": 0.4642,
+    "aod_055": 0.8287,
+    "aod_uncertainty": 0.0573,
+    "column_wv": 2.081,
+    "coverage_fraction": 0.792,
+    "qa_passed": true
+  },
+  {
+    "grid_cell_code": "SEED-GRID-12-10",
+    "ts": "2026-08-21T13:00:00+00:00",
+    "aod_047": 1.0321,
+    "aod_055": 0.7332,
+    "aod_uncertainty": 0.142,
+    "column_wv": 1.948,
+    "coverage_fraction": 0.606,
+    "qa_passed": true
+  },
+  {
+    "grid_cell_code": "SEED-GRID-12-11",
+    "ts": "2026-08-21T13:00:00+00:00",
+    "aod_047": 1.129,
+    "aod_055": 1.1605,
+    "aod_uncertainty": 0.239,
+    "column_wv": 1.391,
+    "coverage_fraction": 0.98,
+    "qa_passed": true
+  },
+  {
+    "grid_cell_code": "SEED-GRID-12-12",
+    "ts": "2026-08-21T13:00:00+00:00",
+    "aod_047": 0.6246,
+    "aod_055": 0.98,
+    "aod_uncertainty": 0.093,
+    "column_wv": 1.723,
+    "coverage_fraction": 0.77,
+    "qa_passed": true
+  },
+  {
+    "grid_cell_code": "SEED-GRID-12-13",
+    "ts": "2026-08-21T13:00:00+00:00",
+    "aod_047": 0.4189,
+    "aod_055": 1.2111,
+    "aod_uncertainty": 0.0911,
+    "column_wv": 1.359,
+    "coverage_fraction": 0.758,
+    "qa_passed": true
+  },
+  {
+    "grid_cell_code": "SEED-GRID-12-14",
+    "ts": "2026-08-21T13:00:00+00:00",
+    "aod_047": 0.5451,
+    "aod_055": 0.8798,
+    "aod_uncertainty": 0.2139,
+    "column_wv": 0.856,
+    "coverage_fraction": 0.691,
+    "qa_passed": true
+  },
+  {
+    "grid_cell_code": "SEED-GRID-12-15",
+    "ts": "2026-08-21T13:00:00+00:00",
+    "aod_047": 0.8459,
+    "aod_055": 0.8395,
+    "aod_uncertainty": 0.222,
+    "column_wv": 2.0,
+    "coverage_fraction": 0.99,
+    "qa_passed": true
+  },
+  {
+    "grid_cell_code": "SEED-GRID-12-16",
+    "ts": "2026-08-21T13:00:00+00:00",
+    "aod_047": 1.1631,
+    "aod_055": 1.2061,
+    "aod_uncertainty": 0.1612,
+    "column_wv": 0.862,
+    "coverage_fraction": 0.937,
+    "qa_passed": true
+  },
+  {
+    "grid_cell_code": "SEED-GRID-12-17",
+    "ts": "2026-08-21T13:00:00+00:00",
+    "aod_047": 0.7912,
+    "aod_055": 1.2648,
+    "aod_uncertainty": 0.2169,
+    "column_wv": 1.62,
+    "coverage_fraction": 0.939,
+    "qa_passed": true
+  },
+  {
+    "grid_cell_code": "SEED-GRID-12-18",
+    "ts": "2026-08-21T13:00:00+00:00",
+    "aod_047": 0.5526,
+    "aod_055": 0.9443,
+    "aod_uncertainty": 0.0948,
+    "column_wv": 1.101,
+    "coverage_fraction": 0.58,
+    "qa_passed": true
+  },
+  {
+    "grid_cell_code": "SEED-GRID-12-19",
+    "ts": "2026-08-21T13:00:00+00:00",
+    "aod_047": 0.6253,
+    "aod_055": 0.7076,
+    "aod_uncertainty": 0.2494,
+    "column_wv": 2.073,
+    "coverage_fraction": 0.997,
+    "qa_passed": true
+  },
+  {
+    "grid_cell_code": "SEED-GRID-13-0",
+    "ts": "2026-08-21T13:00:00+00:00",
+    "aod_047": 0.9972,
+    "aod_055": 0.3681,
+    "aod_uncertainty": 0.2173,
+    "column_wv": 1.838,
+    "coverage_fraction": 0.701,
+    "qa_passed": true
+  },
+  {
+    "grid_cell_code": "SEED-GRID-13-1",
+    "ts": "2026-08-21T13:00:00+00:00",
+    "aod_047": 1.3568,
+    "aod_055": 1.0876,
+    "aod_uncertainty": 0.1823,
+    "column_wv": 1.911,
+    "coverage_fraction": 0.826,
+    "qa_passed": true
+  },
+  {
+    "grid_cell_code": "SEED-GRID-13-2",
+    "ts": "2026-08-21T13:00:00+00:00",
+    "aod_047": 0.9207,
+    "aod_055": 1.0683,
+    "aod_uncertainty": 0.2375,
+    "column_wv": 1.019,
+    "coverage_fraction": 0.806,
+    "qa_passed": true
+  },
+  {
+    "grid_cell_code": "SEED-GRID-13-3",
+    "ts": "2026-08-21T13:00:00+00:00",
+    "aod_047": 0.9446,
+    "aod_055": 0.6624,
+    "aod_uncertainty": 0.0623,
+    "column_wv": 1.352,
+    "coverage_fraction": 0.647,
+    "qa_passed": true
+  },
+  {
+    "grid_cell_code": "SEED-GRID-13-4",
+    "ts": "2026-08-21T13:00:00+00:00",
+    "aod_047": 1.1287,
+    "aod_055": 1.1014,
+    "aod_uncertainty": 0.1526,
+    "column_wv": 2.065,
+    "coverage_fraction": 0.674,
+    "qa_passed": true
+  },
+  {
+    "grid_cell_code": "SEED-GRID-13-5",
+    "ts": "2026-08-21T13:00:00+00:00",
+    "aod_047": 0.8233,
+    "aod_055": 0.4887,
+    "aod_uncertainty": 0.092,
+    "column_wv": 1.666,
+    "coverage_fraction": 0.884,
+    "qa_passed": true
+  },
+  {
+    "grid_cell_code": "SEED-GRID-13-6",
+    "ts": "2026-08-21T13:00:00+00:00",
+    "aod_047": 0.8812,
+    "aod_055": 1.024,
+    "aod_uncertainty": 0.2341,
+    "column_wv": 2.061,
+    "coverage_fraction": 0.677,
+    "qa_passed": true
+  },
+  {
+    "grid_cell_code": "SEED-GRID-13-7",
+    "ts": "2026-08-21T13:00:00+00:00",
+    "aod_047": 0.4221,
+    "aod_055": 0.6013,
+    "aod_uncertainty": 0.0688,
+    "column_wv": 2.005,
+    "coverage_fraction": 0.65,
+    "qa_passed": true
+  },
+  {
+    "grid_cell_code": "SEED-GRID-13-8",
+    "ts": "2026-08-21T13:00:00+00:00",
+    "aod_047": 1.2296,
+    "aod_055": 0.7999,
+    "aod_uncertainty": 0.1802,
+    "column_wv": 0.896,
+    "coverage_fraction": 0.842,
+    "qa_passed": true
+  },
+  {
+    "grid_cell_code": "SEED-GRID-13-9",
+    "ts": "2026-08-21T13:00:00+00:00",
+    "aod_047": 0.6974,
+    "aod_055": 0.6837,
+    "aod_uncertainty": 0.1071,
+    "column_wv": 0.85,
+    "coverage_fraction": 0.855,
+    "qa_passed": true
+  },
+  {
+    "grid_cell_code": "SEED-GRID-13-10",
+    "ts": "2026-08-21T13:00:00+00:00",
+    "aod_047": 0.8813,
+    "aod_055": 0.7558,
+    "aod_uncertainty": 0.1657,
+    "column_wv": 0.845,
+    "coverage_fraction": 0.853,
+    "qa_passed": true
+  },
+  {
+    "grid_cell_code": "SEED-GRID-13-11",
+    "ts": "2026-08-21T13:00:00+00:00",
+    "aod_047": 1.2905,
+    "aod_055": 0.8269,
+    "aod_uncertainty": 0.0728,
+    "column_wv": 1.759,
+    "coverage_fraction": 0.662,
+    "qa_passed": true
+  },
+  {
+    "grid_cell_code": "SEED-GRID-13-12",
+    "ts": "2026-08-21T13:00:00+00:00",
+    "aod_047": 1.4073,
+    "aod_055": 0.827,
+    "aod_uncertainty": 0.1645,
+    "column_wv": 1.109,
+    "coverage_fraction": 0.715,
+    "qa_passed": true
+  },
+  {
+    "grid_cell_code": "SEED-GRID-13-13",
+    "ts": "2026-08-21T13:00:00+00:00",
+    "aod_047": 1.0376,
+    "aod_055": 0.9926,
+    "aod_uncertainty": 0.235,
+    "column_wv": 1.769,
+    "coverage_fraction": 0.993,
+    "qa_passed": true
+  },
+  {
+    "grid_cell_code": "SEED-GRID-13-14",
+    "ts": "2026-08-21T13:00:00+00:00",
+    "aod_047": 0.9986,
+    "aod_055": 0.805,
+    "aod_uncertainty": 0.1234,
+    "column_wv": 1.862,
+    "coverage_fraction": 0.91,
+    "qa_passed": true
+  },
+  {
+    "grid_cell_code": "SEED-GRID-13-15",
+    "ts": "2026-08-21T13:00:00+00:00",
+    "aod_047": 1.3897,
+    "aod_055": 0.7038,
+    "aod_uncertainty": 0.2009,
+    "column_wv": 1.428,
+    "coverage_fraction": 0.685,
+    "qa_passed": true
+  },
+  {
+    "grid_cell_code": "SEED-GRID-13-16",
+    "ts": "2026-08-21T13:00:00+00:00",
+    "aod_047": 0.4731,
+    "aod_055": 1.1428,
+    "aod_uncertainty": 0.112,
+    "column_wv": 1.351,
+    "coverage_fraction": 0.712,
+    "qa_passed": true
+  },
+  {
+    "grid_cell_code": "SEED-GRID-13-17",
+    "ts": "2026-08-21T13:00:00+00:00",
+    "aod_047": 0.7426,
+    "aod_055": 1.1837,
+    "aod_uncertainty": 0.0931,
+    "column_wv": 1.159,
+    "coverage_fraction": 0.84,
+    "qa_passed": true
+  },
+  {
+    "grid_cell_code": "SEED-GRID-13-18",
+    "ts": "2026-08-21T13:00:00+00:00",
+    "aod_047": 0.5054,
+    "aod_055": 1.1244,
+    "aod_uncertainty": 0.1803,
+    "column_wv": 1.327,
+    "coverage_fraction": 0.866,
+    "qa_passed": true
+  },
+  {
+    "grid_cell_code": "SEED-GRID-13-19",
+    "ts": "2026-08-21T13:00:00+00:00",
+    "aod_047": 0.7423,
+    "aod_055": 0.9103,
+    "aod_uncertainty": 0.1174,
+    "column_wv": 2.176,
+    "coverage_fraction": 0.809,
+    "qa_passed": true
+  },
+  {
+    "grid_cell_code": "SEED-GRID-14-0",
+    "ts": "2026-08-21T13:00:00+00:00",
+    "aod_047": 0.9027,
+    "aod_055": 0.8568,
+    "aod_uncertainty": 0.0603,
+    "column_wv": 1.285,
+    "coverage_fraction": 0.773,
+    "qa_passed": true
+  },
+  {
+    "grid_cell_code": "SEED-GRID-14-1",
+    "ts": "2026-08-21T13:00:00+00:00",
+    "aod_047": 1.0029,
+    "aod_055": 1.0858,
+    "aod_uncertainty": 0.1042,
+    "column_wv": 1.378,
+    "coverage_fraction": 0.587,
+    "qa_passed": true
+  },
+  {
+    "grid_cell_code": "SEED-GRID-14-2",
+    "ts": "2026-08-21T13:00:00+00:00",
+    "aod_047": 0.8724,
+    "aod_055": 0.7006,
+    "aod_uncertainty": 0.2176,
+    "column_wv": 1.142,
+    "coverage_fraction": 0.585,
+    "qa_passed": true
+  },
+  {
+    "grid_cell_code": "SEED-GRID-14-3",
+    "ts": "2026-08-21T13:00:00+00:00",
+    "aod_047": 0.6507,
+    "aod_055": 0.3311,
+    "aod_uncertainty": 0.2134,
+    "column_wv": 2.179,
+    "coverage_fraction": 0.585,
+    "qa_passed": true
+  },
+  {
+    "grid_cell_code": "SEED-GRID-14-4",
+    "ts": "2026-08-21T13:00:00+00:00",
+    "aod_047": 0.6412,
+    "aod_055": 1.1264,
+    "aod_uncertainty": 0.139,
+    "column_wv": 1.476,
+    "coverage_fraction": 0.694,
+    "qa_passed": true
+  },
+  {
+    "grid_cell_code": "SEED-GRID-14-5",
+    "ts": "2026-08-21T13:00:00+00:00",
+    "aod_047": 0.426,
+    "aod_055": 0.695,
+    "aod_uncertainty": 0.1686,
+    "column_wv": 2.228,
+    "coverage_fraction": 0.651,
+    "qa_passed": true
+  },
+  {
+    "grid_cell_code": "SEED-GRID-14-6",
+    "ts": "2026-08-21T13:00:00+00:00",
+    "aod_047": 1.1568,
+    "aod_055": 1.1093,
+    "aod_uncertainty": 0.0567,
+    "column_wv": 1.373,
+    "coverage_fraction": 0.728,
+    "qa_passed": true
+  },
+  {
+    "grid_cell_code": "SEED-GRID-14-7",
+    "ts": "2026-08-21T13:00:00+00:00",
+    "aod_047": 0.6571,
+    "aod_055": 0.7275,
+    "aod_uncertainty": 0.1561,
+    "column_wv": 1.361,
+    "coverage_fraction": 0.764,
+    "qa_passed": true
+  },
+  {
+    "grid_cell_code": "SEED-GRID-14-8",
+    "ts": "2026-08-21T13:00:00+00:00",
+    "aod_047": 0.5117,
+    "aod_055": 1.1096,
+    "aod_uncertainty": 0.179,
+    "column_wv": 1.726,
+    "coverage_fraction": 0.737,
+    "qa_passed": true
+  },
+  {
+    "grid_cell_code": "SEED-GRID-14-9",
+    "ts": "2026-08-21T13:00:00+00:00",
+    "aod_047": 0.658,
+    "aod_055": 0.5172,
+    "aod_uncertainty": 0.2183,
+    "column_wv": 1.924,
+    "coverage_fraction": 0.961,
+    "qa_passed": true
+  },
+  {
+    "grid_cell_code": "SEED-GRID-14-10",
+    "ts": "2026-08-21T13:00:00+00:00",
+    "aod_047": 1.4184,
+    "aod_055": 0.9733,
+    "aod_uncertainty": 0.122,
+    "column_wv": 1.843,
+    "coverage_fraction": 0.951,
+    "qa_passed": true
+  },
+  {
+    "grid_cell_code": "SEED-GRID-14-11",
+    "ts": "2026-08-21T13:00:00+00:00",
+    "aod_047": 0.5425,
+    "aod_055": 1.0066,
+    "aod_uncertainty": 0.0842,
+    "column_wv": 2.224,
+    "coverage_fraction": 0.98,
+    "qa_passed": true
+  },
+  {
+    "grid_cell_code": "SEED-GRID-14-12",
+    "ts": "2026-08-21T13:00:00+00:00",
+    "aod_047": 0.5939,
+    "aod_055": 0.8398,
+    "aod_uncertainty": 0.2411,
+    "column_wv": 2.149,
+    "coverage_fraction": 0.916,
+    "qa_passed": true
+  },
+  {
+    "grid_cell_code": "SEED-GRID-14-13",
+    "ts": "2026-08-21T13:00:00+00:00",
+    "aod_047": 1.0095,
+    "aod_055": 0.8718,
+    "aod_uncertainty": 0.1757,
+    "column_wv": 1.807,
+    "coverage_fraction": 0.989,
+    "qa_passed": true
+  },
+  {
+    "grid_cell_code": "SEED-GRID-14-14",
+    "ts": "2026-08-21T13:00:00+00:00",
+    "aod_047": 1.0666,
+    "aod_055": 1.2018,
+    "aod_uncertainty": 0.1464,
+    "column_wv": 1.758,
+    "coverage_fraction": 0.703,
+    "qa_passed": true
+  },
+  {
+    "grid_cell_code": "SEED-GRID-14-15",
+    "ts": "2026-08-21T13:00:00+00:00",
+    "aod_047": 1.4121,
+    "aod_055": 0.7946,
+    "aod_uncertainty": 0.1173,
+    "column_wv": 0.855,
+    "coverage_fraction": 0.671,
+    "qa_passed": true
+  },
+  {
+    "grid_cell_code": "SEED-GRID-14-16",
+    "ts": "2026-08-21T13:00:00+00:00",
+    "aod_047": 1.2379,
+    "aod_055": 0.4574,
+    "aod_uncertainty": 0.1665,
+    "column_wv": 2.16,
+    "coverage_fraction": 0.936,
+    "qa_passed": true
+  },
+  {
+    "grid_cell_code": "SEED-GRID-14-17",
+    "ts": "2026-08-21T13:00:00+00:00",
+    "aod_047": 0.691,
+    "aod_055": 0.9796,
+    "aod_uncertainty": 0.1182,
+    "column_wv": 1.699,
+    "coverage_fraction": 0.602,
+    "qa_passed": true
+  },
+  {
+    "grid_cell_code": "SEED-GRID-14-18",
+    "ts": "2026-08-21T13:00:00+00:00",
+    "aod_047": 0.5294,
+    "aod_055": 1.2319,
+    "aod_uncertainty": 0.1974,
+    "column_wv": 1.44,
+    "coverage_fraction": 0.893,
+    "qa_passed": true
+  },
+  {
+    "grid_cell_code": "SEED-GRID-14-19",
+    "ts": "2026-08-21T13:00:00+00:00",
+    "aod_047": 1.4453,
+    "aod_055": 0.8301,
+    "aod_uncertainty": 0.2179,
+    "column_wv": 2.064,
+    "coverage_fraction": 0.747,
+    "qa_passed": true
+  },
+  {
+    "grid_cell_code": "SEED-GRID-15-0",
+    "ts": "2026-08-21T13:00:00+00:00",
+    "aod_047": 1.0238,
+    "aod_055": 0.3305,
+    "aod_uncertainty": 0.0677,
+    "column_wv": 1.841,
+    "coverage_fraction": 0.673,
+    "qa_passed": true
+  },
+  {
+    "grid_cell_code": "SEED-GRID-15-1",
+    "ts": "2026-08-21T13:00:00+00:00",
+    "aod_047": 1.4655,
+    "aod_055": 0.5998,
+    "aod_uncertainty": 0.0961,
+    "column_wv": 1.514,
+    "coverage_fraction": 0.672,
+    "qa_passed": true
+  },
+  {
+    "grid_cell_code": "SEED-GRID-15-2",
+    "ts": "2026-08-21T13:00:00+00:00",
+    "aod_047": 1.4589,
+    "aod_055": 1.2419,
+    "aod_uncertainty": 0.1159,
+    "column_wv": 1.289,
+    "coverage_fraction": 0.665,
+    "qa_passed": true
+  },
+  {
+    "grid_cell_code": "SEED-GRID-15-3",
+    "ts": "2026-08-21T13:00:00+00:00",
+    "aod_047": 0.8997,
+    "aod_055": 1.0086,
+    "aod_uncertainty": 0.1955,
+    "column_wv": 1.487,
+    "coverage_fraction": 0.571,
+    "qa_passed": true
+  },
+  {
+    "grid_cell_code": "SEED-GRID-15-4",
+    "ts": "2026-08-21T13:00:00+00:00",
+    "aod_047": 0.6378,
+    "aod_055": 0.7943,
+    "aod_uncertainty": 0.1042,
+    "column_wv": 1.168,
+    "coverage_fraction": 0.998,
+    "qa_passed": true
+  },
+  {
+    "grid_cell_code": "SEED-GRID-15-5",
+    "ts": "2026-08-21T13:00:00+00:00",
+    "aod_047": 1.3305,
+    "aod_055": 0.9919,
+    "aod_uncertainty": 0.0678,
+    "column_wv": 1.1,
+    "coverage_fraction": 0.986,
+    "qa_passed": true
+  },
+  {
+    "grid_cell_code": "SEED-GRID-15-6",
+    "ts": "2026-08-21T13:00:00+00:00",
+    "aod_047": 1.185,
+    "aod_055": 0.4431,
+    "aod_uncertainty": 0.149,
+    "column_wv": 2.211,
+    "coverage_fraction": 0.695,
+    "qa_passed": true
+  },
+  {
+    "grid_cell_code": "SEED-GRID-15-7",
+    "ts": "2026-08-21T13:00:00+00:00",
+    "aod_047": 1.1069,
+    "aod_055": 0.5773,
+    "aod_uncertainty": 0.246,
+    "column_wv": 1.68,
+    "coverage_fraction": 0.988,
+    "qa_passed": true
+  },
+  {
+    "grid_cell_code": "SEED-GRID-15-8",
+    "ts": "2026-08-21T13:00:00+00:00",
+    "aod_047": 1.424,
+    "aod_055": 0.7008,
+    "aod_uncertainty": 0.1082,
+    "column_wv": 1.689,
+    "coverage_fraction": 0.836,
+    "qa_passed": true
+  },
+  {
+    "grid_cell_code": "SEED-GRID-15-9",
+    "ts": "2026-08-21T13:00:00+00:00",
+    "aod_047": 1.1813,
+    "aod_055": 1.0821,
+    "aod_uncertainty": 0.0681,
+    "column_wv": 2.341,
+    "coverage_fraction": 0.566,
+    "qa_passed": true
+  },
+  {
+    "grid_cell_code": "SEED-GRID-15-10",
+    "ts": "2026-08-21T13:00:00+00:00",
+    "aod_047": 1.4059,
+    "aod_055": 0.3171,
+    "aod_uncertainty": 0.1552,
+    "column_wv": 0.957,
+    "coverage_fraction": 0.889,
+    "qa_passed": true
+  },
+  {
+    "grid_cell_code": "SEED-GRID-15-11",
+    "ts": "2026-08-21T13:00:00+00:00",
+    "aod_047": 1.1668,
+    "aod_055": 0.7678,
+    "aod_uncertainty": 0.071,
+    "column_wv": 2.133,
+    "coverage_fraction": 0.83,
+    "qa_passed": true
+  },
+  {
+    "grid_cell_code": "SEED-GRID-15-12",
+    "ts": "2026-08-21T13:00:00+00:00",
+    "aod_047": 0.63,
+    "aod_055": 0.6133,
+    "aod_uncertainty": 0.0965,
+    "column_wv": 1.741,
+    "coverage_fraction": 0.599,
+    "qa_passed": true
+  },
+  {
+    "grid_cell_code": "SEED-GRID-15-13",
+    "ts": "2026-08-21T13:00:00+00:00",
+    "aod_047": 0.4225,
+    "aod_055": 1.2798,
+    "aod_uncertainty": 0.1358,
+    "column_wv": 1.581,
+    "coverage_fraction": 0.861,
+    "qa_passed": true
+  },
+  {
+    "grid_cell_code": "SEED-GRID-15-14",
+    "ts": "2026-08-21T13:00:00+00:00",
+    "aod_047": 1.4487,
+    "aod_055": 1.2044,
+    "aod_uncertainty": 0.1706,
+    "column_wv": 1.707,
+    "coverage_fraction": 0.986,
+    "qa_passed": true
+  },
+  {
+    "grid_cell_code": "SEED-GRID-15-15",
+    "ts": "2026-08-21T13:00:00+00:00",
+    "aod_047": 1.2641,
+    "aod_055": 0.4644,
+    "aod_uncertainty": 0.0989,
+    "column_wv": 0.94,
+    "coverage_fraction": 0.572,
+    "qa_passed": true
+  },
+  {
+    "grid_cell_code": "SEED-GRID-15-16",
+    "ts": "2026-08-21T13:00:00+00:00",
+    "aod_047": 1.4731,
+    "aod_055": 1.1909,
+    "aod_uncertainty": 0.1566,
+    "column_wv": 2.08,
+    "coverage_fraction": 0.615,
+    "qa_passed": true
+  },
+  {
+    "grid_cell_code": "SEED-GRID-15-17",
+    "ts": "2026-08-21T13:00:00+00:00",
+    "aod_047": 1.4318,
+    "aod_055": 1.0025,
+    "aod_uncertainty": 0.1391,
+    "column_wv": 1.685,
+    "coverage_fraction": 0.998,
+    "qa_passed": true
+  },
+  {
+    "grid_cell_code": "SEED-GRID-15-18",
+    "ts": "2026-08-21T13:00:00+00:00",
+    "aod_047": 1.4363,
+    "aod_055": 0.6946,
+    "aod_uncertainty": 0.0521,
+    "column_wv": 1.39,
+    "coverage_fraction": 0.819,
+    "qa_passed": true
+  },
+  {
+    "grid_cell_code": "SEED-GRID-15-19",
+    "ts": "2026-08-21T13:00:00+00:00",
+    "aod_047": 1.1745,
+    "aod_055": 0.469,
+    "aod_uncertainty": 0.1207,
+    "column_wv": 2.191,
+    "coverage_fraction": 0.739,
+    "qa_passed": true
+  },
+  {
+    "grid_cell_code": "SEED-GRID-16-0",
+    "ts": "2026-08-21T13:00:00+00:00",
+    "aod_047": 1.3892,
+    "aod_055": 0.9273,
+    "aod_uncertainty": 0.2431,
+    "column_wv": 1.479,
+    "coverage_fraction": 0.656,
+    "qa_passed": true
+  },
+  {
+    "grid_cell_code": "SEED-GRID-16-1",
+    "ts": "2026-08-21T13:00:00+00:00",
+    "aod_047": 1.3238,
+    "aod_055": 0.4955,
+    "aod_uncertainty": 0.2476,
+    "column_wv": 0.966,
+    "coverage_fraction": 0.925,
+    "qa_passed": true
+  },
+  {
+    "grid_cell_code": "SEED-GRID-16-2",
+    "ts": "2026-08-21T13:00:00+00:00",
+    "aod_047": 0.5053,
+    "aod_055": 0.7237,
+    "aod_uncertainty": 0.2226,
+    "column_wv": 2.25,
+    "coverage_fraction": 0.975,
+    "qa_passed": true
+  },
+  {
+    "grid_cell_code": "SEED-GRID-16-3",
+    "ts": "2026-08-21T13:00:00+00:00",
+    "aod_047": 1.1303,
+    "aod_055": 0.9913,
+    "aod_uncertainty": 0.11,
+    "column_wv": 1.957,
+    "coverage_fraction": 0.955,
+    "qa_passed": true
+  },
+  {
+    "grid_cell_code": "SEED-GRID-16-4",
+    "ts": "2026-08-21T13:00:00+00:00",
+    "aod_047": 0.7734,
+    "aod_055": 0.3266,
+    "aod_uncertainty": 0.2049,
+    "column_wv": 2.073,
+    "coverage_fraction": 0.882,
+    "qa_passed": true
+  },
+  {
+    "grid_cell_code": "SEED-GRID-16-5",
+    "ts": "2026-08-21T13:00:00+00:00",
+    "aod_047": 0.9393,
+    "aod_055": 0.9372,
+    "aod_uncertainty": 0.1125,
+    "column_wv": 1.266,
+    "coverage_fraction": 0.641,
+    "qa_passed": true
+  },
+  {
+    "grid_cell_code": "SEED-GRID-16-6",
+    "ts": "2026-08-21T13:00:00+00:00",
+    "aod_047": 1.1851,
+    "aod_055": 0.5326,
+    "aod_uncertainty": 0.1446,
+    "column_wv": 1.864,
+    "coverage_fraction": 0.706,
+    "qa_passed": true
+  },
+  {
+    "grid_cell_code": "SEED-GRID-16-7",
+    "ts": "2026-08-21T13:00:00+00:00",
+    "aod_047": 0.9448,
+    "aod_055": 0.5537,
+    "aod_uncertainty": 0.1073,
+    "column_wv": 1.341,
+    "coverage_fraction": 0.715,
+    "qa_passed": true
+  },
+  {
+    "grid_cell_code": "SEED-GRID-16-8",
+    "ts": "2026-08-21T13:00:00+00:00",
+    "aod_047": 0.8278,
+    "aod_055": 0.4243,
+    "aod_uncertainty": 0.1725,
+    "column_wv": 1.272,
+    "coverage_fraction": 0.805,
+    "qa_passed": true
+  },
+  {
+    "grid_cell_code": "SEED-GRID-16-9",
+    "ts": "2026-08-21T13:00:00+00:00",
+    "aod_047": 1.3791,
+    "aod_055": 0.9224,
+    "aod_uncertainty": 0.2152,
+    "column_wv": 1.236,
+    "coverage_fraction": 0.799,
+    "qa_passed": true
+  },
+  {
+    "grid_cell_code": "SEED-GRID-16-10",
+    "ts": "2026-08-21T13:00:00+00:00",
+    "aod_047": 1.4061,
+    "aod_055": 1.0748,
+    "aod_uncertainty": 0.1391,
+    "column_wv": 0.801,
+    "coverage_fraction": 0.573,
+    "qa_passed": true
+  },
+  {
+    "grid_cell_code": "SEED-GRID-16-11",
+    "ts": "2026-08-21T13:00:00+00:00",
+    "aod_047": 1.0016,
+    "aod_055": 0.3893,
+    "aod_uncertainty": 0.069,
+    "column_wv": 1.259,
+    "coverage_fraction": 0.577,
+    "qa_passed": true
+  },
+  {
+    "grid_cell_code": "SEED-GRID-16-12",
+    "ts": "2026-08-21T13:00:00+00:00",
+    "aod_047": 1.2493,
+    "aod_055": 0.7092,
+    "aod_uncertainty": 0.2342,
+    "column_wv": 1.372,
+    "coverage_fraction": 0.684,
+    "qa_passed": true
+  },
+  {
+    "grid_cell_code": "SEED-GRID-16-13",
+    "ts": "2026-08-21T13:00:00+00:00",
+    "aod_047": 1.2267,
+    "aod_055": 0.6391,
+    "aod_uncertainty": 0.186,
+    "column_wv": 0.953,
+    "coverage_fraction": 0.594,
+    "qa_passed": true
+  },
+  {
+    "grid_cell_code": "SEED-GRID-16-14",
+    "ts": "2026-08-21T13:00:00+00:00",
+    "aod_047": 0.8543,
+    "aod_055": 0.6718,
+    "aod_uncertainty": 0.2154,
+    "column_wv": 2.118,
+    "coverage_fraction": 0.818,
+    "qa_passed": true
+  },
+  {
+    "grid_cell_code": "SEED-GRID-16-15",
+    "ts": "2026-08-21T13:00:00+00:00",
+    "aod_047": 1.1939,
+    "aod_055": 1.1884,
+    "aod_uncertainty": 0.1068,
+    "column_wv": 2.304,
+    "coverage_fraction": 0.85,
+    "qa_passed": true
+  },
+  {
+    "grid_cell_code": "SEED-GRID-16-16",
+    "ts": "2026-08-21T13:00:00+00:00",
+    "aod_047": 1.1207,
+    "aod_055": 0.5041,
+    "aod_uncertainty": 0.1628,
+    "column_wv": 2.369,
+    "coverage_fraction": 0.988,
+    "qa_passed": true
+  },
+  {
+    "grid_cell_code": "SEED-GRID-16-17",
+    "ts": "2026-08-21T13:00:00+00:00",
+    "aod_047": 0.8173,
+    "aod_055": 0.589,
+    "aod_uncertainty": 0.2421,
+    "column_wv": 1.756,
+    "coverage_fraction": 0.803,
+    "qa_passed": true
+  },
+  {
+    "grid_cell_code": "SEED-GRID-16-18",
+    "ts": "2026-08-21T13:00:00+00:00",
+    "aod_047": 1.2247,
+    "aod_055": 1.2236,
+    "aod_uncertainty": 0.2441,
+    "column_wv": 1.433,
+    "coverage_fraction": 0.801,
+    "qa_passed": true
+  },
+  {
+    "grid_cell_code": "SEED-GRID-16-19",
+    "ts": "2026-08-21T13:00:00+00:00",
+    "aod_047": 0.5581,
+    "aod_055": 1.1284,
+    "aod_uncertainty": 0.1203,
+    "column_wv": 1.119,
+    "coverage_fraction": 0.851,
+    "qa_passed": true
+  },
+  {
+    "grid_cell_code": "SEED-GRID-17-0",
+    "ts": "2026-08-21T13:00:00+00:00",
+    "aod_047": 0.4689,
+    "aod_055": 0.9889,
+    "aod_uncertainty": 0.2359,
+    "column_wv": 0.981,
+    "coverage_fraction": 0.749,
+    "qa_passed": true
+  },
+  {
+    "grid_cell_code": "SEED-GRID-17-1",
+    "ts": "2026-08-21T13:00:00+00:00",
+    "aod_047": 1.0475,
+    "aod_055": 1.0482,
+    "aod_uncertainty": 0.1767,
+    "column_wv": 1.828,
+    "coverage_fraction": 0.658,
+    "qa_passed": true
+  },
+  {
+    "grid_cell_code": "SEED-GRID-17-2",
+    "ts": "2026-08-21T13:00:00+00:00",
+    "aod_047": 0.805,
+    "aod_055": 0.4846,
+    "aod_uncertainty": 0.1754,
+    "column_wv": 1.176,
+    "coverage_fraction": 0.809,
+    "qa_passed": true
+  },
+  {
+    "grid_cell_code": "SEED-GRID-17-3",
+    "ts": "2026-08-21T13:00:00+00:00",
+    "aod_047": 0.4418,
+    "aod_055": 1.0198,
+    "aod_uncertainty": 0.1992,
+    "column_wv": 2.237,
+    "coverage_fraction": 0.619,
+    "qa_passed": true
+  },
+  {
+    "grid_cell_code": "SEED-GRID-17-4",
+    "ts": "2026-08-21T13:00:00+00:00",
+    "aod_047": 0.6506,
+    "aod_055": 0.9613,
+    "aod_uncertainty": 0.1314,
+    "column_wv": 1.163,
+    "coverage_fraction": 0.953,
+    "qa_passed": true
+  },
+  {
+    "grid_cell_code": "SEED-GRID-17-5",
+    "ts": "2026-08-21T13:00:00+00:00",
+    "aod_047": 1.2434,
+    "aod_055": 0.334,
+    "aod_uncertainty": 0.1778,
+    "column_wv": 0.891,
+    "coverage_fraction": 0.663,
+    "qa_passed": true
+  },
+  {
+    "grid_cell_code": "SEED-GRID-17-6",
+    "ts": "2026-08-21T13:00:00+00:00",
+    "aod_047": 1.1075,
+    "aod_055": 1.0538,
+    "aod_uncertainty": 0.1672,
+    "column_wv": 1.09,
+    "coverage_fraction": 0.584,
+    "qa_passed": true
+  },
+  {
+    "grid_cell_code": "SEED-GRID-17-7",
+    "ts": "2026-08-21T13:00:00+00:00",
+    "aod_047": 0.7028,
+    "aod_055": 1.0063,
+    "aod_uncertainty": 0.1633,
+    "column_wv": 2.259,
+    "coverage_fraction": 0.997,
+    "qa_passed": true
+  },
+  {
+    "grid_cell_code": "SEED-GRID-17-8",
+    "ts": "2026-08-21T13:00:00+00:00",
+    "aod_047": 0.4697,
+    "aod_055": 1.1109,
+    "aod_uncertainty": 0.1847,
+    "column_wv": 2.195,
+    "coverage_fraction": 0.552,
+    "qa_passed": true
+  },
+  {
+    "grid_cell_code": "SEED-GRID-17-9",
+    "ts": "2026-08-21T13:00:00+00:00",
+    "aod_047": 1.1127,
+    "aod_055": 0.422,
+    "aod_uncertainty": 0.1696,
+    "column_wv": 1.889,
+    "coverage_fraction": 0.586,
+    "qa_passed": true
+  },
+  {
+    "grid_cell_code": "SEED-GRID-17-10",
+    "ts": "2026-08-21T13:00:00+00:00",
+    "aod_047": 1.2202,
+    "aod_055": 0.3062,
+    "aod_uncertainty": 0.2441,
+    "column_wv": 1.279,
+    "coverage_fraction": 0.74,
+    "qa_passed": true
+  },
+  {
+    "grid_cell_code": "SEED-GRID-17-11",
+    "ts": "2026-08-21T13:00:00+00:00",
+    "aod_047": 1.145,
+    "aod_055": 0.9927,
+    "aod_uncertainty": 0.1556,
+    "column_wv": 2.047,
+    "coverage_fraction": 0.591,
+    "qa_passed": true
+  },
+  {
+    "grid_cell_code": "SEED-GRID-17-12",
+    "ts": "2026-08-21T13:00:00+00:00",
+    "aod_047": 0.8211,
+    "aod_055": 0.5837,
+    "aod_uncertainty": 0.154,
+    "column_wv": 1.466,
+    "coverage_fraction": 0.672,
+    "qa_passed": true
+  },
+  {
+    "grid_cell_code": "SEED-GRID-17-13",
+    "ts": "2026-08-21T13:00:00+00:00",
+    "aod_047": 1.0247,
+    "aod_055": 1.282,
+    "aod_uncertainty": 0.1787,
+    "column_wv": 1.611,
+    "coverage_fraction": 0.752,
+    "qa_passed": true
+  },
+  {
+    "grid_cell_code": "SEED-GRID-17-14",
+    "ts": "2026-08-21T13:00:00+00:00",
+    "aod_047": 1.4558,
+    "aod_055": 1.1391,
+    "aod_uncertainty": 0.2404,
+    "column_wv": 1.034,
+    "coverage_fraction": 0.911,
+    "qa_passed": true
+  },
+  {
+    "grid_cell_code": "SEED-GRID-17-15",
+    "ts": "2026-08-21T13:00:00+00:00",
+    "aod_047": 0.6459,
+    "aod_055": 0.928,
+    "aod_uncertainty": 0.1953,
+    "column_wv": 1.672,
+    "coverage_fraction": 0.836,
+    "qa_passed": true
+  },
+  {
+    "grid_cell_code": "SEED-GRID-17-16",
+    "ts": "2026-08-21T13:00:00+00:00",
+    "aod_047": 0.804,
+    "aod_055": 0.4477,
+    "aod_uncertainty": 0.23,
+    "column_wv": 1.337,
+    "coverage_fraction": 0.643,
+    "qa_passed": true
+  },
+  {
+    "grid_cell_code": "SEED-GRID-17-17",
+    "ts": "2026-08-21T13:00:00+00:00",
+    "aod_047": 0.6275,
+    "aod_055": 1.1759,
+    "aod_uncertainty": 0.0964,
+    "column_wv": 1.11,
+    "coverage_fraction": 0.747,
+    "qa_passed": true
+  },
+  {
+    "grid_cell_code": "SEED-GRID-17-18",
+    "ts": "2026-08-21T13:00:00+00:00",
+    "aod_047": 1.4278,
+    "aod_055": 1.1455,
+    "aod_uncertainty": 0.0771,
+    "column_wv": 1.686,
+    "coverage_fraction": 0.798,
+    "qa_passed": true
+  },
+  {
+    "grid_cell_code": "SEED-GRID-17-19",
+    "ts": "2026-08-21T13:00:00+00:00",
+    "aod_047": 1.477,
+    "aod_055": 0.6886,
+    "aod_uncertainty": 0.1393,
+    "column_wv": 1.274,
+    "coverage_fraction": 0.976,
+    "qa_passed": true
+  },
+  {
+    "grid_cell_code": "SEED-GRID-18-0",
+    "ts": "2026-08-21T13:00:00+00:00",
+    "aod_047": 0.5109,
+    "aod_055": 0.3328,
+    "aod_uncertainty": 0.2207,
+    "column_wv": 1.968,
+    "coverage_fraction": 0.593,
+    "qa_passed": true
+  },
+  {
+    "grid_cell_code": "SEED-GRID-18-1",
+    "ts": "2026-08-21T13:00:00+00:00",
+    "aod_047": 0.461,
+    "aod_055": 1.2445,
+    "aod_uncertainty": 0.1393,
+    "column_wv": 2.192,
+    "coverage_fraction": 0.658,
+    "qa_passed": true
+  },
+  {
+    "grid_cell_code": "SEED-GRID-18-2",
+    "ts": "2026-08-21T13:00:00+00:00",
+    "aod_047": 0.8446,
+    "aod_055": 0.8916,
+    "aod_uncertainty": 0.1244,
+    "column_wv": 1.002,
+    "coverage_fraction": 0.618,
+    "qa_passed": true
+  },
+  {
+    "grid_cell_code": "SEED-GRID-18-3",
+    "ts": "2026-08-21T13:00:00+00:00",
+    "aod_047": 0.5185,
+    "aod_055": 0.7211,
+    "aod_uncertainty": 0.0744,
+    "column_wv": 1.135,
+    "coverage_fraction": 0.89,
+    "qa_passed": true
+  },
+  {
+    "grid_cell_code": "SEED-GRID-18-4",
+    "ts": "2026-08-21T13:00:00+00:00",
+    "aod_047": 0.6605,
+    "aod_055": 1.0019,
+    "aod_uncertainty": 0.2103,
+    "column_wv": 1.221,
+    "coverage_fraction": 0.679,
+    "qa_passed": true
+  },
+  {
+    "grid_cell_code": "SEED-GRID-18-5",
+    "ts": "2026-08-21T13:00:00+00:00",
+    "aod_047": 0.9719,
+    "aod_055": 1.0765,
+    "aod_uncertainty": 0.1644,
+    "column_wv": 1.724,
+    "coverage_fraction": 0.623,
+    "qa_passed": true
+  },
+  {
+    "grid_cell_code": "SEED-GRID-18-6",
+    "ts": "2026-08-21T13:00:00+00:00",
+    "aod_047": 1.4659,
+    "aod_055": 0.6061,
+    "aod_uncertainty": 0.1377,
+    "column_wv": 2.342,
+    "coverage_fraction": 0.743,
+    "qa_passed": true
+  },
+  {
+    "grid_cell_code": "SEED-GRID-18-7",
+    "ts": "2026-08-21T13:00:00+00:00",
+    "aod_047": 1.3807,
+    "aod_055": 0.6347,
+    "aod_uncertainty": 0.2216,
+    "column_wv": 2.044,
+    "coverage_fraction": 0.605,
+    "qa_passed": true
+  },
+  {
+    "grid_cell_code": "SEED-GRID-18-8",
+    "ts": "2026-08-21T13:00:00+00:00",
+    "aod_047": 0.8608,
+    "aod_055": 1.2551,
+    "aod_uncertainty": 0.0705,
+    "column_wv": 1.858,
+    "coverage_fraction": 0.939,
+    "qa_passed": true
+  },
+  {
+    "grid_cell_code": "SEED-GRID-18-9",
+    "ts": "2026-08-21T13:00:00+00:00",
+    "aod_047": 1.3611,
+    "aod_055": 0.3779,
+    "aod_uncertainty": 0.1727,
+    "column_wv": 1.525,
+    "coverage_fraction": 0.895,
+    "qa_passed": true
+  },
+  {
+    "grid_cell_code": "SEED-GRID-18-10",
+    "ts": "2026-08-21T13:00:00+00:00",
+    "aod_047": 0.9913,
+    "aod_055": 0.7051,
+    "aod_uncertainty": 0.1688,
+    "column_wv": 0.813,
+    "coverage_fraction": 0.603,
+    "qa_passed": true
+  },
+  {
+    "grid_cell_code": "SEED-GRID-18-11",
+    "ts": "2026-08-21T13:00:00+00:00",
+    "aod_047": 1.1059,
+    "aod_055": 0.6727,
+    "aod_uncertainty": 0.1592,
+    "column_wv": 1.277,
+    "coverage_fraction": 0.662,
+    "qa_passed": true
+  },
+  {
+    "grid_cell_code": "SEED-GRID-18-12",
+    "ts": "2026-08-21T13:00:00+00:00",
+    "aod_047": 0.9636,
+    "aod_055": 0.5106,
+    "aod_uncertainty": 0.1233,
+    "column_wv": 1.092,
+    "coverage_fraction": 0.972,
+    "qa_passed": true
+  },
+  {
+    "grid_cell_code": "SEED-GRID-18-13",
+    "ts": "2026-08-21T13:00:00+00:00",
+    "aod_047": 1.0209,
+    "aod_055": 0.5229,
+    "aod_uncertainty": 0.1535,
+    "column_wv": 1.52,
+    "coverage_fraction": 0.964,
+    "qa_passed": true
+  },
+  {
+    "grid_cell_code": "SEED-GRID-18-14",
+    "ts": "2026-08-21T13:00:00+00:00",
+    "aod_047": 1.2559,
+    "aod_055": 0.5237,
+    "aod_uncertainty": 0.1241,
+    "column_wv": 2.379,
+    "coverage_fraction": 0.83,
+    "qa_passed": true
+  },
+  {
+    "grid_cell_code": "SEED-GRID-18-15",
+    "ts": "2026-08-21T13:00:00+00:00",
+    "aod_047": 0.7321,
+    "aod_055": 0.4493,
+    "aod_uncertainty": 0.2053,
+    "column_wv": 1.473,
+    "coverage_fraction": 0.793,
+    "qa_passed": true
+  },
+  {
+    "grid_cell_code": "SEED-GRID-18-16",
+    "ts": "2026-08-21T13:00:00+00:00",
+    "aod_047": 1.0513,
+    "aod_055": 0.9798,
+    "aod_uncertainty": 0.1912,
+    "column_wv": 1.105,
+    "coverage_fraction": 0.999,
+    "qa_passed": true
+  },
+  {
+    "grid_cell_code": "SEED-GRID-18-17",
+    "ts": "2026-08-21T13:00:00+00:00",
+    "aod_047": 0.6456,
+    "aod_055": 0.6718,
+    "aod_uncertainty": 0.1172,
+    "column_wv": 0.98,
+    "coverage_fraction": 0.741,
+    "qa_passed": true
+  },
+  {
+    "grid_cell_code": "SEED-GRID-18-18",
+    "ts": "2026-08-21T13:00:00+00:00",
+    "aod_047": 0.6292,
+    "aod_055": 0.8881,
+    "aod_uncertainty": 0.143,
+    "column_wv": 2.295,
+    "coverage_fraction": 0.879,
+    "qa_passed": true
+  },
+  {
+    "grid_cell_code": "SEED-GRID-18-19",
+    "ts": "2026-08-21T13:00:00+00:00",
+    "aod_047": 0.9288,
+    "aod_055": 0.8008,
+    "aod_uncertainty": 0.1403,
+    "column_wv": 0.999,
+    "coverage_fraction": 0.995,
+    "qa_passed": true
+  },
+  {
+    "grid_cell_code": "SEED-GRID-19-0",
+    "ts": "2026-08-21T13:00:00+00:00",
+    "aod_047": 0.6335,
+    "aod_055": 1.0527,
+    "aod_uncertainty": 0.0906,
+    "column_wv": 1.059,
+    "coverage_fraction": 0.558,
+    "qa_passed": true
+  },
+  {
+    "grid_cell_code": "SEED-GRID-19-1",
+    "ts": "2026-08-21T13:00:00+00:00",
+    "aod_047": 1.106,
+    "aod_055": 1.0887,
+    "aod_uncertainty": 0.1357,
+    "column_wv": 1.772,
+    "coverage_fraction": 0.992,
+    "qa_passed": true
+  },
+  {
+    "grid_cell_code": "SEED-GRID-19-2",
+    "ts": "2026-08-21T13:00:00+00:00",
+    "aod_047": 1.0187,
+    "aod_055": 1.075,
+    "aod_uncertainty": 0.2438,
+    "column_wv": 1.626,
+    "coverage_fraction": 0.797,
+    "qa_passed": true
+  },
+  {
+    "grid_cell_code": "SEED-GRID-19-3",
+    "ts": "2026-08-21T13:00:00+00:00",
+    "aod_047": 1.4457,
+    "aod_055": 0.6198,
+    "aod_uncertainty": 0.0862,
+    "column_wv": 2.258,
+    "coverage_fraction": 0.901,
+    "qa_passed": true
+  },
+  {
+    "grid_cell_code": "SEED-GRID-19-4",
+    "ts": "2026-08-21T13:00:00+00:00",
+    "aod_047": 0.7357,
+    "aod_055": 0.5859,
+    "aod_uncertainty": 0.0708,
+    "column_wv": 0.953,
+    "coverage_fraction": 0.834,
+    "qa_passed": true
+  },
+  {
+    "grid_cell_code": "SEED-GRID-19-5",
+    "ts": "2026-08-21T13:00:00+00:00",
+    "aod_047": 0.7678,
+    "aod_055": 0.9179,
+    "aod_uncertainty": 0.1009,
+    "column_wv": 1.631,
+    "coverage_fraction": 0.764,
+    "qa_passed": true
+  },
+  {
+    "grid_cell_code": "SEED-GRID-19-6",
+    "ts": "2026-08-21T13:00:00+00:00",
+    "aod_047": 1.2998,
+    "aod_055": 1.1144,
+    "aod_uncertainty": 0.1169,
+    "column_wv": 2.046,
+    "coverage_fraction": 0.59,
+    "qa_passed": true
+  },
+  {
+    "grid_cell_code": "SEED-GRID-19-7",
+    "ts": "2026-08-21T13:00:00+00:00",
+    "aod_047": 0.7919,
+    "aod_055": 0.615,
+    "aod_uncertainty": 0.2374,
+    "column_wv": 1.37,
+    "coverage_fraction": 0.752,
+    "qa_passed": true
+  },
+  {
+    "grid_cell_code": "SEED-GRID-19-8",
+    "ts": "2026-08-21T13:00:00+00:00",
+    "aod_047": 0.952,
+    "aod_055": 0.6907,
+    "aod_uncertainty": 0.1304,
+    "column_wv": 2.185,
+    "coverage_fraction": 0.788,
+    "qa_passed": true
+  },
+  {
+    "grid_cell_code": "SEED-GRID-19-9",
+    "ts": "2026-08-21T13:00:00+00:00",
+    "aod_047": 1.439,
+    "aod_055": 0.4839,
+    "aod_uncertainty": 0.2053,
+    "column_wv": 1.602,
+    "coverage_fraction": 0.889,
+    "qa_passed": true
+  },
+  {
+    "grid_cell_code": "SEED-GRID-19-10",
+    "ts": "2026-08-21T13:00:00+00:00",
+    "aod_047": 1.3388,
+    "aod_055": 0.5221,
+    "aod_uncertainty": 0.1353,
+    "column_wv": 2.07,
+    "coverage_fraction": 0.865,
+    "qa_passed": true
+  },
+  {
+    "grid_cell_code": "SEED-GRID-19-11",
+    "ts": "2026-08-21T13:00:00+00:00",
+    "aod_047": 1.23,
+    "aod_055": 1.21,
+    "aod_uncertainty": 0.2079,
+    "column_wv": 1.551,
+    "coverage_fraction": 0.756,
+    "qa_passed": true
+  },
+  {
+    "grid_cell_code": "SEED-GRID-19-12",
+    "ts": "2026-08-21T13:00:00+00:00",
+    "aod_047": 1.3591,
+    "aod_055": 1.1333,
+    "aod_uncertainty": 0.176,
+    "column_wv": 1.855,
+    "coverage_fraction": 0.98,
+    "qa_passed": true
+  },
+  {
+    "grid_cell_code": "SEED-GRID-19-13",
+    "ts": "2026-08-21T13:00:00+00:00",
+    "aod_047": 0.4333,
+    "aod_055": 1.0798,
+    "aod_uncertainty": 0.0911,
+    "column_wv": 2.22,
+    "coverage_fraction": 0.694,
+    "qa_passed": true
+  },
+  {
+    "grid_cell_code": "SEED-GRID-19-14",
+    "ts": "2026-08-21T13:00:00+00:00",
+    "aod_047": 0.9462,
+    "aod_055": 0.768,
+    "aod_uncertainty": 0.0848,
+    "column_wv": 1.079,
+    "coverage_fraction": 0.947,
+    "qa_passed": true
+  },
+  {
+    "grid_cell_code": "SEED-GRID-19-15",
+    "ts": "2026-08-21T13:00:00+00:00",
+    "aod_047": 1.0565,
+    "aod_055": 0.3845,
+    "aod_uncertainty": 0.2129,
+    "column_wv": 2.233,
+    "coverage_fraction": 0.819,
+    "qa_passed": true
+  },
+  {
+    "grid_cell_code": "SEED-GRID-19-16",
+    "ts": "2026-08-21T13:00:00+00:00",
+    "aod_047": 1.0988,
+    "aod_055": 1.2822,
+    "aod_uncertainty": 0.1339,
+    "column_wv": 1.582,
+    "coverage_fraction": 0.795,
+    "qa_passed": true
+  },
+  {
+    "grid_cell_code": "SEED-GRID-19-17",
+    "ts": "2026-08-21T13:00:00+00:00",
+    "aod_047": 1.3802,
+    "aod_055": 1.2335,
+    "aod_uncertainty": 0.2244,
+    "column_wv": 1.457,
+    "coverage_fraction": 0.797,
+    "qa_passed": true
+  },
+  {
+    "grid_cell_code": "SEED-GRID-19-18",
+    "ts": "2026-08-21T13:00:00+00:00",
+    "aod_047": 1.3749,
+    "aod_055": 1.0529,
+    "aod_uncertainty": 0.124,
+    "column_wv": 1.899,
+    "coverage_fraction": 0.731,
+    "qa_passed": true
+  },
+  {
+    "grid_cell_code": "SEED-GRID-19-19",
+    "ts": "2026-08-21T13:00:00+00:00",
+    "aod_047": 1.2863,
+    "aod_055": 0.6576,
+    "aod_uncertainty": 0.0753,
+    "column_wv": 0.914,
+    "coverage_fraction": 0.894,
+    "qa_passed": true
+  }
+]

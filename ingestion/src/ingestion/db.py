@@ -138,9 +138,7 @@ def write_fire_detections(records: list[dict], mode: str) -> int:
         ):
             raise ValueError("FIRMS record has invalid coordinates")
         acquired = f"{record.get('acq_date')} {str(record.get('acq_time', '0')).zfill(4)}"
-        timestamp = datetime.strptime(acquired, "%Y-%m-%d %H%M").replace(
-            tzinfo=ZoneInfo("UTC")
-        )
+        timestamp = datetime.strptime(acquired, "%Y-%m-%d %H%M").replace(tzinfo=ZoneInfo("UTC"))
         rows.append(
             {
                 "external_id": f"{latitude}:{longitude}:{acquired}",
@@ -171,6 +169,185 @@ def write_fire_detections(records: list[dict], mode: str) -> int:
                     """
                 ),
                 row,
+            )
+    return len(rows)
+
+
+def _resolve_grid_cell_ids(connection, codes: set[str]) -> dict[str, int]:
+    """Map grid cell codes to ids, rejecting codes the grid does not contain.
+
+    A snapshot row for an unknown cell is a bug in the reduction, not a row to
+    skip quietly: it means the Earth Engine grid and the PostGIS grid have
+    drifted apart, and every downstream join would be silently wrong.
+    """
+    if not codes:
+        return {}
+
+    rows = connection.execute(
+        text("SELECT code, id FROM grid_cell WHERE code = ANY(:codes)"),
+        {"codes": list(codes)},
+    ).all()
+    resolved = {code: identifier for code, identifier in rows}
+
+    missing = codes - resolved.keys()
+    if missing:
+        sample = ", ".join(sorted(missing)[:5])
+        raise ValueError(
+            f"{len(missing)} snapshot rows reference unknown grid cells (e.g. {sample}). "
+            f"The Earth Engine grid and grid_cell have diverged."
+        )
+    return resolved
+
+
+def _snapshot_rows(records: list[dict], connection) -> list[tuple[int, dict]]:
+    # A record with no grid cell code is a bug in the reduction, not a row to
+    # skip. Dropping it silently would shrink row_count while the run still
+    # reported SUCCESS, which is the same class of dishonesty as filling a gap.
+    unlabelled = sum(1 for record in records if not record.get("grid_cell_code"))
+    if unlabelled:
+        raise ValueError(
+            f"{unlabelled} of {len(records)} snapshot records carry no grid_cell_code; "
+            f"the reduction did not attach cell identity"
+        )
+
+    codes = {str(record["grid_cell_code"]) for record in records}
+    identifiers = _resolve_grid_cell_ids(connection, codes)
+    return [(identifiers[str(record["grid_cell_code"])], record) for record in records]
+
+
+def write_aod_snapshot(records: list[dict], mode: str) -> int:
+    """Write MAIAC AOD onto the grid, preserving zero-coverage cells.
+
+    A cell the satellite could not see is written with coverage_fraction 0 and
+    null values rather than dropped. Dropping it would make a gap
+    indistinguishable from clean air downstream.
+    """
+    if not records:
+        return 0
+
+    with engine.begin() as connection:
+        rows = _snapshot_rows(records, connection)
+        for grid_cell_id, record in rows:
+            coverage = float(record.get("coverage_fraction") or 0.0)
+            has_signal = coverage > 0
+            connection.execute(
+                text(
+                    """
+                    INSERT INTO gee_aod_snapshot
+                        (grid_cell_id, ts, aod_047, aod_055, aod_uncertainty,
+                         column_wv, coverage_fraction, qa_passed, source)
+                    VALUES (:grid_cell_id, :ts, :aod_047, :aod_055, :aod_uncertainty,
+                            :column_wv, :coverage_fraction, :qa_passed, :source)
+                    ON CONFLICT (grid_cell_id, ts) DO UPDATE SET
+                        aod_047 = EXCLUDED.aod_047, aod_055 = EXCLUDED.aod_055,
+                        aod_uncertainty = EXCLUDED.aod_uncertainty,
+                        column_wv = EXCLUDED.column_wv,
+                        coverage_fraction = EXCLUDED.coverage_fraction,
+                        qa_passed = EXCLUDED.qa_passed, ingested_at = now()
+                    """
+                ),
+                {
+                    "grid_cell_id": grid_cell_id,
+                    "ts": record["ts"],
+                    "aod_047": _as_float(record.get("aod_047")) if has_signal else None,
+                    "aod_055": _as_float(record.get("aod_055")) if has_signal else None,
+                    "aod_uncertainty": _as_float(record.get("aod_uncertainty")),
+                    "column_wv": _as_float(record.get("column_wv")),
+                    "coverage_fraction": coverage,
+                    "qa_passed": bool(record.get("qa_passed", has_signal)),
+                    "source": mode,
+                },
+            )
+    return len(rows)
+
+
+def write_s5p_snapshot(records: list[dict], mode: str) -> int:
+    """Write Sentinel-5P columns onto the grid.
+
+    Negative NO2 columns are written unchanged. They are the instrument's noise
+    floor over clean air, and clipping them biases the feature upward exactly
+    where the air is cleanest.
+    """
+    if not records:
+        return 0
+
+    with engine.begin() as connection:
+        rows = _snapshot_rows(records, connection)
+        for grid_cell_id, record in rows:
+            connection.execute(
+                text(
+                    """
+                    INSERT INTO gee_s5p_snapshot
+                        (grid_cell_id, ts, no2_column, aer_ai, coverage_fraction, source)
+                    VALUES (:grid_cell_id, :ts, :no2_column, :aer_ai,
+                            :coverage_fraction, :source)
+                    ON CONFLICT (grid_cell_id, ts) DO UPDATE SET
+                        no2_column = EXCLUDED.no2_column, aer_ai = EXCLUDED.aer_ai,
+                        coverage_fraction = EXCLUDED.coverage_fraction,
+                        ingested_at = now()
+                    """
+                ),
+                {
+                    "grid_cell_id": grid_cell_id,
+                    "ts": record["ts"],
+                    "no2_column": _as_float(record.get("no2_column")),
+                    "aer_ai": _as_float(record.get("aer_ai")),
+                    "coverage_fraction": float(record.get("coverage_fraction") or 0.0),
+                    "source": mode,
+                },
+            )
+    return len(rows)
+
+
+def write_met_snapshot(records: list[dict], mode: str) -> int:
+    """Write meteorology onto the grid, keyed by (cell, ts, kind).
+
+    REANALYSIS and FORECAST rows coexist for the same cell and timestamp on
+    purpose: the nowcast trains on what the weather was, the forecast runs on
+    what it is expected to be, and conflating them would leak the future.
+    """
+    if not records:
+        return 0
+
+    with engine.begin() as connection:
+        rows = _snapshot_rows(records, connection)
+        for grid_cell_id, record in rows:
+            kind = str(record.get("kind") or "REANALYSIS")
+            if kind not in {"REANALYSIS", "FORECAST"}:
+                raise ValueError("met kind must be REANALYSIS or FORECAST")
+            connection.execute(
+                text(
+                    """
+                    INSERT INTO met_snapshot
+                        (grid_cell_id, ts, kind, boundary_layer_height, wind_u, wind_v,
+                         temp_2m, relative_humidity, surface_pressure, precipitation,
+                         source)
+                    VALUES (:grid_cell_id, :ts, :kind, :boundary_layer_height,
+                            :wind_u, :wind_v, :temp_2m, :relative_humidity,
+                            :surface_pressure, :precipitation, :source)
+                    ON CONFLICT (grid_cell_id, ts, kind) DO UPDATE SET
+                        boundary_layer_height = EXCLUDED.boundary_layer_height,
+                        wind_u = EXCLUDED.wind_u, wind_v = EXCLUDED.wind_v,
+                        temp_2m = EXCLUDED.temp_2m,
+                        relative_humidity = EXCLUDED.relative_humidity,
+                        surface_pressure = EXCLUDED.surface_pressure,
+                        precipitation = EXCLUDED.precipitation,
+                        ingested_at = now()
+                    """
+                ),
+                {
+                    "grid_cell_id": grid_cell_id,
+                    "ts": record["ts"],
+                    "kind": kind,
+                    "boundary_layer_height": _as_float(record.get("boundary_layer_height")),
+                    "wind_u": _as_float(record.get("wind_u")),
+                    "wind_v": _as_float(record.get("wind_v")),
+                    "temp_2m": _as_float(record.get("temp_2m")),
+                    "relative_humidity": _as_float(record.get("relative_humidity")),
+                    "surface_pressure": _as_float(record.get("surface_pressure")),
+                    "precipitation": _as_float(record.get("precipitation")),
+                    "source": mode,
+                },
             )
     return len(rows)
 
