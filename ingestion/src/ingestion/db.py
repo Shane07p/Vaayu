@@ -200,13 +200,19 @@ def _resolve_grid_cell_ids(connection, codes: set[str]) -> dict[str, int]:
 
 
 def _snapshot_rows(records: list[dict], connection) -> list[tuple[int, dict]]:
-    codes = {str(record["grid_cell_code"]) for record in records if record.get("grid_cell_code")}
+    # A record with no grid cell code is a bug in the reduction, not a row to
+    # skip. Dropping it silently would shrink row_count while the run still
+    # reported SUCCESS, which is the same class of dishonesty as filling a gap.
+    unlabelled = sum(1 for record in records if not record.get("grid_cell_code"))
+    if unlabelled:
+        raise ValueError(
+            f"{unlabelled} of {len(records)} snapshot records carry no grid_cell_code; "
+            f"the reduction did not attach cell identity"
+        )
+
+    codes = {str(record["grid_cell_code"]) for record in records}
     identifiers = _resolve_grid_cell_ids(connection, codes)
-    return [
-        (identifiers[str(record["grid_cell_code"])], record)
-        for record in records
-        if record.get("grid_cell_code")
-    ]
+    return [(identifiers[str(record["grid_cell_code"])], record) for record in records]
 
 
 def write_aod_snapshot(records: list[dict], mode: str) -> int:

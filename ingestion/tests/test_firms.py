@@ -20,6 +20,7 @@ from ingestion.firms import (
     FirmsSource,
     accepts_confidence,
 )
+from ingestion.source import SourceUnavailableError
 
 FIXTURES = Path(__file__).resolve().parents[1] / "fixtures"
 
@@ -124,3 +125,37 @@ class TestLiveRequestShape:
     def test_day_range_outside_the_api_limit_is_rejected(self, days):
         with pytest.raises(ValueError, match="between 1 and 10"):
             FirmsSource(api_key=None, days=days)
+
+
+class TestOutageIsNotMistakenForQuiet:
+    def test_response_without_a_confidence_column_raises(self, monkeypatch):
+        """A schema change or an error page is not "no fires today".
+
+        The confidence filter drops every row when the column is absent, so
+        without this guard the run records a zero-row SUCCESS and the console
+        shows an empty, healthy-looking fire map during an outage.
+        """
+
+        class FakeResponse:
+            text = "latitude,longitude,frp\n31.6,74.8,12.5\n31.7,74.9,8.0\n"
+
+            def raise_for_status(self) -> None:
+                return None
+
+        monkeypatch.setattr("ingestion.firms.httpx.get", lambda url, **kw: FakeResponse())
+
+        with pytest.raises(SourceUnavailableError, match="no confidence column"):
+            FirmsSource(api_key="test-key").fetch()
+
+    def test_genuinely_empty_response_is_still_allowed(self, monkeypatch):
+        """A real day with no detections must not raise."""
+
+        class FakeResponse:
+            text = "latitude,longitude,confidence\n"
+
+            def raise_for_status(self) -> None:
+                return None
+
+        monkeypatch.setattr("ingestion.firms.httpx.get", lambda url, **kw: FakeResponse())
+
+        assert FirmsSource(api_key="test-key").fetch() == []

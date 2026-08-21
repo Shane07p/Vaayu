@@ -28,11 +28,22 @@ FIXTURES = Path(__file__).resolve().parents[1] / "fixtures"
 class TestCredentialGate:
     """Absent credentials behave exactly like an absent API key."""
 
-    def test_sources_fall_back_to_fixture_mode_without_credentials(self):
-        assert not credentials_present()
+    def test_sources_fall_back_to_fixture_mode_without_credentials(self, monkeypatch):
+        # Forced rather than assumed: a developer with real GEE credentials
+        # configured would otherwise see this test fail for the wrong reason.
+        monkeypatch.setattr("ingestion.gee.maiac_aod.credentials_present", lambda: False)
+        monkeypatch.setattr("ingestion.gee.s5p.credentials_present", lambda: False)
+        monkeypatch.setattr("ingestion.gee.era5.credentials_present", lambda: False)
+
         assert MaiacAodSource().mode == "FIXTURE"
         assert Sentinel5PSource().mode == "FIXTURE"
         assert Era5Source().mode == "FIXTURE"
+
+    def test_credentials_absent_when_key_path_does_not_exist(self, monkeypatch):
+        monkeypatch.setattr(
+            "ingestion.gee.client.settings.gee_service_account_key", "/no/such/key.json"
+        )
+        assert not credentials_present()
 
     def test_fixtures_load_for_every_source(self):
         assert len(MaiacAodSource().fetch()) == 400
@@ -121,16 +132,35 @@ class TestGapsNeverBecomeValues:
         row = MaiacAodSource()._to_row(
             {
                 "code": "SEED-GRID-0-0",
-                "Optical_Depth_047_mean": 0.9,
-                "Optical_Depth_055_mean": 0.7,
-                "Optical_Depth_047_count": 0,
-                "total_count": 0,
+                "Optical_Depth_047": 0.9,
+                "Optical_Depth_055": 0.7,
+                "n_Optical_Depth_047": 0,
+                "n_total": 120,
             },
             "2026-08-20T00:00:00",
         )
         assert row["coverage_fraction"] == 0.0
         assert row["aod_047"] is None
+        assert row["aod_055"] is None
         assert row["qa_passed"] is False
+
+    def test_partial_coverage_is_reported_as_a_fraction_not_a_flag(self):
+        """The denominator is the cell's full pixel count, not the observed count.
+
+        Using the observed count as its own denominator made coverage only ever
+        1.0 or 0.0, so a cell seen in a tenth of its area reported full coverage.
+        """
+        row = MaiacAodSource()._to_row(
+            {
+                "code": "SEED-GRID-0-0",
+                "Optical_Depth_047": 0.8,
+                "n_Optical_Depth_047": 12,
+                "n_total": 120,
+            },
+            "2026-08-20T00:00:00",
+        )
+        assert row["coverage_fraction"] == pytest.approx(0.1)
+        assert row["aod_047"] == 0.8
 
 
 class TestSentinel5PNoiseIsPreserved:
@@ -143,14 +173,22 @@ class TestSentinel5PNoiseIsPreserved:
         row = Sentinel5PSource()._to_row(
             {
                 "code": "SEED-GRID-0-0",
-                "no2_column_mean": -1.1e-05,
-                "no2_column_count": 12,
-                "aer_ai_mean": -0.3,
+                "no2_column": -1.1e-05,
+                "n_no2_column": 12,
+                "n_total": 12,
+                "aer_ai": -0.3,
             },
             "2026-08-20T00:00:00",
         )
         assert row["no2_column"] == -1.1e-05
         assert row["aer_ai"] == -0.3
+
+    def test_partial_coverage_uses_the_cell_pixel_count(self):
+        row = Sentinel5PSource()._to_row(
+            {"code": "SEED-GRID-0-0", "n_no2_column": 3, "n_total": 12},
+            "2026-08-20T00:00:00",
+        )
+        assert row["coverage_fraction"] == pytest.approx(0.25)
 
     def test_fixture_retains_negative_columns(self):
         records = json.loads((FIXTURES / "gee_s5p_sample.json").read_text())
@@ -158,11 +196,23 @@ class TestSentinel5PNoiseIsPreserved:
 
 
 class TestMeteorology:
-    def test_kelvin_is_converted_to_celsius(self):
-        row = Era5Source()._to_row(
+    def test_era5_kelvin_is_converted_to_celsius(self):
+        row = Era5Source(kind="REANALYSIS")._to_row(
             {"code": "SEED-GRID-0-0", "temp_2m": 300.15}, "2026-08-20T00:00:00"
         )
         assert row["temp_2m"] == pytest.approx(300.15 - KELVIN_OFFSET)
+
+    def test_gfs_celsius_is_left_alone(self):
+        """GFS reports celsius already.
+
+        Applying the kelvin offset to forecast rows wrote about -253 C, and no
+        CHECK constraint on met_snapshot would have caught it.
+        """
+        row = Era5Source(kind="FORECAST")._to_row(
+            {"code": "SEED-GRID-0-0", "temp_2m": 27.0}, "2026-08-20T00:00:00"
+        )
+        assert row["temp_2m"] == pytest.approx(27.0)
+        assert row["temp_2m"] > -50
 
     def test_missing_temperature_stays_none(self):
         row = Era5Source()._to_row({"code": "SEED-GRID-0-0"}, "2026-08-20T00:00:00")

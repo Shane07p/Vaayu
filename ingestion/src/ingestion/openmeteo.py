@@ -45,7 +45,14 @@ class OpenMeteoSource(Source):
         offline: bool | None = None,
     ) -> None:
         if offline is None:
-            offline = os.environ.get("VAAYU_OFFLINE", "").strip() in {"1", "true", "True"}
+            # casefold, not a literal set: VAAYU_OFFLINE=TRUE silently ran
+            # live and broke the offline demo.
+            offline = os.environ.get("VAAYU_OFFLINE", "").strip().casefold() in {
+                "1",
+                "true",
+                "yes",
+                "on",
+            }
         super().__init__(api_key=None if offline else "live")
         if not -90 <= latitude <= 90 or not -180 <= longitude <= 180:
             raise ValueError("latitude or longitude is invalid")

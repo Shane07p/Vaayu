@@ -24,7 +24,7 @@ import httpx
 
 from ingestion.db import write_fire_detections
 from ingestion.settings import settings
-from ingestion.source import Source
+from ingestion.source import Source, SourceUnavailableError
 
 BASE_URL = "https://firms.modaps.eosdis.nasa.gov/api/area/csv"
 
@@ -85,10 +85,21 @@ class FirmsSource(Source):
         Filtering here rather than in the writer means fixture and live records
         pass through identical rules, so the offline demo cannot show counts the
         live pipeline would never produce.
+
+        Raises:
+            SourceUnavailableError: the response carried rows but no confidence
+                column at all. That is a schema change or an error page, not a
+                day with no fires, and silently returning an empty list would
+                record a zero-row SUCCESS and hide the outage.
         """
-        return [
-            record for record in super().fetch() if accepts_confidence(record.get("confidence"))
-        ]
+        records = super().fetch()
+        if records and not any("confidence" in record for record in records):
+            raise SourceUnavailableError(
+                f"{self.name}: response has no confidence column; "
+                f"refusing to report {len(records)} unverifiable detections"
+            )
+
+        return [record for record in records if accepts_confidence(record.get("confidence"))]
 
     def _fetch_live(self) -> list[dict]:
         # Format per the FIRMS API itself:

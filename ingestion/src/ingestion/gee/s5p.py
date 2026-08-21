@@ -17,6 +17,7 @@ from __future__ import annotations
 
 import argparse
 import json
+from datetime import UTC, datetime
 
 from ingestion.gee.client import (
     EarthEngineUnavailableError,
@@ -54,7 +55,11 @@ class Sentinel5PSource(Source):
 
             initialise()
 
-            end = ee.Date.now()
+            # Computed once in Python: see the note in maiac_aod._fetch_live.
+            window_end = datetime.now(UTC)
+            timestamp = window_end.isoformat()
+
+            end = ee.Date(timestamp)
             start = end.advance(-self._days_back, "day")
 
             no2 = (
@@ -74,13 +79,24 @@ class Sentinel5PSource(Source):
 
             from ingestion.gee.grid import grid_feature_collection
 
-            reduced = no2.addBands(aer_ai).reduceRegions(
-                collection=grid_feature_collection(),
-                reducer=ee.Reducer.mean().combine(ee.Reducer.count(), sharedInputs=False),
-                scale=SCALE_METRES,
+            # Every pixel in the cell, not every pixel that carried a value.
+            # S5P bands are masked where retrieval failed, so counting them
+            # would compare retrievals against retrievals.
+            total = ee.Image.constant(1).rename("total").toFloat()
+
+            # sharedInputs=True: both reducers consume the same bands.
+            reduced = (
+                no2.addBands(aer_ai)
+                .addBands(total)
+                .reduceRegions(
+                    collection=grid_feature_collection(),
+                    reducer=ee.Reducer.mean().combine(
+                        ee.Reducer.count(), outputPrefix="n_", sharedInputs=True
+                    ),
+                    scale=SCALE_METRES,
+                )
             )
 
-            timestamp = end.format().getInfo()
             return [
                 self._to_row(feature["properties"], timestamp)
                 for feature in reduced.getInfo().get("features", [])
@@ -89,16 +105,19 @@ class Sentinel5PSource(Source):
             raise SourceUnavailableError(f"{self.name}: {exc}") from exc
 
     def _to_row(self, properties: dict, timestamp: str) -> dict:
-        count = properties.get("no2_column_count") or 0
-        coverage = coverage_fraction(count, count if count else 1)
+        # Reducer output names: mean keeps the band name, count is prefixed.
+        # The denominator is the cell's full pixel count. Using the observed
+        # count as its own denominator would make coverage only ever 1.0 or
+        # 0.0, which reads as full coverage over a barely-observed cell.
+        coverage = coverage_fraction(properties.get("n_no2_column"), properties.get("n_total"))
 
         # No clipping. A negative column over clean air is the instrument
         # telling the truth about its own noise floor.
         return {
             "grid_cell_code": properties.get("code"),
             "ts": timestamp,
-            "no2_column": properties.get("no2_column_mean"),
-            "aer_ai": properties.get("aer_ai_mean"),
+            "no2_column": properties.get("no2_column"),
+            "aer_ai": properties.get("aer_ai"),
             "coverage_fraction": coverage,
         }
 
@@ -117,10 +136,12 @@ def main() -> None:
         print(json.dumps(records[:3], indent=2))
         return
 
-    from ingestion.db import record_run, write_s5p_snapshot
+    from ingestion.db import write_s5p_snapshot
+    from ingestion.runner import run_source
 
-    written = write_s5p_snapshot(records, mode=source.mode)
-    record_run(source.name, source.mode, "SUCCESS", row_count=written)
+    # run_source records the outcome whether it succeeds, hits an upstream
+    # outage, or crashes. Recording only on success left failures invisible.
+    written = run_source(source, write_s5p_snapshot)
     print(f"written={written}")
 
 

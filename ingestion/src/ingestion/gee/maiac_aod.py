@@ -21,6 +21,7 @@ from __future__ import annotations
 
 import argparse
 import json
+from datetime import UTC, datetime
 
 from ingestion.gee.client import (
     EarthEngineUnavailableError,
@@ -84,10 +85,18 @@ class MaiacAodSource(Source):
 
             initialise()
 
-            end = ee.Date.now()
+            # The snapshot timestamp is computed here, once, in Python. Calling
+            # ee.Date.now().format().getInfo() per feature would cost one network
+            # round trip per grid cell and re-evaluate the clock each time,
+            # scattering a single snapshot across hundreds of distinct ts values
+            # under UNIQUE (grid_cell_id, ts).
+            window_end = datetime.now(UTC)
+            timestamp = window_end.isoformat()
+
+            end = ee.Date(timestamp)
             start = end.advance(-self._days_back, "day")
 
-            collection = (
+            masked = (
                 ee.ImageCollection(COLLECTION)
                 .filterDate(start, end)
                 .select(
@@ -100,35 +109,41 @@ class MaiacAodSource(Source):
                     ]
                 )
                 .map(self._quality_mask)
+                .mean()
             )
 
-            masked = collection.mean()
-            # An unmasked copy gives the denominator for coverage: how many
-            # pixels the grid cell contains at all, versus how many survived QA.
-            unmasked = ee.ImageCollection(COLLECTION).filterDate(start, end).mean()
+            # The denominator must be every pixel in the cell, not every pixel
+            # that happened to carry an AOD value. MAIAC bands are masked at
+            # source where retrieval failed, so counting them would compare
+            # retrievals against retrievals and report near-total coverage over
+            # a cell the satellite barely saw -- precisely the gap-blindness
+            # this pipeline exists to avoid.
+            total = ee.Image.constant(1).rename("total").toFloat()
 
             from ingestion.gee.grid import grid_feature_collection
 
-            cells = grid_feature_collection()
-
-            reduced = masked.addBands(
-                unmasked.select("Optical_Depth_047").rename("total")
-            ).reduceRegions(
-                collection=cells,
-                reducer=ee.Reducer.mean().combine(ee.Reducer.count(), sharedInputs=False),
+            # sharedInputs=True: both reducers consume the same bands. With
+            # False the combined reducer expects a separate input per reducer,
+            # which misaligns the outputs _to_row reads.
+            reduced = masked.addBands(total).reduceRegions(
+                collection=grid_feature_collection(),
+                reducer=ee.Reducer.mean().combine(
+                    ee.Reducer.count(), outputPrefix="n_", sharedInputs=True
+                ),
                 scale=SCALE_METRES,
             )
 
             return [
-                self._to_row(feature["properties"], end.format().getInfo())
+                self._to_row(feature["properties"], timestamp)
                 for feature in reduced.getInfo().get("features", [])
             ]
         except EarthEngineUnavailableError as exc:
             raise SourceUnavailableError(f"{self.name}: {exc}") from exc
 
     def _to_row(self, properties: dict, timestamp: str) -> dict:
-        observed = properties.get("Optical_Depth_047_count")
-        expected = properties.get("total_count")
+        # Reducer output names: mean keeps the band name, count is prefixed.
+        observed = properties.get("n_Optical_Depth_047")
+        expected = properties.get("n_total")
         coverage = coverage_fraction(observed, expected)
 
         # The schema forbids a value without coverage. Enforce it here too, so a
@@ -137,10 +152,10 @@ class MaiacAodSource(Source):
         return {
             "grid_cell_code": properties.get("code"),
             "ts": timestamp,
-            "aod_047": properties.get("Optical_Depth_047_mean") if has_signal else None,
-            "aod_055": properties.get("Optical_Depth_055_mean") if has_signal else None,
-            "aod_uncertainty": properties.get("AOD_Uncertainty_mean"),
-            "column_wv": properties.get("Column_WV_mean"),
+            "aod_047": properties.get("Optical_Depth_047") if has_signal else None,
+            "aod_055": properties.get("Optical_Depth_055") if has_signal else None,
+            "aod_uncertainty": properties.get("AOD_Uncertainty") if has_signal else None,
+            "column_wv": properties.get("Column_WV") if has_signal else None,
             "coverage_fraction": coverage,
             "qa_passed": has_signal,
         }
@@ -164,10 +179,12 @@ def main() -> None:
         print(json.dumps(records[:3], indent=2))
         return
 
-    from ingestion.db import record_run, write_aod_snapshot
+    from ingestion.db import write_aod_snapshot
+    from ingestion.runner import run_source
 
-    written = write_aod_snapshot(records, mode=source.mode)
-    record_run(source.name, source.mode, "SUCCESS", row_count=written)
+    # run_source records the outcome whether it succeeds, hits an upstream
+    # outage, or crashes. Recording only on success left failures invisible.
+    written = run_source(source, write_aod_snapshot)
     print(f"written={written}")
 
 
