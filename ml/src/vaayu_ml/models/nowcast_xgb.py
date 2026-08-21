@@ -28,7 +28,7 @@ class NowcastModel:
         
     def train(self, df: pd.DataFrame, mlflow_run_name: str = "nowcast_xgb") -> None:
         """Train 3 quantile models, log metrics + artifacts to MLflow."""
-        X = df[self.FEATURE_COLS]
+        x_features = df[self.FEATURE_COLS]
         y = df["pm25"]
         
         mlflow.set_experiment("vaayu_nowcast")
@@ -41,11 +41,11 @@ class NowcastModel:
                     quantile_alpha=q,
                     **self.params
                 )
-                model.fit(X, y)
+                model.fit(x_features, y)
                 self.models[q] = model
                 
             # Log training metrics
-            preds_50 = self.models[0.5].predict(X)
+            preds_50 = self.models[0.5].predict(x_features)
             rmse = np.sqrt(np.mean((y - preds_50)**2))
             r2 = 1 - np.sum((y - preds_50)**2) / np.sum((y - np.mean(y))**2)
             
@@ -54,19 +54,19 @@ class NowcastModel:
             
     def predict(self, df: pd.DataFrame) -> pd.DataFrame:
         """Returns q10, q50, q90 columns + coverage_fraction."""
-        X = df[self.FEATURE_COLS]
+        x_features = df[self.FEATURE_COLS]
         
         preds = pd.DataFrame(index=df.index)
         if 0.1 in self.models:
-            preds["pm25_q10"] = self.models[0.1].predict(X)
+            preds["pm25_q10"] = self.models[0.1].predict(x_features)
         if 0.5 in self.models:
-            preds["pm25_q50"] = self.models[0.5].predict(X)
+            preds["pm25_q50"] = self.models[0.5].predict(x_features)
         if 0.9 in self.models:
-            preds["pm25_q90"] = self.models[0.9].predict(X)
+            preds["pm25_q90"] = self.models[0.9].predict(x_features)
             
         # Calculate coverage fraction (fraction of satellite AOD features that are not NaN/missing)
         aod_cols = ["aod_047", "aod_055"]
-        valid_aod = X[aod_cols].notna().mean(axis=1)
+        valid_aod = x_features[aod_cols].notna().mean(axis=1)
         preds["coverage_fraction"] = valid_aod
         
         return preds

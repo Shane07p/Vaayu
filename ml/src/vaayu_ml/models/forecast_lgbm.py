@@ -40,7 +40,7 @@ class ForecastModel:
             
         train_df = df.dropna(subset=[target_col] + self.BASE_FEATURES)
         
-        X = train_df[self.BASE_FEATURES]
+        x_features = train_df[self.BASE_FEATURES]
         y = train_df[target_col]
         
         mlflow.set_experiment("vaayu_forecast")
@@ -51,15 +51,15 @@ class ForecastModel:
             # Use quantile objective for prediction intervals
             # Model 50% (Median)
             model_50 = lgb.LGBMRegressor(objective="quantile", alpha=0.5, **self.params)
-            model_50.fit(X, y)
+            model_50.fit(x_features, y)
             
             # Model 10% (Lower bound)
             model_10 = lgb.LGBMRegressor(objective="quantile", alpha=0.1, **self.params)
-            model_10.fit(X, y)
+            model_10.fit(x_features, y)
             
             # Model 90% (Upper bound)
             model_90 = lgb.LGBMRegressor(objective="quantile", alpha=0.9, **self.params)
-            model_90.fit(X, y)
+            model_90.fit(x_features, y)
             
             self.models[horizon] = {
                 "q50": model_50,
@@ -68,7 +68,7 @@ class ForecastModel:
             }
             
             # Train metrics
-            preds = model_50.predict(X)
+            preds = model_50.predict(x_features)
             rmse = np.sqrt(np.mean((y - preds)**2))
             mlflow.log_metric("rmse_train", rmse)
 
@@ -93,12 +93,12 @@ class ForecastModel:
         if horizon not in self.models:
             raise ValueError(f"Model for horizon {horizon} not trained")
             
-        X = df[self.BASE_FEATURES]
+        x_features = df[self.BASE_FEATURES]
         
         preds = pd.DataFrame(index=df.index)
-        preds["pm25"] = self.models[horizon]["q50"].predict(X)
-        preds["ci_low"] = self.models[horizon]["q10"].predict(X)
-        preds["ci_high"] = self.models[horizon]["q90"].predict(X)
+        preds["pm25"] = self.models[horizon]["q50"].predict(x_features)
+        preds["ci_low"] = self.models[horizon]["q10"].predict(x_features)
+        preds["ci_high"] = self.models[horizon]["q90"].predict(x_features)
         
         preds["aqi"] = preds["pm25"].apply(self.pm25_to_aqi)
         

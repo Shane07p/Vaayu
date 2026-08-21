@@ -36,7 +36,9 @@ def rank_fire_clusters(
         df["trajectory_intersection"] = 0.0
         df["transport_hours"] = dists / 10.0 # guess 10km/h
         df["trajectory_confidence"] = 0.0
-        df["downwind_population"] = population_grid["population"].sum() if population_grid is not None else 18400000
+        df["downwind_population"] = (
+            population_grid["population"].sum() if population_grid is not None else 18400000
+        )
     else:
         scores = []
         intersections = []
@@ -75,7 +77,9 @@ def rank_fire_clusters(
         df["trajectory_intersection"] = intersections
         df["transport_hours"] = transport_hrs
         df["trajectory_confidence"] = 0.81 # Default confidence for ERA5
-        df["downwind_population"] = population_grid["population"].sum() if population_grid is not None else 18400000
+        df["downwind_population"] = (
+            population_grid["population"].sum() if population_grid is not None else 18400000
+        )
         
     # Rank descending by score
     df = df.sort_values("impact_score", ascending=False).reset_index(drop=True)

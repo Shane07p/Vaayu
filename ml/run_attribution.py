@@ -27,7 +27,9 @@ def run():
     print("Ranking clusters by impact...")
     ranked = rank_fire_clusters(clusters, trajectories, pop_grid)
     
-    print(ranked[["code", "impact_rank", "impact_score", "trajectory_intersection", "transport_hours"]])
+    print(ranked[
+        ["code", "impact_rank", "impact_score", "trajectory_intersection", "transport_hours"]
+    ])
     print("Done! (In live mode, these write to `fire_cluster_impact` in PostGIS)")
 
 if __name__ == "__main__":

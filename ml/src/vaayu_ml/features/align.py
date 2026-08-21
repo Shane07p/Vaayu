@@ -3,7 +3,7 @@ import pandas as pd
 
 def haversine_distance(lat1, lon1, lat2, lon2):
     """Calculate the great circle distance in kilometers between two points."""
-    R = 6371.0  # Earth radius in km
+    r_earth = 6371.0  # Earth radius in km
     
     phi1 = np.radians(lat1)
     phi2 = np.radians(lat2)
@@ -13,7 +13,7 @@ def haversine_distance(lat1, lon1, lat2, lon2):
     a = np.sin(delta_phi/2.0)**2 + np.cos(phi1) * np.cos(phi2) * np.sin(delta_lambda/2.0)**2
     c = 2 * np.arctan2(np.sqrt(a), np.sqrt(1 - a))
     
-    return R * c
+    return r_earth * c
 
 def build_aligned_dataset(
     station_readings: pd.DataFrame,
@@ -27,8 +27,8 @@ def build_aligned_dataset(
     
     Args:
         station_readings: cols [station_id, lat, lon, ts, pm25]
-        grid_cells: cols [grid_cell_id, grid_cell_code, centroid_lat, centroid_lon, population]
-        gee_aod: cols [grid_cell_code, ts, aod_047, aod_055, aod_uncertainty, column_wv, coverage_fraction]
+        grid_cells: cols [grid_cell_code, centroid_lat, centroid_lon]
+        gee_aod: cols [grid_cell_code, ts, aod_047, aod_055, aod_uncert...]
         gee_s5p: cols [grid_cell_code, ts, no2_column, aer_ai]
         met: cols [grid_cell_code, ts, blh, wind_u, wind_v, rh, temp_2m]
     """
@@ -37,7 +37,7 @@ def build_aligned_dataset(
     df["date"] = df["ts"].dt.date
     
     # 1. Spatial join: Snap each station to the nearest grid cell
-    # In a real pipeline with thousands of points we'd use a KDTree. For this, distance matrix is fine.
+    # In a real pipeline with thousands of points use KDTree. Distance matrix is fine here.
     station_coords = df[["station_id", "lat", "lon"]].drop_duplicates()
     
     nearest_cells = []
@@ -56,7 +56,9 @@ def build_aligned_dataset(
     station_coords["distance_to_nearest_station_km"] = distances
     
     # Join the grid cell mappings back to readings
-    df = df.merge(station_coords[["station_id", "grid_cell_code", "distance_to_nearest_station_km"]], on="station_id")
+    df = df.merge(station_coords[
+        ["station_id", "grid_cell_code", "distance_to_nearest_station_km"]
+    ], on="station_id")
     
     # 2. Join ERA5 Met Data (Hourly - join on exact ts)
     met_copy = met.copy()

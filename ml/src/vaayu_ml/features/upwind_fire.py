@@ -27,14 +27,16 @@ def upwind_fire_exposure(
         
     if np.isnan(wind_u) or np.isnan(wind_v) or (wind_u == 0 and wind_v == 0):
         # Without wind, we can't determine upwind. Apply distance-only baseline
-        dists = haversine_distance(receptor_lat, receptor_lon, fires["lat"].values, fires["lon"].values)
+        dists = haversine_distance(
+            receptor_lat, receptor_lon, fires["lat"].values, fires["lon"].values
+        )
         return float(np.sum(fires["frp"].values / (1 + dists)))
         
     wind_speed_ms = np.sqrt(wind_u**2 + wind_v**2)
     # Wind vector direction (where it's going)
     # Note: meteorology wind_u/wind_v usually denote where the wind is blowing towards
     
-    # 1. Vector from receptor TO fire (to see if fire is upwind, wind should blow from fire to receptor)
+    # 1. Vector from receptor TO fire (to see if fire is upwind, wind should blow TO receptor)
     # But wait, we want wind going FROM fire TO receptor.
     # The vector FROM receptor TO fire is (fire_lon - receptor_lon, fire_lat - receptor_lat)
     # The wind vector is (wind_u, wind_v). If wind is blowing FROM the fire TO the receptor,
@@ -48,7 +50,9 @@ def upwind_fire_exposure(
     y_dist = lat_diff * 111000
     
     # Distance in km
-    dists_km = haversine_distance(receptor_lat, receptor_lon, fires["lat"].values, fires["lon"].values)
+    dists_km = haversine_distance(
+        receptor_lat, receptor_lon, fires["lat"].values, fires["lon"].values
+    )
     
     # Cosine similarity between wind vector and (receptor -> fire) vector
     # We want them to be OPPOSITE for the fire to be upwind.
