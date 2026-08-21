@@ -1,5 +1,7 @@
 import pandas as pd
+
 from vaayu_ml.attribution.rank import rank_fire_clusters
+
 
 def run():
     print("Loading fire clusters and calculating trajectories...")

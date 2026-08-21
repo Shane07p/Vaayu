@@ -1,8 +1,10 @@
-import numpy as np
-import pandas as pd
+from pathlib import Path
+
 import lightgbm as lgb
 import mlflow
-from pathlib import Path
+import numpy as np
+import pandas as pd
+
 
 class ForecastModel:
     """LightGBM multi-horizon PM2.5 spike forecast."""

@@ -1,9 +1,10 @@
-import json
+from pathlib import Path
+
+import mlflow
 import numpy as np
 import pandas as pd
 import xgboost as xgb
-import mlflow
-from pathlib import Path
+
 
 class NowcastModel:
     """XGBoost quantile regression for 1km PM2.5 surface."""

@@ -1,7 +1,8 @@
 import pandas as pd
-from vaayu_ml.features.align import build_aligned_dataset
-from vaayu_ml.features.grid import build_static_features, add_cyclic_features
+
+from vaayu_ml.features.grid import add_cyclic_features, build_static_features
 from vaayu_ml.models.nowcast_xgb import NowcastModel
+
 
 def run():
     print("Loading fixtures...")

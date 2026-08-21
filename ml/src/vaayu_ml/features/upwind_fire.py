@@ -1,6 +1,8 @@
 import numpy as np
 import pandas as pd
+
 from vaayu_ml.features.align import haversine_distance
+
 
 def upwind_fire_exposure(
     receptor_lat: float,

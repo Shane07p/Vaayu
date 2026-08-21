@@ -1,6 +1,7 @@
 import numpy as np
 import pandas as pd
 
+
 def add_cyclic_features(df: pd.DataFrame) -> pd.DataFrame:
     """Add sin/cos transformations for diurnal and seasonal cycles."""
     if "ts" not in df.columns:

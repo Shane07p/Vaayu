@@ -1,6 +1,7 @@
 import numpy as np
 import pandas as pd
 
+
 def haversine_distance(lat1, lon1, lat2, lon2):
     """Calculate the great circle distance in kilometers between two points."""
     r_earth = 6371.0  # Earth radius in km
