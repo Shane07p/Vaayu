@@ -1,4 +1,4 @@
-.PHONY: up down logs test fmt clean
+﻿.PHONY: up down logs test fmt clean
 
 up:
 	docker compose up --build -d
@@ -14,13 +14,13 @@ logs:
 
 test:
 	cd backend && ./mvnw test
-	cd ingestion && uv run pytest
-	cd ml && uv run pytest
+	cd ingestion && uv run --extra dev pytest
+	cd ml && uv run --extra dev pytest
 	cd web && pnpm lint
 
 fmt:
-	cd ingestion && uv run ruff format . && uv run ruff check --fix .
-	cd ml && uv run ruff format . && uv run ruff check --fix .
+	cd ingestion && uv run --extra dev ruff format . && uv run --extra dev ruff check --fix .
+	cd ml && uv run --extra dev ruff format . && uv run --extra dev ruff check --fix .
 	cd web && pnpm lint --fix
 
 clean:

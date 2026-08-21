@@ -1,4 +1,4 @@
-services:
+﻿services:
   postgres:
     image: postgis/postgis:16-3.4
     environment:
@@ -47,7 +47,15 @@ services:
       backend:
         condition: service_healthy
     environment:
+      # NEXT_PUBLIC_API_URL is used by browser-side code (if any).
+      # NEXT_PUBLIC_API_URL is set to the public-facing address for the browser.
+      # Server-side RSC fetches use the internal Docker service name.
       NEXT_PUBLIC_API_URL: http://localhost:8080
+      # Internal API URL used by Next.js RSC (server-side) to call the backend
+      # container directly over the Docker network - avoids NAT round-trip.
+      INTERNAL_API_URL: http://backend:8080
+      # Passed to RSC calls that need the console auth header.
+      CONSOLE_SECRET: ${CONSOLE_SHARED_SECRET:-dev-only-not-a-real-secret}
     ports:
       - "3000:3000"
 
