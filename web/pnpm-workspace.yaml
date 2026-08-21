@@ -1,3 +1,18 @@
+allowBuilds:
+  unrs-resolver: set this to true or false
+minimumReleaseAgeExclude:
+  - '@next/env@16.3.2'
+  - '@next/eslint-plugin-next@16.3.2'
+  - '@next/swc-darwin-arm64@16.3.2'
+  - '@next/swc-darwin-x64@16.3.2'
+  - '@next/swc-linux-arm64-gnu@16.3.2'
+  - '@next/swc-linux-arm64-musl@16.3.2'
+  - '@next/swc-linux-x64-gnu@16.3.2'
+  - '@next/swc-linux-x64-musl@16.3.2'
+  - '@next/swc-win32-arm64-msvc@16.3.2'
+  - '@next/swc-win32-x64-msvc@16.3.2'
+  - eslint-config-next@16.3.2
+  - next@16.3.2
 # pnpm 10+ reads settings from here rather than from package.json.
 #
 # Explicit allowlist for install-time build scripts. pnpm blocks postinstall by
