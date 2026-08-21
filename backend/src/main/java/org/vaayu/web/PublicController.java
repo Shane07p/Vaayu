@@ -1,6 +1,8 @@
 package org.vaayu.web;
 
 import jakarta.validation.Valid;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import java.util.List;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -16,32 +18,36 @@ import org.vaayu.web.dto.ForecastResponse;
 import org.vaayu.web.dto.GridPredictionResponse;
 import org.vaayu.web.dto.StationResponse;
 import org.vaayu.web.service.CitizenReportService;
-import org.vaayu.web.service.ReadQueryService;
+import org.vaayu.web.service.ReadQueryOperations;
 
 /** Public, read-only data surface plus anonymous citizen report intake. */
 @RestController
 @RequestMapping("/api/v1/public")
+@Tag(name = "Public data", description = "Observed, modelled, and fixture-backed data. SEED and FIXTURE values must be displayed as CACHED.")
 public class PublicController {
-    private final ReadQueryService queries;
+    private final ReadQueryOperations queries;
     private final CitizenReportService reports;
 
-    public PublicController(ReadQueryService queries, CitizenReportService reports) {
+    public PublicController(ReadQueryOperations queries, CitizenReportService reports) {
         this.queries = queries;
         this.reports = reports;
     }
 
     @GetMapping("/stations")
+    @Operation(summary = "List monitoring stations")
     public List<StationResponse> stations() {
         return queries.stations();
     }
 
     @GetMapping("/grid")
+    @Operation(summary = "Read latest 1 km PM2.5 prediction cells within a bounding box")
     public List<GridPredictionResponse> grid(@RequestParam String bbox) {
         Bbox parsed = Bbox.parse(bbox);
         return queries.grid(parsed.minLon(), parsed.minLat(), parsed.maxLon(), parsed.maxLat());
     }
 
     @GetMapping("/forecast")
+    @Operation(summary = "Read the latest 6, 24, and 72 hour forecast for a station")
     public List<ForecastResponse> forecast(@RequestParam long stationId) {
         if (stationId < 1) {
             throw new IllegalArgumentException("stationId must be positive");
@@ -50,6 +56,7 @@ public class PublicController {
     }
 
     @PostMapping("/reports")
+    @Operation(summary = "Submit a coarse-location citizen observation; photo output is always a band, never a concentration")
     @ResponseStatus(HttpStatus.CREATED)
     public CitizenReportResponse report(@Valid @RequestBody CitizenReportRequest request) {
         return reports.submit(request);
