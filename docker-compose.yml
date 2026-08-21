@@ -6,7 +6,11 @@ services:
       POSTGRES_USER: ${POSTGRES_USER:-vaayu}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-vaayu}
     ports:
-      - "5432:5432"
+      # Host port is configurable because a locally installed PostgreSQL also
+      # binds 5432. When both listen, host connections reach whichever won the
+      # bind and fail authentication against the wrong server. Set
+      # POSTGRES_HOST_PORT=5433 in .env rather than stopping the local service.
+      - "${POSTGRES_HOST_PORT:-5432}:5432"
     volumes:
       - pgdata:/var/lib/postgresql/data
       - ./infra/postgres/init.sql:/docker-entrypoint-initdb.d/00-init.sql:ro

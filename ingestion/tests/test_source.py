@@ -76,7 +76,5 @@ def test_fixture_payload_shape_matches_the_cpcb_response():
     records = FakeSource(api_key=None).fetch()
 
     for record in records:
-        assert {"pollutant_id", "pollutant_min", "pollutant_max", "pollutant_avg"} <= set(
-            record
-        )
+        assert {"pollutant_id", "pollutant_min", "pollutant_max", "pollutant_avg"} <= set(record)
         assert {"latitude", "longitude", "last_update"} <= set(record)

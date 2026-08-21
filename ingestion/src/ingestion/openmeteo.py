@@ -11,6 +11,7 @@ Implement: ``OpenMeteoSource(Source)`` overriding the key requirement.
 from __future__ import annotations
 
 import argparse
+import os
 
 import httpx
 
@@ -23,13 +24,29 @@ DELHI_LON = 77.2090
 
 
 class OpenMeteoSource(Source):
-    """Live CAMS forecast baseline; never substitutes fixture values."""
+    """CAMS forecast baseline.
+
+    Open-Meteo needs no API key, so this source runs live by default. It still
+    supports fixture mode, because the offline demo has to produce a baseline:
+    a forecast chart without the baseline it must beat is the exact failure the
+    technical document warns against, and "the network was down" is not an
+    excuse the chart can make on its own.
+
+    Set ``offline=True`` (or ``VAAYU_OFFLINE=1``) to read the committed fixture.
+    """
 
     name = "OPEN_METEO"
-    fixture_file = "cpcb_sample.json"
+    fixture_file = "openmeteo_sample.json"
 
-    def __init__(self, latitude: float = DELHI_LAT, longitude: float = DELHI_LON) -> None:
-        super().__init__(api_key="live")
+    def __init__(
+        self,
+        latitude: float = DELHI_LAT,
+        longitude: float = DELHI_LON,
+        offline: bool | None = None,
+    ) -> None:
+        if offline is None:
+            offline = os.environ.get("VAAYU_OFFLINE", "").strip() in {"1", "true", "True"}
+        super().__init__(api_key=None if offline else "live")
         if not -90 <= latitude <= 90 or not -180 <= longitude <= 180:
             raise ValueError("latitude or longitude is invalid")
         self._latitude = latitude
@@ -54,10 +71,7 @@ class OpenMeteoSource(Source):
             raise ValueError("Open-Meteo response did not contain hourly data")
         keys = ("time", "pm2_5", "pm10", "nitrogen_dioxide", "us_aqi")
         columns = (hourly.get(key, []) for key in keys)
-        return [
-            dict(zip(keys, values, strict=True))
-            for values in zip(*columns, strict=True)
-        ]
+        return [dict(zip(keys, values, strict=True)) for values in zip(*columns, strict=True)]
 
 
 def main() -> None:
