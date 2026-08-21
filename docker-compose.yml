@@ -30,6 +30,8 @@ services:
       POSTGRES_USER: ${POSTGRES_USER:-vaayu}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-vaayu}
       CONSOLE_SHARED_SECRET: ${CONSOLE_SHARED_SECRET:-dev-only-not-a-real-secret}
+      GEMINI_API_KEY: ${GEMINI_API_KEY:-}
+      GEMINI_MODEL: ${GEMINI_MODEL:-gemini-2.0-flash}
     ports:
       - "8080:8080"
     healthcheck:
