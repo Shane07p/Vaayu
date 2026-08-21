@@ -36,6 +36,18 @@ vaayu:
   console:
     # Stub auth only. Not an identity provider. Replace before any deployment.
     shared-secret: ${CONSOLE_SHARED_SECRET:dev-only-not-a-real-secret}
+  gemini:
+    api-key: ${GEMINI_API_KEY:}
+    model: ${GEMINI_MODEL:gemini-2.0-flash}
+
+resilience4j:
+  circuitbreaker:
+    instances:
+      gemini:
+        sliding-window-size: 5
+        minimum-number-of-calls: 2
+        failure-rate-threshold: 50
+        wait-duration-in-open-state: 30s
 
 management:
   endpoints:

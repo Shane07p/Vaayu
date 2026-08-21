@@ -1,6 +1,7 @@
 package org.vaayu.web.dto;
 
 public record WorklistItemResponse(
+        long clusterId,
         String clusterCode,
         String tehsil,
         String district,

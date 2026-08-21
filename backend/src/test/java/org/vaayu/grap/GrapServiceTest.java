@@ -18,6 +18,10 @@ class GrapServiceTest {
     void resolves_exact_statutory_boundaries() {
         assertThat(service.stageFor(200)).isEmpty();
         assertThat(service.stageFor(201).orElseThrow().stage()).isEqualTo("I");
+        assertThat(service.stageFor(300).orElseThrow().stage()).isEqualTo("I");
+        assertThat(service.stageFor(301).orElseThrow().stage()).isEqualTo("II");
+        assertThat(service.stageFor(400).orElseThrow().stage()).isEqualTo("II");
+        assertThat(service.stageFor(401).orElseThrow().stage()).isEqualTo("III");
         assertThat(service.stageFor(450).orElseThrow().stage()).isEqualTo("III");
         assertThat(service.stageFor(451).orElseThrow().stage()).isEqualTo("IV");
     }

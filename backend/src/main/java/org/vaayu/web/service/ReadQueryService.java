@@ -6,6 +6,7 @@ import java.sql.SQLException;
 import java.time.OffsetDateTime;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Service;
@@ -14,12 +15,13 @@ import org.vaayu.web.dto.AlertResponse;
 import org.vaayu.web.dto.ForecastResponse;
 import org.vaayu.web.dto.GridPredictionResponse;
 import org.vaayu.web.dto.StationResponse;
+import org.vaayu.web.dto.WorklistActionResponse;
 import org.vaayu.web.dto.WorklistItemResponse;
 
 /** Read-only SQL projection layer; Flyway, rather than Hibernate, owns this schema. */
 @Service
 @Transactional(readOnly = true)
-public class ReadQueryService {
+public class ReadQueryService implements ReadQueryOperations {
     private final NamedParameterJdbcTemplate jdbc;
 
     public ReadQueryService(NamedParameterJdbcTemplate jdbc) {
@@ -53,7 +55,10 @@ public class ReadQueryService {
                     WHERE p.grid_cell_id = g.id
                     ORDER BY p.ts DESC, p.id DESC LIMIT 1
                 ) p ON TRUE
-                WHERE g.geom && ST_MakeEnvelope(:minLon, :minLat, :maxLon, :maxLat, 4326)
+                WHERE ST_Within(
+                    g.centroid::geometry,
+                    ST_MakeEnvelope(:minLon, :minLat, :maxLon, :maxLat, 4326)
+                )
                 """,
                 Map.of("minLon", minLon, "minLat", minLat, "maxLon", maxLon, "maxLat", maxLat),
                 (rs, row) -> new GridPredictionResponse(
@@ -64,6 +69,7 @@ public class ReadQueryService {
                         rs.getString("source")));
     }
 
+    @Cacheable(value = "forecast", key = "#stationId")
     public List<ForecastResponse> forecast(long stationId) {
         return jdbc.query(
                 """
@@ -87,7 +93,7 @@ public class ReadQueryService {
     public List<WorklistItemResponse> worklist(String receptor) {
         return jdbc.query(
                 """
-                SELECT c.code, c.tehsil, c.district, c.state, ST_X(c.centroid::geometry) AS lon,
+                SELECT c.id AS cluster_id, c.code, c.tehsil, c.district, c.state, ST_X(c.centroid::geometry) AS lon,
                        ST_Y(c.centroid::geometry) AS lat, c.detection_count, c.total_frp,
                        i.impact_score, i.impact_rank, i.downwind_population, i.transport_hours,
                        i.trajectory_confidence, i.consecutive_days_unactioned
@@ -96,7 +102,7 @@ public class ReadQueryService {
                 """,
                 Map.of("receptor", receptor),
                 (rs, row) -> new WorklistItemResponse(
-                        rs.getString("code"), rs.getString("tehsil"), rs.getString("district"),
+                        rs.getLong("cluster_id"), rs.getString("code"), rs.getString("tehsil"), rs.getString("district"),
                         rs.getString("state"), rs.getDouble("lon"), rs.getDouble("lat"),
                         rs.getInt("detection_count"), rs.getDouble("total_frp"),
                         rs.getDouble("impact_score"), rs.getInt("impact_rank"),
@@ -109,7 +115,7 @@ public class ReadQueryService {
     public List<AlertResponse> alerts() {
         return jdbc.query(
                 """
-                SELECT * FROM alert ORDER BY issued_at DESC, id DESC
+                SELECT * FROM alert ORDER BY issued_at DESC, id DESC LIMIT 50
                 """,
                 (rs, row) -> new AlertResponse(
                         rs.getString("alert_id"), timestamp(rs, "issued_at"), rs.getInt("horizon_hours"),
@@ -118,6 +124,46 @@ public class ReadQueryService {
                         textArray(rs, "jurisdiction"), textArray(rs, "mandated_actions"),
                         nullableLong(rs, "exposed_population"), rs.getString("model_version"),
                         textArray(rs, "evidence_sources"), rs.getString("source")));
+    }
+
+    public Optional<AlertResponse> alert(String alertId) {
+        List<AlertResponse> alerts = jdbc.query(
+                """
+                SELECT * FROM alert WHERE alert_id = :alertId
+                """,
+                Map.of("alertId", alertId),
+                (rs, row) -> new AlertResponse(
+                        rs.getString("alert_id"), timestamp(rs, "issued_at"), rs.getInt("horizon_hours"),
+                        rs.getInt("predicted_aqi"), rs.getInt("ci_low"), rs.getInt("ci_high"),
+                        rs.getString("recommended_grap_stage"), rs.getString("statutory_basis"),
+                        textArray(rs, "jurisdiction"), textArray(rs, "mandated_actions"),
+                        nullableLong(rs, "exposed_population"), rs.getString("model_version"),
+                        textArray(rs, "evidence_sources"), rs.getString("source")));
+        return alerts.stream().findFirst();
+    }
+
+    @Transactional
+    @org.springframework.cache.annotation.CacheEvict(value = "worklist", allEntries = true)
+    public WorklistActionResponse recordWorklistAction(long clusterId, String receptor, String actionedBy) {
+        List<WorklistActionResponse> actions = jdbc.query(
+                """
+                UPDATE fire_cluster_impact impact
+                SET consecutive_days_unactioned = 0,
+                    last_actioned_at = now(),
+                    actioned_by = :actionedBy
+                FROM fire_cluster cluster
+                WHERE impact.fire_cluster_id = cluster.id
+                  AND impact.fire_cluster_id = :clusterId
+                  AND impact.receptor = :receptor
+                RETURNING cluster.code, impact.last_actioned_at, impact.actioned_by
+                """,
+                Map.of("clusterId", clusterId, "receptor", receptor, "actionedBy", actionedBy),
+                (rs, row) -> new WorklistActionResponse(
+                        rs.getString("code"), timestamp(rs, "last_actioned_at"), rs.getString("actioned_by")));
+        if (actions.isEmpty()) {
+            throw new java.util.NoSuchElementException("worklist cluster was not found");
+        }
+        return actions.getFirst();
     }
 
     private static OffsetDateTime timestamp(ResultSet rs, String column) throws SQLException {

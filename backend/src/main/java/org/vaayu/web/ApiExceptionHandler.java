@@ -2,6 +2,7 @@ package org.vaayu.web;
 
 import jakarta.validation.ConstraintViolationException;
 import java.time.OffsetDateTime;
+import java.util.NoSuchElementException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -15,6 +16,12 @@ public class ApiExceptionHandler {
             MethodArgumentNotValidException.class})
     ResponseEntity<ApiError> badRequest(Exception exception) {
         return ResponseEntity.badRequest().body(new ApiError("INVALID_REQUEST", exception.getMessage()));
+    }
+
+    @ExceptionHandler(NoSuchElementException.class)
+    ResponseEntity<ApiError> notFound(NoSuchElementException exception) {
+        return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                .body(new ApiError("NOT_FOUND", exception.getMessage()));
     }
 
     record ApiError(String code, String message, OffsetDateTime timestamp) {
