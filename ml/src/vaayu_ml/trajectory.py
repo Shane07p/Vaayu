@@ -1,70 +1,63 @@
-"""Lagrangian back-trajectory over ERA5 and GFS wind fields.
-
-Steps an air parcel backwards through the wind field from a receptor to recover
-its path and transport time.
-
-This is deliberately NOT HYSPLIT and must never be described as HYSPLIT in code,
-comments, interfaces, or documentation. HYSPLIT requires a compiled binary and
-multi-gigabyte GDAS meteorology files, which do not fit the deployment target.
-
-What it is: a single-particle approximation, not dispersion modelling. That is
-the same caveat the technical document already states for HYSPLIT trajectories,
-so the honesty framing is unchanged. Attribution confidence is reported, never
-asserted.
-
-Implement: ``back_trajectory(lat, lon, wind_at, hours=48, step_hours=1)``
-returning ``list[tuple[float, float]]``, receptor first and oldest last.
-"""
-
-from __future__ import annotations
-
-import math
-
-EARTH_RADIUS_M = 6_371_000.0
-
+import numpy as np
+import pandas as pd
 
 def back_trajectory(
-    lat: float,
-    lon: float,
-    wind_at,
-    hours: int = 48,
-    step_hours: int = 1,
+    receptor_lat: float,
+    receptor_lon: float,
+    n_hours: int,
+    wind_u_grid: np.ndarray,
+    wind_v_grid: np.ndarray,
+    grid_lats: np.ndarray,
+    grid_lons: np.ndarray,
 ) -> list[tuple[float, float]]:
-    """Integrate a single parcel backward using an east/north m/s wind callback.
-
-    ``wind_at(latitude, longitude, elapsed_hours)`` returns ``(u, v)`` where
-    positive values point east and north. Missing wind data stops the path: a
-    fabricated continuation would look more certain than the inputs permit.
     """
-    if not -90 <= lat <= 90 or not -180 <= lon <= 180:
-        raise ValueError("starting latitude or longitude is invalid")
-    if hours < 1 or step_hours < 1 or hours % step_hours:
-        raise ValueError(
-            "hours and step_hours must be positive, with hours divisible by step_hours"
-        )
-
-    path = [(float(lat), float(lon))]
-    seconds = step_hours * 3_600
-    for elapsed in range(0, hours, step_hours):
-        wind = wind_at(lat, lon, elapsed)
-        if wind is None:
+    Lagrangian back-trajectory approximation.
+    
+    This is a single-particle Lagrangian approximation, not a dispersion model.
+    It steps backward one hour at a time, calculating wind displacement.
+    Accuracy degrades significantly beyond ~48h and in complex terrain.
+    
+    Args:
+        receptor_lat, receptor_lon: Starting point
+        n_hours: Number of hours to trace back
+        wind_u_grid: 3D numpy array of U wind component (time, lat, lon)
+        wind_v_grid: 3D numpy array of V wind component (time, lat, lon)
+        grid_lats: 1D array of latitudes corresponding to grid
+        grid_lons: 1D array of longitudes corresponding to grid
+        
+    Returns:
+        List of (lat, lon) waypoints.
+    """
+    waypoints = [(receptor_lat, receptor_lon)]
+    
+    cur_lat = receptor_lat
+    cur_lon = receptor_lon
+    
+    # Simple nearest-neighbor interpolation for this approximation
+    for t in range(min(n_hours, wind_u_grid.shape[0])):
+        # Find nearest grid index
+        lat_idx = np.abs(grid_lats - cur_lat).argmin()
+        lon_idx = np.abs(grid_lons - cur_lon).argmin()
+        
+        u = wind_u_grid[t, lat_idx, lon_idx]
+        v = wind_v_grid[t, lat_idx, lon_idx]
+        
+        if np.isnan(u) or np.isnan(v):
             break
-        try:
-            u, v = wind
-        except (TypeError, ValueError):
-            break
-        if not all(
-            isinstance(component, (int, float)) and math.isfinite(component)
-            for component in (u, v)
-        ):
-            break
-        lat -= (v * seconds / EARTH_RADIUS_M) * 180 / 3.141592653589793
-        cosine = math.cos(math.radians(lat))
-        if abs(cosine) < 1e-8:
-            break
-        lon -= (u * seconds / (EARTH_RADIUS_M * cosine)) * 180 / 3.141592653589793
-        lon = (lon + 180) % 360 - 180
-        if not -90 <= lat <= 90:
-            break
-        path.append((lat, lon))
-    return path
+            
+        # Convert wind speed (m/s) to degrees per hour approx
+        # 1 degree lat is ~111 km, 1 degree lon is ~111 * cos(lat) km
+        # 1 m/s = 3.6 km/h
+        u_kmh = u * 3.6
+        v_kmh = v * 3.6
+        
+        d_lat = v_kmh / 111.0
+        d_lon = u_kmh / (111.0 * np.cos(np.radians(cur_lat)))
+        
+        # Step backward in time (so we subtract wind displacement)
+        cur_lat = cur_lat - d_lat
+        cur_lon = cur_lon - d_lon
+        
+        waypoints.append((float(cur_lat), float(cur_lon)))
+        
+    return waypoints
