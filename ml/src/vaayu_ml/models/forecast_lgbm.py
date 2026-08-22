@@ -87,14 +87,29 @@ class ForecastModel:
             mlflow.log_metric("rmse_train", rmse)
 
     def pm25_to_aqi(self, pm25: float) -> int:
-        """Convert PM2.5 (ug/m3) to India CPCB AQI."""
+        """Convert PM2.5 (ug/m3) to India CPCB AQI.
+
+        The published CPCB table lists integer bands (0-30, 31-60, 61-90, ...),
+        which leaves gaps between them. PM2.5 is a continuous measurement, so a
+        concentration of 30.5 matched no band and fell through to the severe
+        fallback: 30.5 micrograms, genuinely clean air, converted to AQI 500.
+        Under GRAP that is Stage IV -- truck bans, construction stoppage, school
+        closures.
+
+        The bands below are contiguous on the concentration axis with the
+        published index endpoints preserved. First match wins, so an exact
+        boundary value belongs to the lower band.
+
+        Mirrored by AqiScale.java in the backend; a change here needs the same
+        change there.
+        """
         breakpoints = [
             (0, 30, 0, 50),
-            (31, 60, 51, 100),
-            (61, 90, 101, 200),
-            (91, 120, 201, 300),
-            (121, 250, 301, 400),
-            (251, 99999, 401, 500),
+            (30, 60, 51, 100),
+            (60, 90, 101, 200),
+            (90, 120, 201, 300),
+            (120, 250, 301, 400),
+            (250, 99999, 401, 500),
         ]
         pm25 = max(0, pm25)
         for c_low, c_high, i_low, i_high in breakpoints:
