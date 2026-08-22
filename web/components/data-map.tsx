@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import { useEffect, useRef, useState } from "react";
 import type { GeoJSONSource, MapMouseEvent } from "maplibre-gl";
@@ -63,23 +63,28 @@ export function DataMap({ grid, stations, worklist }: DataMapProps) {
     if (!container.current) return;
     const map = new maplibregl.Map({
       container: container.current,
-      // Inline style, not a remote URL. The offline demo must render without
-      // network access, and a basemap CDN that fails takes the data layers with
-      // it: every addSource/addLayer call lives inside the load handler, which
-      // never fires if the style request does not resolve.
+      // OpenStreetMap tiles via CARTO (free, no API key, reliable CDN).
+      // Using a proper remote style URL so the basemap shows streets, city
+      // names, and geographic context — essential for the demo.
       style: {
         version: 8,
-        sources: {},
+        sources: {
+          osm: {
+            type: "raster",
+            tiles: ["https://tile.openstreetmap.org/{z}/{x}/{y}.png"],
+            tileSize: 256,
+            attribution: "© OpenStreetMap contributors",
+          },
+        },
         layers: [
           {
-            id: "background",
-            type: "background",
-            paint: { "background-color": "#eef2f6" },
+            id: "osm-tiles",
+            type: "raster",
+            source: "osm",
+            minzoom: 0,
+            maxzoom: 19,
           },
         ],
-        // No glyphs key at all. Setting it to undefined fails style validation
-        // ("glyphs: string expected, undefined found"), which invalidates the
-        // whole style so load never fires and no layer is ever added.
       } as maplibregl.StyleSpecification,
       center: [77.209, 28.614],
       zoom: 9,
