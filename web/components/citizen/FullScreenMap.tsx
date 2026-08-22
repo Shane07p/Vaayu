@@ -146,7 +146,7 @@ const FullScreenMap: React.FC = () => {
 
       {/* Bottom-Left Selected Location Inspector Overlay */}
       {showCard && displayAqi !== null && (
-        <div className="absolute bottom-6 left-4 sm:left-6 z-20 max-w-sm w-[calc(100vw-2rem)] sm:w-80 bg-[#080d12]/95 border border-white/10 rounded-2xl shadow-2xl backdrop-blur-xl animate-fade-in text-slate-100 overflow-hidden">
+        <div className="absolute bottom-6 left-4 sm:left-6 z-20 max-w-sm w-[calc(100vw-2rem)] sm:w-80 bg-black/65 border border-white/10 rounded-2xl backdrop-blur-md animate-fade-in text-slate-100 overflow-hidden">
           
           {/* AQI Severity Image Banner */}
           <div className="relative w-full h-28 overflow-hidden">
