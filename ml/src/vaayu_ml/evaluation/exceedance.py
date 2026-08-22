@@ -34,14 +34,10 @@ def exceedance_metrics(
     false_positive = int(np.sum(~observed_events & predicted_events))
     false_negative = int(np.sum(observed_events & ~predicted_events))
     precision = (
-        true_positive / (true_positive + false_positive)
-        if true_positive + false_positive
-        else 0.0
+        true_positive / (true_positive + false_positive) if true_positive + false_positive else 0.0
     )
     recall = (
-        true_positive / (true_positive + false_negative)
-        if true_positive + false_negative
-        else 0.0
+        true_positive / (true_positive + false_negative) if true_positive + false_negative else 0.0
     )
     f1 = 2 * precision * recall / (precision + recall) if precision + recall else 0.0
     return {

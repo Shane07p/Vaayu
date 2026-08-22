@@ -29,3 +29,7 @@ secrets/
 # Local planning artefacts, not part of the deliverable
 docs/superpowers/
 implementation_plan*.md
+
+# MLflow local store and model artifacts
+ml/mlflow.db
+ml/artifacts/

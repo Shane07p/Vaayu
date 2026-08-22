@@ -1,7 +1,151 @@
 [
   {
-    "grid_cell_code": "SEED-GRID-0-0",
-    "ts": "2026-08-21T13:00:00+00:00",
+    "grid_cell_code": "NCR-035-029",
+    "ts": "2026-08-22T05:00:00+00:00",
+    "kind": "REANALYSIS",
+    "boundary_layer_height": 175.8,
+    "wind_u": -1.725,
+    "wind_v": -0.605,
+    "temp_2m": 14.56,
+    "relative_humidity": 78.1,
+    "surface_pressure": 100439.5,
+    "precipitation": 0.0
+  },
+  {
+    "grid_cell_code": "NCR-035-030",
+    "ts": "2026-08-22T05:00:00+00:00",
+    "kind": "REANALYSIS",
+    "boundary_layer_height": 253.3,
+    "wind_u": -1.733,
+    "wind_v": -0.849,
+    "temp_2m": 10.08,
+    "relative_humidity": 86.7,
+    "surface_pressure": 99726.0,
+    "precipitation": 0.0
+  },
+  {
+    "grid_cell_code": "NCR-035-031",
+    "ts": "2026-08-22T05:00:00+00:00",
+    "kind": "REANALYSIS",
+    "boundary_layer_height": 203.6,
+    "wind_u": -2.718,
+    "wind_v": -1.399,
+    "temp_2m": 14.96,
+    "relative_humidity": 61.6,
+    "surface_pressure": 99940.6,
+    "precipitation": 0.0
+  },
+  {
+    "grid_cell_code": "NCR-035-032",
+    "ts": "2026-08-22T05:00:00+00:00",
+    "kind": "REANALYSIS",
+    "boundary_layer_height": 184.1,
+    "wind_u": -1.655,
+    "wind_v": -1.309,
+    "temp_2m": 12.26,
+    "relative_humidity": 72.7,
+    "surface_pressure": 100622.1,
+    "precipitation": 0.0
+  },
+  {
+    "grid_cell_code": "NCR-035-033",
+    "ts": "2026-08-22T05:00:00+00:00",
+    "kind": "REANALYSIS",
+    "boundary_layer_height": 429.7,
+    "wind_u": -3.066,
+    "wind_v": -2.009,
+    "temp_2m": 15.65,
+    "relative_humidity": 86.4,
+    "surface_pressure": 100493.7,
+    "precipitation": 0.0
+  },
+  {
+    "grid_cell_code": "NCR-035-034",
+    "ts": "2026-08-22T05:00:00+00:00",
+    "kind": "REANALYSIS",
+    "boundary_layer_height": 254.2,
+    "wind_u": -1.895,
+    "wind_v": -2.649,
+    "temp_2m": 10.0,
+    "relative_humidity": 78.9,
+    "surface_pressure": 100357.7,
+    "precipitation": 0.0
+  },
+  {
+    "grid_cell_code": "NCR-035-035",
+    "ts": "2026-08-22T05:00:00+00:00",
+    "kind": "REANALYSIS",
+    "boundary_layer_height": 148.8,
+    "wind_u": -4.22,
+    "wind_v": -1.535,
+    "temp_2m": 10.8,
+    "relative_humidity": 69.3,
+    "surface_pressure": 100744.8,
+    "precipitation": 0.0
+  },
+  {
+    "grid_cell_code": "NCR-035-036",
+    "ts": "2026-08-22T05:00:00+00:00",
+    "kind": "REANALYSIS",
+    "boundary_layer_height": 445.5,
+    "wind_u": -4.456,
+    "wind_v": -1.794,
+    "temp_2m": 13.8,
+    "relative_humidity": 65.0,
+    "surface_pressure": 101477.6,
+    "precipitation": 0.0
+  },
+  {
+    "grid_cell_code": "NCR-035-037",
+    "ts": "2026-08-22T05:00:00+00:00",
+    "kind": "REANALYSIS",
+    "boundary_layer_height": 283.1,
+    "wind_u": -1.821,
+    "wind_v": -2.149,
+    "temp_2m": 12.59,
+    "relative_humidity": 64.0,
+    "surface_pressure": 101098.5,
+    "precipitation": 0.0
+  },
+  {
+    "grid_cell_code": "NCR-035-038",
+    "ts": "2026-08-22T05:00:00+00:00",
+    "kind": "REANALYSIS",
+    "boundary_layer_height": 434.9,
+    "wind_u": -3.012,
+    "wind_v": -2.082,
+    "temp_2m": 15.46,
+    "relative_humidity": 57.5,
+    "surface_pressure": 101448.5,
+    "precipitation": 0.0
+  },
+  {
+    "grid_cell_code": "NCR-035-039",
+    "ts": "2026-08-22T05:00:00+00:00",
+    "kind": "REANALYSIS",
+    "boundary_layer_height": 329.2,
+    "wind_u": -3.529,
+    "wind_v": -1.189,
+    "temp_2m": 17.1,
+    "relative_humidity": 68.1,
+    "surface_pressure": 100097.6,
+    "precipitation": 0.0
+  },
+  {
+    "grid_cell_code": "NCR-035-040",
+    "ts": "2026-08-22T05:00:00+00:00",
+    "kind": "REANALYSIS",
+    "boundary_layer_height": 221.1,
+    "wind_u": -4.244,
+    "wind_v": -1.933,
+    "temp_2m": 12.7,
+    "relative_humidity": 68.8,
+    "surface_pressure": 100337.1,
+    "precipitation": 0.0
+  },
+  {
+    "grid_cell_code": "NCR-035-041",
+    "ts": "2026-08-22T05:00:00+00:00",
     "kind": "REANALYSIS",
     "boundary_layer_height": 343.8,
     "wind_u": -2.044,
@@ -12,8 +156,8 @@
     "precipitation": 0.0
   },
   {
-    "grid_cell_code": "SEED-GRID-0-1",
-    "ts": "2026-08-21T13:00:00+00:00",
+    "grid_cell_code": "NCR-035-042",
+    "ts": "2026-08-22T05:00:00+00:00",
     "kind": "REANALYSIS",
     "boundary_layer_height": 277.9,
     "wind_u": -4.297,
@@ -24,8 +168,8 @@
     "precipitation": 0.0
   },
   {
-    "grid_cell_code": "SEED-GRID-0-2",
-    "ts": "2026-08-21T13:00:00+00:00",
+    "grid_cell_code": "NCR-035-043",
+    "ts": "2026-08-22T05:00:00+00:00",
     "kind": "REANALYSIS",
     "boundary_layer_height": 209.2,
     "wind_u": -3.429,
@@ -36,8 +180,8 @@
     "precipitation": 0.0
   },
   {
-    "grid_cell_code": "SEED-GRID-0-3",
-    "ts": "2026-08-21T13:00:00+00:00",
+    "grid_cell_code": "NCR-035-044",
+    "ts": "2026-08-22T05:00:00+00:00",
     "kind": "REANALYSIS",
     "boundary_layer_height": 420.1,
     "wind_u": -2.546,
@@ -48,8 +192,8 @@
     "precipitation": 0.0
   },
   {
-    "grid_cell_code": "SEED-GRID-0-4",
-    "ts": "2026-08-21T13:00:00+00:00",
+    "grid_cell_code": "NCR-035-045",
+    "ts": "2026-08-22T05:00:00+00:00",
     "kind": "REANALYSIS",
     "boundary_layer_height": 336.0,
     "wind_u": -2.359,
@@ -60,8 +204,8 @@
     "precipitation": 0.0
   },
   {
-    "grid_cell_code": "SEED-GRID-0-5",
-    "ts": "2026-08-21T13:00:00+00:00",
+    "grid_cell_code": "NCR-035-046",
+    "ts": "2026-08-22T05:00:00+00:00",
     "kind": "REANALYSIS",
     "boundary_layer_height": 387.0,
     "wind_u": -4.036,
@@ -72,8 +216,8 @@
     "precipitation": 0.0
   },
   {
-    "grid_cell_code": "SEED-GRID-0-6",
-    "ts": "2026-08-21T13:00:00+00:00",
+    "grid_cell_code": "NCR-035-047",
+    "ts": "2026-08-22T05:00:00+00:00",
     "kind": "REANALYSIS",
     "boundary_layer_height": 315.6,
     "wind_u": -3.517,
@@ -84,8 +228,8 @@
     "precipitation": 0.0
   },
   {
-    "grid_cell_code": "SEED-GRID-0-7",
-    "ts": "2026-08-21T13:00:00+00:00",
+    "grid_cell_code": "NCR-035-048",
+    "ts": "2026-08-22T05:00:00+00:00",
     "kind": "REANALYSIS",
     "boundary_layer_height": 298.6,
     "wind_u": -4.405,
@@ -96,8 +240,8 @@
     "precipitation": 0.0
   },
   {
-    "grid_cell_code": "SEED-GRID-0-8",
-    "ts": "2026-08-21T13:00:00+00:00",
+    "grid_cell_code": "NCR-036-029",
+    "ts": "2026-08-22T05:00:00+00:00",
     "kind": "REANALYSIS",
     "boundary_layer_height": 320.0,
     "wind_u": -4.265,
@@ -108,8 +252,8 @@
     "precipitation": 0.0
   },
   {
-    "grid_cell_code": "SEED-GRID-0-9",
-    "ts": "2026-08-21T13:00:00+00:00",
+    "grid_cell_code": "NCR-036-030",
+    "ts": "2026-08-22T05:00:00+00:00",
     "kind": "REANALYSIS",
     "boundary_layer_height": 333.4,
     "wind_u": -1.215,
@@ -120,8 +264,8 @@
     "precipitation": 0.0
   },
   {
-    "grid_cell_code": "SEED-GRID-0-10",
-    "ts": "2026-08-21T13:00:00+00:00",
+    "grid_cell_code": "NCR-036-031",
+    "ts": "2026-08-22T05:00:00+00:00",
     "kind": "REANALYSIS",
     "boundary_layer_height": 249.6,
     "wind_u": -4.143,
@@ -132,8 +276,8 @@
     "precipitation": 0.0
   },
   {
-    "grid_cell_code": "SEED-GRID-0-11",
-    "ts": "2026-08-21T13:00:00+00:00",
+    "grid_cell_code": "NCR-036-032",
+    "ts": "2026-08-22T05:00:00+00:00",
     "kind": "REANALYSIS",
     "boundary_layer_height": 403.7,
     "wind_u": -2.783,
@@ -144,8 +288,8 @@
     "precipitation": 0.0
   },
   {
-    "grid_cell_code": "SEED-GRID-0-12",
-    "ts": "2026-08-21T13:00:00+00:00",
+    "grid_cell_code": "NCR-036-033",
+    "ts": "2026-08-22T05:00:00+00:00",
     "kind": "REANALYSIS",
     "boundary_layer_height": 142.6,
     "wind_u": -1.262,
@@ -156,8 +300,8 @@
     "precipitation": 0.0
   },
   {
-    "grid_cell_code": "SEED-GRID-0-13",
-    "ts": "2026-08-21T13:00:00+00:00",
+    "grid_cell_code": "NCR-036-034",
+    "ts": "2026-08-22T05:00:00+00:00",
     "kind": "REANALYSIS",
     "boundary_layer_height": 250.6,
     "wind_u": -3.082,
@@ -168,8 +312,8 @@
     "precipitation": 0.0
   },
   {
-    "grid_cell_code": "SEED-GRID-0-14",
-    "ts": "2026-08-21T13:00:00+00:00",
+    "grid_cell_code": "NCR-036-035",
+    "ts": "2026-08-22T05:00:00+00:00",
     "kind": "REANALYSIS",
     "boundary_layer_height": 344.6,
     "wind_u": -2.003,
@@ -180,8 +324,8 @@
     "precipitation": 0.0
   },
   {
-    "grid_cell_code": "SEED-GRID-0-15",
-    "ts": "2026-08-21T13:00:00+00:00",
+    "grid_cell_code": "NCR-036-036",
+    "ts": "2026-08-22T05:00:00+00:00",
     "kind": "REANALYSIS",
     "boundary_layer_height": 365.3,
     "wind_u": -4.118,
@@ -192,8 +336,8 @@
     "precipitation": 0.0
   },
   {
-    "grid_cell_code": "SEED-GRID-0-16",
-    "ts": "2026-08-21T13:00:00+00:00",
+    "grid_cell_code": "NCR-036-037",
+    "ts": "2026-08-22T05:00:00+00:00",
     "kind": "REANALYSIS",
     "boundary_layer_height": 398.4,
     "wind_u": -3.609,
@@ -204,8 +348,8 @@
     "precipitation": 0.0
   },
   {
-    "grid_cell_code": "SEED-GRID-0-17",
-    "ts": "2026-08-21T13:00:00+00:00",
+    "grid_cell_code": "NCR-036-038",
+    "ts": "2026-08-22T05:00:00+00:00",
     "kind": "REANALYSIS",
     "boundary_layer_height": 262.8,
     "wind_u": -3.61,
@@ -216,8 +360,8 @@
     "precipitation": 0.0
   },
   {
-    "grid_cell_code": "SEED-GRID-0-18",
-    "ts": "2026-08-21T13:00:00+00:00",
+    "grid_cell_code": "NCR-036-039",
+    "ts": "2026-08-22T05:00:00+00:00",
     "kind": "REANALYSIS",
     "boundary_layer_height": 324.1,
     "wind_u": -3.264,
@@ -228,8 +372,8 @@
     "precipitation": 0.0
   },
   {
-    "grid_cell_code": "SEED-GRID-0-19",
-    "ts": "2026-08-21T13:00:00+00:00",
+    "grid_cell_code": "NCR-036-040",
+    "ts": "2026-08-22T05:00:00+00:00",
     "kind": "REANALYSIS",
     "boundary_layer_height": 267.2,
     "wind_u": -1.127,
@@ -240,8 +384,8 @@
     "precipitation": 0.0
   },
   {
-    "grid_cell_code": "SEED-GRID-1-0",
-    "ts": "2026-08-21T13:00:00+00:00",
+    "grid_cell_code": "NCR-036-041",
+    "ts": "2026-08-22T05:00:00+00:00",
     "kind": "REANALYSIS",
     "boundary_layer_height": 171.6,
     "wind_u": -3.224,
@@ -252,8 +396,8 @@
     "precipitation": 0.0
   },
   {
-    "grid_cell_code": "SEED-GRID-1-1",
-    "ts": "2026-08-21T13:00:00+00:00",
+    "grid_cell_code": "NCR-036-042",
+    "ts": "2026-08-22T05:00:00+00:00",
     "kind": "REANALYSIS",
     "boundary_layer_height": 206.3,
     "wind_u": -2.864,
@@ -264,8 +408,8 @@
     "precipitation": 0.0
   },
   {
-    "grid_cell_code": "SEED-GRID-1-2",
-    "ts": "2026-08-21T13:00:00+00:00",
+    "grid_cell_code": "NCR-036-043",
+    "ts": "2026-08-22T05:00:00+00:00",
     "kind": "REANALYSIS",
     "boundary_layer_height": 190.5,
     "wind_u": -2.855,
@@ -276,8 +420,8 @@
     "precipitation": 0.0
   },
   {
-    "grid_cell_code": "SEED-GRID-1-3",
-    "ts": "2026-08-21T13:00:00+00:00",
+    "grid_cell_code": "NCR-036-044",
+    "ts": "2026-08-22T05:00:00+00:00",
     "kind": "REANALYSIS",
     "boundary_layer_height": 453.2,
     "wind_u": -2.651,
@@ -288,8 +432,8 @@
     "precipitation": 0.0
   },
   {
-    "grid_cell_code": "SEED-GRID-1-4",
-    "ts": "2026-08-21T13:00:00+00:00",
+    "grid_cell_code": "NCR-036-045",
+    "ts": "2026-08-22T05:00:00+00:00",
     "kind": "REANALYSIS",
     "boundary_layer_height": 442.2,
     "wind_u": -4.475,
@@ -300,8 +444,8 @@
     "precipitation": 0.0
   },
   {
-    "grid_cell_code": "SEED-GRID-1-5",
-    "ts": "2026-08-21T13:00:00+00:00",
+    "grid_cell_code": "NCR-036-046",
+    "ts": "2026-08-22T05:00:00+00:00",
     "kind": "REANALYSIS",
     "boundary_layer_height": 128.2,
     "wind_u": -3.877,
@@ -312,8 +456,8 @@
     "precipitation": 0.0
   },
   {
-    "grid_cell_code": "SEED-GRID-1-6",
-    "ts": "2026-08-21T13:00:00+00:00",
+    "grid_cell_code": "NCR-036-047",
+    "ts": "2026-08-22T05:00:00+00:00",
     "kind": "REANALYSIS",
     "boundary_layer_height": 447.4,
     "wind_u": -1.111,
@@ -324,8 +468,8 @@
     "precipitation": 0.0
   },
   {
-    "grid_cell_code": "SEED-GRID-1-7",
-    "ts": "2026-08-21T13:00:00+00:00",
+    "grid_cell_code": "NCR-036-048",
+    "ts": "2026-08-22T05:00:00+00:00",
     "kind": "REANALYSIS",
     "boundary_layer_height": 383.6,
     "wind_u": -3.623,
@@ -336,8 +480,8 @@
     "precipitation": 0.0
   },
   {
-    "grid_cell_code": "SEED-GRID-1-8",
-    "ts": "2026-08-21T13:00:00+00:00",
+    "grid_cell_code": "NCR-037-029",
+    "ts": "2026-08-22T05:00:00+00:00",
     "kind": "REANALYSIS",
     "boundary_layer_height": 334.3,
     "wind_u": -3.405,
@@ -348,8 +492,8 @@
     "precipitation": 0.0
   },
   {
-    "grid_cell_code": "SEED-GRID-1-9",
-    "ts": "2026-08-21T13:00:00+00:00",
+    "grid_cell_code": "NCR-037-030",
+    "ts": "2026-08-22T05:00:00+00:00",
     "kind": "REANALYSIS",
     "boundary_layer_height": 134.7,
     "wind_u": -3.002,
@@ -360,8 +504,8 @@
     "precipitation": 0.0
   },
   {
-    "grid_cell_code": "SEED-GRID-1-10",
-    "ts": "2026-08-21T13:00:00+00:00",
+    "grid_cell_code": "NCR-037-031",
+    "ts": "2026-08-22T05:00:00+00:00",
     "kind": "REANALYSIS",
     "boundary_layer_height": 146.6,
     "wind_u": -1.773,
@@ -372,8 +516,8 @@
     "precipitation": 0.0
   },
   {
-    "grid_cell_code": "SEED-GRID-1-11",
-    "ts": "2026-08-21T13:00:00+00:00",
+    "grid_cell_code": "NCR-037-032",
+    "ts": "2026-08-22T05:00:00+00:00",
     "kind": "REANALYSIS",
     "boundary_layer_height": 214.2,
     "wind_u": -4.334,
@@ -384,8 +528,8 @@
     "precipitation": 0.0
   },
   {
-    "grid_cell_code": "SEED-GRID-1-12",
-    "ts": "2026-08-21T13:00:00+00:00",
+    "grid_cell_code": "NCR-037-033",
+    "ts": "2026-08-22T05:00:00+00:00",
     "kind": "REANALYSIS",
     "boundary_layer_height": 417.8,
     "wind_u": -2.02,
@@ -396,8 +540,8 @@
     "precipitation": 0.0
   },
   {
-    "grid_cell_code": "SEED-GRID-1-13",
-    "ts": "2026-08-21T13:00:00+00:00",
+    "grid_cell_code": "NCR-037-034",
+    "ts": "2026-08-22T05:00:00+00:00",
     "kind": "REANALYSIS",
     "boundary_layer_height": 380.7,
     "wind_u": -2.273,
@@ -408,8 +552,8 @@
     "precipitation": 0.0
   },
   {
-    "grid_cell_code": "SEED-GRID-1-14",
-    "ts": "2026-08-21T13:00:00+00:00",
+    "grid_cell_code": "NCR-037-035",
+    "ts": "2026-08-22T05:00:00+00:00",
     "kind": "REANALYSIS",
     "boundary_layer_height": 430.0,
     "wind_u": -3.025,
@@ -420,8 +564,8 @@
     "precipitation": 0.0
   },
   {
-    "grid_cell_code": "SEED-GRID-1-15",
-    "ts": "2026-08-21T13:00:00+00:00",
+    "grid_cell_code": "NCR-037-036",
+    "ts": "2026-08-22T05:00:00+00:00",
     "kind": "REANALYSIS",
     "boundary_layer_height": 281.0,
     "wind_u": -1.356,
@@ -432,8 +576,8 @@
     "precipitation": 0.0
   },
   {
-    "grid_cell_code": "SEED-GRID-1-16",
-    "ts": "2026-08-21T13:00:00+00:00",
+    "grid_cell_code": "NCR-037-037",
+    "ts": "2026-08-22T05:00:00+00:00",
     "kind": "REANALYSIS",
     "boundary_layer_height": 229.4,
     "wind_u": -2.513,
@@ -444,8 +588,8 @@
     "precipitation": 0.0
   },
   {
-    "grid_cell_code": "SEED-GRID-1-17",
-    "ts": "2026-08-21T13:00:00+00:00",
+    "grid_cell_code": "NCR-037-038",
+    "ts": "2026-08-22T05:00:00+00:00",
     "kind": "REANALYSIS",
     "boundary_layer_height": 392.3,
     "wind_u": -4.257,
@@ -456,8 +600,8 @@
     "precipitation": 0.0
   },
   {
-    "grid_cell_code": "SEED-GRID-1-18",
-    "ts": "2026-08-21T13:00:00+00:00",
+    "grid_cell_code": "NCR-037-039",
+    "ts": "2026-08-22T05:00:00+00:00",
     "kind": "REANALYSIS",
     "boundary_layer_height": 240.7,
     "wind_u": -2.409,
@@ -468,8 +612,8 @@
     "precipitation": 0.0
   },
   {
-    "grid_cell_code": "SEED-GRID-1-19",
-    "ts": "2026-08-21T13:00:00+00:00",
+    "grid_cell_code": "NCR-037-040",
+    "ts": "2026-08-22T05:00:00+00:00",
     "kind": "REANALYSIS",
     "boundary_layer_height": 302.9,
     "wind_u": -4.09,
@@ -480,8 +624,8 @@
     "precipitation": 0.0
   },
   {
-    "grid_cell_code": "SEED-GRID-2-0",
-    "ts": "2026-08-21T13:00:00+00:00",
+    "grid_cell_code": "NCR-037-041",
+    "ts": "2026-08-22T05:00:00+00:00",
     "kind": "REANALYSIS",
     "boundary_layer_height": 287.1,
     "wind_u": -4.339,
@@ -492,8 +636,8 @@
     "precipitation": 0.0
   },
   {
-    "grid_cell_code": "SEED-GRID-2-1",
-    "ts": "2026-08-21T13:00:00+00:00",
+    "grid_cell_code": "NCR-037-042",
+    "ts": "2026-08-22T05:00:00+00:00",
     "kind": "REANALYSIS",
     "boundary_layer_height": 455.9,
     "wind_u": -1.752,
@@ -504,8 +648,8 @@
     "precipitation": 0.0
   },
   {
-    "grid_cell_code": "SEED-GRID-2-2",
-    "ts": "2026-08-21T13:00:00+00:00",
+    "grid_cell_code": "NCR-037-043",
+    "ts": "2026-08-22T05:00:00+00:00",
     "kind": "REANALYSIS",
     "boundary_layer_height": 319.7,
     "wind_u": -3.977,
@@ -516,8 +660,8 @@
     "precipitation": 0.0
   },
   {
-    "grid_cell_code": "SEED-GRID-2-3",
-    "ts": "2026-08-21T13:00:00+00:00",
+    "grid_cell_code": "NCR-037-044",
+    "ts": "2026-08-22T05:00:00+00:00",
     "kind": "REANALYSIS",
     "boundary_layer_height": 163.5,
     "wind_u": -2.282,
@@ -528,8 +672,8 @@
     "precipitation": 0.0
   },
   {
-    "grid_cell_code": "SEED-GRID-2-4",
-    "ts": "2026-08-21T13:00:00+00:00",
+    "grid_cell_code": "NCR-037-045",
+    "ts": "2026-08-22T05:00:00+00:00",
     "kind": "REANALYSIS",
     "boundary_layer_height": 249.6,
     "wind_u": -1.747,
@@ -540,8 +684,8 @@
     "precipitation": 0.0
   },
   {
-    "grid_cell_code": "SEED-GRID-2-5",
-    "ts": "2026-08-21T13:00:00+00:00",
+    "grid_cell_code": "NCR-037-046",
+    "ts": "2026-08-22T05:00:00+00:00",
     "kind": "REANALYSIS",
     "boundary_layer_height": 462.3,
     "wind_u": -3.128,
@@ -552,8 +696,8 @@
     "precipitation": 0.0
   },
   {
-    "grid_cell_code": "SEED-GRID-2-6",
-    "ts": "2026-08-21T13:00:00+00:00",
+    "grid_cell_code": "NCR-037-047",
+    "ts": "2026-08-22T05:00:00+00:00",
     "kind": "REANALYSIS",
     "boundary_layer_height": 378.9,
     "wind_u": -1.596,
@@ -564,8 +708,8 @@
     "precipitation": 0.0
   },
   {
-    "grid_cell_code": "SEED-GRID-2-7",
-    "ts": "2026-08-21T13:00:00+00:00",
+    "grid_cell_code": "NCR-037-048",
+    "ts": "2026-08-22T05:00:00+00:00",
     "kind": "REANALYSIS",
     "boundary_layer_height": 386.0,
     "wind_u": -3.806,
@@ -576,8 +720,8 @@
     "precipitation": 0.0
   },
   {
-    "grid_cell_code": "SEED-GRID-2-8",
-    "ts": "2026-08-21T13:00:00+00:00",
+    "grid_cell_code": "NCR-038-029",
+    "ts": "2026-08-22T05:00:00+00:00",
     "kind": "REANALYSIS",
     "boundary_layer_height": 469.5,
     "wind_u": -3.534,
@@ -588,8 +732,8 @@
     "precipitation": 0.0
   },
   {
-    "grid_cell_code": "SEED-GRID-2-9",
-    "ts": "2026-08-21T13:00:00+00:00",
+    "grid_cell_code": "NCR-038-030",
+    "ts": "2026-08-22T05:00:00+00:00",
     "kind": "REANALYSIS",
     "boundary_layer_height": 331.5,
     "wind_u": -3.69,
@@ -600,8 +744,8 @@
     "precipitation": 0.0
   },
   {
-    "grid_cell_code": "SEED-GRID-2-10",
-    "ts": "2026-08-21T13:00:00+00:00",
+    "grid_cell_code": "NCR-038-031",
+    "ts": "2026-08-22T05:00:00+00:00",
     "kind": "REANALYSIS",
     "boundary_layer_height": 361.6,
     "wind_u": -2.404,
@@ -612,8 +756,8 @@
     "precipitation": 0.0
   },
   {
-    "grid_cell_code": "SEED-GRID-2-11",
-    "ts": "2026-08-21T13:00:00+00:00",
+    "grid_cell_code": "NCR-038-032",
+    "ts": "2026-08-22T05:00:00+00:00",
     "kind": "REANALYSIS",
     "boundary_layer_height": 324.6,
     "wind_u": -3.568,
@@ -624,8 +768,8 @@
     "precipitation": 0.0
   },
   {
-    "grid_cell_code": "SEED-GRID-2-12",
-    "ts": "2026-08-21T13:00:00+00:00",
+    "grid_cell_code": "NCR-038-033",
+    "ts": "2026-08-22T05:00:00+00:00",
     "kind": "REANALYSIS",
     "boundary_layer_height": 294.0,
     "wind_u": -4.174,
@@ -636,8 +780,8 @@
     "precipitation": 0.0
   },
   {
-    "grid_cell_code": "SEED-GRID-2-13",
-    "ts": "2026-08-21T13:00:00+00:00",
+    "grid_cell_code": "NCR-038-034",
+    "ts": "2026-08-22T05:00:00+00:00",
     "kind": "REANALYSIS",
     "boundary_layer_height": 312.3,
     "wind_u": -1.269,
@@ -648,8 +792,8 @@
     "precipitation": 0.0
   },
   {
-    "grid_cell_code": "SEED-GRID-2-14",
-    "ts": "2026-08-21T13:00:00+00:00",
+    "grid_cell_code": "NCR-038-035",
+    "ts": "2026-08-22T05:00:00+00:00",
     "kind": "REANALYSIS",
     "boundary_layer_height": 402.0,
     "wind_u": -2.751,
@@ -660,8 +804,8 @@
     "precipitation": 0.0
   },
   {
-    "grid_cell_code": "SEED-GRID-2-15",
-    "ts": "2026-08-21T13:00:00+00:00",
+    "grid_cell_code": "NCR-038-036",
+    "ts": "2026-08-22T05:00:00+00:00",
     "kind": "REANALYSIS",
     "boundary_layer_height": 250.8,
     "wind_u": -1.685,
@@ -672,8 +816,8 @@
     "precipitation": 0.0
   },
   {
-    "grid_cell_code": "SEED-GRID-2-16",
-    "ts": "2026-08-21T13:00:00+00:00",
+    "grid_cell_code": "NCR-038-037",
+    "ts": "2026-08-22T05:00:00+00:00",
     "kind": "REANALYSIS",
     "boundary_layer_height": 200.0,
     "wind_u": -1.257,
@@ -684,8 +828,8 @@
     "precipitation": 0.0
   },
   {
-    "grid_cell_code": "SEED-GRID-2-17",
-    "ts": "2026-08-21T13:00:00+00:00",
+    "grid_cell_code": "NCR-038-038",
+    "ts": "2026-08-22T05:00:00+00:00",
     "kind": "REANALYSIS",
     "boundary_layer_height": 273.5,
     "wind_u": -3.402,
@@ -696,8 +840,8 @@
     "precipitation": 0.0
   },
   {
-    "grid_cell_code": "SEED-GRID-2-18",
-    "ts": "2026-08-21T13:00:00+00:00",
+    "grid_cell_code": "NCR-038-039",
+    "ts": "2026-08-22T05:00:00+00:00",
     "kind": "REANALYSIS",
     "boundary_layer_height": 182.6,
     "wind_u": -2.472,
@@ -708,8 +852,8 @@
     "precipitation": 0.0
   },
   {
-    "grid_cell_code": "SEED-GRID-2-19",
-    "ts": "2026-08-21T13:00:00+00:00",
+    "grid_cell_code": "NCR-038-040",
+    "ts": "2026-08-22T05:00:00+00:00",
     "kind": "REANALYSIS",
     "boundary_layer_height": 127.7,
     "wind_u": -4.147,
@@ -720,8 +864,8 @@
     "precipitation": 0.0
   },
   {
-    "grid_cell_code": "SEED-GRID-3-0",
-    "ts": "2026-08-21T13:00:00+00:00",
+    "grid_cell_code": "NCR-038-041",
+    "ts": "2026-08-22T05:00:00+00:00",
     "kind": "REANALYSIS",
     "boundary_layer_height": 307.1,
     "wind_u": -1.021,
@@ -732,8 +876,8 @@
     "precipitation": 0.0
   },
   {
-    "grid_cell_code": "SEED-GRID-3-1",
-    "ts": "2026-08-21T13:00:00+00:00",
+    "grid_cell_code": "NCR-038-042",
+    "ts": "2026-08-22T05:00:00+00:00",
     "kind": "REANALYSIS",
     "boundary_layer_height": 155.5,
     "wind_u": -3.254,
@@ -744,8 +888,8 @@
     "precipitation": 0.0
   },
   {
-    "grid_cell_code": "SEED-GRID-3-2",
-    "ts": "2026-08-21T13:00:00+00:00",
+    "grid_cell_code": "NCR-038-043",
+    "ts": "2026-08-22T05:00:00+00:00",
     "kind": "REANALYSIS",
     "boundary_layer_height": 144.3,
     "wind_u": -2.301,
@@ -756,8 +900,8 @@
     "precipitation": 0.0
   },
   {
-    "grid_cell_code": "SEED-GRID-3-3",
-    "ts": "2026-08-21T13:00:00+00:00",
+    "grid_cell_code": "NCR-038-044",
+    "ts": "2026-08-22T05:00:00+00:00",
     "kind": "REANALYSIS",
     "boundary_layer_height": 325.0,
     "wind_u": -2.287,
@@ -768,8 +912,8 @@
     "precipitation": 0.0
   },
   {
-    "grid_cell_code": "SEED-GRID-3-4",
-    "ts": "2026-08-21T13:00:00+00:00",
+    "grid_cell_code": "NCR-038-045",
+    "ts": "2026-08-22T05:00:00+00:00",
     "kind": "REANALYSIS",
     "boundary_layer_height": 412.4,
     "wind_u": -2.267,
@@ -780,8 +924,8 @@
     "precipitation": 0.0
   },
   {
-    "grid_cell_code": "SEED-GRID-3-5",
-    "ts": "2026-08-21T13:00:00+00:00",
+    "grid_cell_code": "NCR-038-046",
+    "ts": "2026-08-22T05:00:00+00:00",
     "kind": "REANALYSIS",
     "boundary_layer_height": 182.9,
     "wind_u": -1.753,
@@ -792,8 +936,8 @@
     "precipitation": 0.0
   },
   {
-    "grid_cell_code": "SEED-GRID-3-6",
-    "ts": "2026-08-21T13:00:00+00:00",
+    "grid_cell_code": "NCR-038-047",
+    "ts": "2026-08-22T05:00:00+00:00",
     "kind": "REANALYSIS",
     "boundary_layer_height": 231.3,
     "wind_u": -3.01,
@@ -804,8 +948,8 @@
     "precipitation": 0.0
   },
   {
-    "grid_cell_code": "SEED-GRID-3-7",
-    "ts": "2026-08-21T13:00:00+00:00",
+    "grid_cell_code": "NCR-038-048",
+    "ts": "2026-08-22T05:00:00+00:00",
     "kind": "REANALYSIS",
     "boundary_layer_height": 371.3,
     "wind_u": -3.075,
@@ -816,8 +960,8 @@
     "precipitation": 0.0
   },
   {
-    "grid_cell_code": "SEED-GRID-3-8",
-    "ts": "2026-08-21T13:00:00+00:00",
+    "grid_cell_code": "NCR-039-029",
+    "ts": "2026-08-22T05:00:00+00:00",
     "kind": "REANALYSIS",
     "boundary_layer_height": 138.7,
     "wind_u": -3.925,
@@ -828,8 +972,8 @@
     "precipitation": 0.0
   },
   {
-    "grid_cell_code": "SEED-GRID-3-9",
-    "ts": "2026-08-21T13:00:00+00:00",
+    "grid_cell_code": "NCR-039-030",
+    "ts": "2026-08-22T05:00:00+00:00",
     "kind": "REANALYSIS",
     "boundary_layer_height": 307.5,
     "wind_u": -2.538,
@@ -840,8 +984,8 @@
     "precipitation": 0.0
   },
   {
-    "grid_cell_code": "SEED-GRID-3-10",
-    "ts": "2026-08-21T13:00:00+00:00",
+    "grid_cell_code": "NCR-039-031",
+    "ts": "2026-08-22T05:00:00+00:00",
     "kind": "REANALYSIS",
     "boundary_layer_height": 242.4,
     "wind_u": -3.202,
@@ -852,8 +996,8 @@
     "precipitation": 0.0
   },
   {
-    "grid_cell_code": "SEED-GRID-3-11",
-    "ts": "2026-08-21T13:00:00+00:00",
+    "grid_cell_code": "NCR-039-032",
+    "ts": "2026-08-22T05:00:00+00:00",
     "kind": "REANALYSIS",
     "boundary_layer_height": 408.3,
     "wind_u": -3.24,
@@ -864,8 +1008,8 @@
     "precipitation": 0.0
   },
   {
-    "grid_cell_code": "SEED-GRID-3-12",
-    "ts": "2026-08-21T13:00:00+00:00",
+    "grid_cell_code": "NCR-039-033",
+    "ts": "2026-08-22T05:00:00+00:00",
     "kind": "REANALYSIS",
     "boundary_layer_height": 199.2,
     "wind_u": -2.507,
@@ -876,8 +1020,8 @@
     "precipitation": 0.0
   },
   {
-    "grid_cell_code": "SEED-GRID-3-13",
-    "ts": "2026-08-21T13:00:00+00:00",
+    "grid_cell_code": "NCR-039-034",
+    "ts": "2026-08-22T05:00:00+00:00",
     "kind": "REANALYSIS",
     "boundary_layer_height": 360.9,
     "wind_u": -1.92,
@@ -888,8 +1032,8 @@
     "precipitation": 0.0
   },
   {
-    "grid_cell_code": "SEED-GRID-3-14",
-    "ts": "2026-08-21T13:00:00+00:00",
+    "grid_cell_code": "NCR-039-035",
+    "ts": "2026-08-22T05:00:00+00:00",
     "kind": "REANALYSIS",
     "boundary_layer_height": 175.9,
     "wind_u": -1.078,
@@ -900,8 +1044,8 @@
     "precipitation": 0.0
   },
   {
-    "grid_cell_code": "SEED-GRID-3-15",
-    "ts": "2026-08-21T13:00:00+00:00",
+    "grid_cell_code": "NCR-039-036",
+    "ts": "2026-08-22T05:00:00+00:00",
     "kind": "REANALYSIS",
     "boundary_layer_height": 178.6,
     "wind_u": -1.036,
@@ -912,8 +1056,8 @@
     "precipitation": 0.0
   },
   {
-    "grid_cell_code": "SEED-GRID-3-16",
-    "ts": "2026-08-21T13:00:00+00:00",
+    "grid_cell_code": "NCR-039-037",
+    "ts": "2026-08-22T05:00:00+00:00",
     "kind": "REANALYSIS",
     "boundary_layer_height": 349.5,
     "wind_u": -3.853,
@@ -924,8 +1068,8 @@
     "precipitation": 0.0
   },
   {
-    "grid_cell_code": "SEED-GRID-3-17",
-    "ts": "2026-08-21T13:00:00+00:00",
+    "grid_cell_code": "NCR-039-038",
+    "ts": "2026-08-22T05:00:00+00:00",
     "kind": "REANALYSIS",
     "boundary_layer_height": 293.0,
     "wind_u": -3.928,
@@ -936,8 +1080,8 @@
     "precipitation": 0.0
   },
   {
-    "grid_cell_code": "SEED-GRID-3-18",
-    "ts": "2026-08-21T13:00:00+00:00",
+    "grid_cell_code": "NCR-039-039",
+    "ts": "2026-08-22T05:00:00+00:00",
     "kind": "REANALYSIS",
     "boundary_layer_height": 283.6,
     "wind_u": -3.592,
@@ -948,8 +1092,8 @@
     "precipitation": 0.0
   },
   {
-    "grid_cell_code": "SEED-GRID-3-19",
-    "ts": "2026-08-21T13:00:00+00:00",
+    "grid_cell_code": "NCR-039-040",
+    "ts": "2026-08-22T05:00:00+00:00",
     "kind": "REANALYSIS",
     "boundary_layer_height": 310.6,
     "wind_u": -3.971,
@@ -960,8 +1104,8 @@
     "precipitation": 0.0
   },
   {
-    "grid_cell_code": "SEED-GRID-4-0",
-    "ts": "2026-08-21T13:00:00+00:00",
+    "grid_cell_code": "NCR-039-041",
+    "ts": "2026-08-22T05:00:00+00:00",
     "kind": "REANALYSIS",
     "boundary_layer_height": 212.5,
     "wind_u": -3.483,
@@ -972,8 +1116,8 @@
     "precipitation": 0.0
   },
   {
-    "grid_cell_code": "SEED-GRID-4-1",
-    "ts": "2026-08-21T13:00:00+00:00",
+    "grid_cell_code": "NCR-039-042",
+    "ts": "2026-08-22T05:00:00+00:00",
     "kind": "REANALYSIS",
     "boundary_layer_height": 467.3,
     "wind_u": -1.237,
@@ -984,8 +1128,8 @@
     "precipitation": 0.0
   },
   {
-    "grid_cell_code": "SEED-GRID-4-2",
-    "ts": "2026-08-21T13:00:00+00:00",
+    "grid_cell_code": "NCR-039-043",
+    "ts": "2026-08-22T05:00:00+00:00",
     "kind": "REANALYSIS",
     "boundary_layer_height": 180.0,
     "wind_u": -3.053,
@@ -996,8 +1140,8 @@
     "precipitation": 0.0
   },
   {
-    "grid_cell_code": "SEED-GRID-4-3",
-    "ts": "2026-08-21T13:00:00+00:00",
+    "grid_cell_code": "NCR-039-044",
+    "ts": "2026-08-22T05:00:00+00:00",
     "kind": "REANALYSIS",
     "boundary_layer_height": 429.1,
     "wind_u": -2.114,
@@ -1008,8 +1152,8 @@
     "precipitation": 0.0
   },
   {
-    "grid_cell_code": "SEED-GRID-4-4",
-    "ts": "2026-08-21T13:00:00+00:00",
+    "grid_cell_code": "NCR-039-045",
+    "ts": "2026-08-22T05:00:00+00:00",
     "kind": "REANALYSIS",
     "boundary_layer_height": 203.3,
     "wind_u": -2.549,
@@ -1020,8 +1164,8 @@
     "precipitation": 0.0
   },
   {
-    "grid_cell_code": "SEED-GRID-4-5",
-    "ts": "2026-08-21T13:00:00+00:00",
+    "grid_cell_code": "NCR-039-046",
+    "ts": "2026-08-22T05:00:00+00:00",
     "kind": "REANALYSIS",
     "boundary_layer_height": 165.4,
     "wind_u": -2.281,
@@ -1032,8 +1176,8 @@
     "precipitation": 0.0
   },
   {
-    "grid_cell_code": "SEED-GRID-4-6",
-    "ts": "2026-08-21T13:00:00+00:00",
+    "grid_cell_code": "NCR-039-047",
+    "ts": "2026-08-22T05:00:00+00:00",
     "kind": "REANALYSIS",
     "boundary_layer_height": 467.7,
     "wind_u": -1.342,
@@ -1044,8 +1188,8 @@
     "precipitation": 0.0
   },
   {
-    "grid_cell_code": "SEED-GRID-4-7",
-    "ts": "2026-08-21T13:00:00+00:00",
+    "grid_cell_code": "NCR-039-048",
+    "ts": "2026-08-22T05:00:00+00:00",
     "kind": "REANALYSIS",
     "boundary_layer_height": 240.9,
     "wind_u": -4.125,
@@ -1056,8 +1200,8 @@
     "precipitation": 0.0
   },
   {
-    "grid_cell_code": "SEED-GRID-4-8",
-    "ts": "2026-08-21T13:00:00+00:00",
+    "grid_cell_code": "NCR-040-029",
+    "ts": "2026-08-22T05:00:00+00:00",
     "kind": "REANALYSIS",
     "boundary_layer_height": 449.5,
     "wind_u": -1.847,
@@ -1068,8 +1212,8 @@
     "precipitation": 0.0
   },
   {
-    "grid_cell_code": "SEED-GRID-4-9",
-    "ts": "2026-08-21T13:00:00+00:00",
+    "grid_cell_code": "NCR-040-030",
+    "ts": "2026-08-22T05:00:00+00:00",
     "kind": "REANALYSIS",
     "boundary_layer_height": 350.8,
     "wind_u": -1.043,
@@ -1080,8 +1224,8 @@
     "precipitation": 0.0
   },
   {
-    "grid_cell_code": "SEED-GRID-4-10",
-    "ts": "2026-08-21T13:00:00+00:00",
+    "grid_cell_code": "NCR-040-031",
+    "ts": "2026-08-22T05:00:00+00:00",
     "kind": "REANALYSIS",
     "boundary_layer_height": 125.9,
     "wind_u": -2.428,
@@ -1092,8 +1236,8 @@
     "precipitation": 0.0
   },
   {
-    "grid_cell_code": "SEED-GRID-4-11",
-    "ts": "2026-08-21T13:00:00+00:00",
+    "grid_cell_code": "NCR-040-032",
+    "ts": "2026-08-22T05:00:00+00:00",
     "kind": "REANALYSIS",
     "boundary_layer_height": 330.8,
     "wind_u": -1.488,
@@ -1104,8 +1248,8 @@
     "precipitation": 0.0
   },
   {
-    "grid_cell_code": "SEED-GRID-4-12",
-    "ts": "2026-08-21T13:00:00+00:00",
+    "grid_cell_code": "NCR-040-033",
+    "ts": "2026-08-22T05:00:00+00:00",
     "kind": "REANALYSIS",
     "boundary_layer_height": 473.3,
     "wind_u": -1.254,
@@ -1116,8 +1260,8 @@
     "precipitation": 0.0
   },
   {
-    "grid_cell_code": "SEED-GRID-4-13",
-    "ts": "2026-08-21T13:00:00+00:00",
+    "grid_cell_code": "NCR-040-034",
+    "ts": "2026-08-22T05:00:00+00:00",
     "kind": "REANALYSIS",
     "boundary_layer_height": 324.4,
     "wind_u": -3.723,
@@ -1128,8 +1272,8 @@
     "precipitation": 0.0
   },
   {
-    "grid_cell_code": "SEED-GRID-4-14",
-    "ts": "2026-08-21T13:00:00+00:00",
+    "grid_cell_code": "NCR-040-035",
+    "ts": "2026-08-22T05:00:00+00:00",
     "kind": "REANALYSIS",
     "boundary_layer_height": 283.9,
     "wind_u": -3.671,
@@ -1140,8 +1284,8 @@
     "precipitation": 0.0
   },
   {
-    "grid_cell_code": "SEED-GRID-4-15",
-    "ts": "2026-08-21T13:00:00+00:00",
+    "grid_cell_code": "NCR-040-036",
+    "ts": "2026-08-22T05:00:00+00:00",
     "kind": "REANALYSIS",
     "boundary_layer_height": 411.7,
     "wind_u": -1.027,
@@ -1152,8 +1296,8 @@
     "precipitation": 0.0
   },
   {
-    "grid_cell_code": "SEED-GRID-4-16",
-    "ts": "2026-08-21T13:00:00+00:00",
+    "grid_cell_code": "NCR-040-037",
+    "ts": "2026-08-22T05:00:00+00:00",
     "kind": "REANALYSIS",
     "boundary_layer_height": 260.3,
     "wind_u": -1.358,
@@ -1164,8 +1308,8 @@
     "precipitation": 0.0
   },
   {
-    "grid_cell_code": "SEED-GRID-4-17",
-    "ts": "2026-08-21T13:00:00+00:00",
+    "grid_cell_code": "NCR-040-038",
+    "ts": "2026-08-22T05:00:00+00:00",
     "kind": "REANALYSIS",
     "boundary_layer_height": 478.4,
     "wind_u": -3.508,
@@ -1176,8 +1320,8 @@
     "precipitation": 0.0
   },
   {
-    "grid_cell_code": "SEED-GRID-4-18",
-    "ts": "2026-08-21T13:00:00+00:00",
+    "grid_cell_code": "NCR-040-039",
+    "ts": "2026-08-22T05:00:00+00:00",
     "kind": "REANALYSIS",
     "boundary_layer_height": 333.3,
     "wind_u": -2.579,
@@ -1188,8 +1332,8 @@
     "precipitation": 0.0
   },
   {
-    "grid_cell_code": "SEED-GRID-4-19",
-    "ts": "2026-08-21T13:00:00+00:00",
+    "grid_cell_code": "NCR-040-040",
+    "ts": "2026-08-22T05:00:00+00:00",
     "kind": "REANALYSIS",
     "boundary_layer_height": 339.8,
     "wind_u": -3.626,
@@ -1200,8 +1344,8 @@
     "precipitation": 0.0
   },
   {
-    "grid_cell_code": "SEED-GRID-5-0",
-    "ts": "2026-08-21T13:00:00+00:00",
+    "grid_cell_code": "NCR-040-041",
+    "ts": "2026-08-22T05:00:00+00:00",
     "kind": "REANALYSIS",
     "boundary_layer_height": 398.1,
     "wind_u": -1.75,
@@ -1212,8 +1356,8 @@
     "precipitation": 0.0
   },
   {
-    "grid_cell_code": "SEED-GRID-5-1",
-    "ts": "2026-08-21T13:00:00+00:00",
+    "grid_cell_code": "NCR-040-042",
+    "ts": "2026-08-22T05:00:00+00:00",
     "kind": "REANALYSIS",
     "boundary_layer_height": 133.6,
     "wind_u": -2.826,
@@ -1224,8 +1368,8 @@
     "precipitation": 0.0
   },
   {
-    "grid_cell_code": "SEED-GRID-5-2",
-    "ts": "2026-08-21T13:00:00+00:00",
+    "grid_cell_code": "NCR-040-043",
+    "ts": "2026-08-22T05:00:00+00:00",
     "kind": "REANALYSIS",
     "boundary_layer_height": 121.2,
     "wind_u": -1.278,
@@ -1236,8 +1380,8 @@
     "precipitation": 0.0
   },
   {
-    "grid_cell_code": "SEED-GRID-5-3",
-    "ts": "2026-08-21T13:00:00+00:00",
+    "grid_cell_code": "NCR-040-044",
+    "ts": "2026-08-22T05:00:00+00:00",
     "kind": "REANALYSIS",
     "boundary_layer_height": 194.3,
     "wind_u": -4.413,
@@ -1248,8 +1392,8 @@
     "precipitation": 0.0
   },
   {
-    "grid_cell_code": "SEED-GRID-5-4",
-    "ts": "2026-08-21T13:00:00+00:00",
+    "grid_cell_code": "NCR-040-045",
+    "ts": "2026-08-22T05:00:00+00:00",
     "kind": "REANALYSIS",
     "boundary_layer_height": 348.3,
     "wind_u": -2.993,
@@ -1260,8 +1404,8 @@
     "precipitation": 0.0
   },
   {
-    "grid_cell_code": "SEED-GRID-5-5",
-    "ts": "2026-08-21T13:00:00+00:00",
+    "grid_cell_code": "NCR-040-046",
+    "ts": "2026-08-22T05:00:00+00:00",
     "kind": "REANALYSIS",
     "boundary_layer_height": 315.4,
     "wind_u": -3.329,
@@ -1272,8 +1416,8 @@
     "precipitation": 0.0
   },
   {
-    "grid_cell_code": "SEED-GRID-5-6",
-    "ts": "2026-08-21T13:00:00+00:00",
+    "grid_cell_code": "NCR-040-047",
+    "ts": "2026-08-22T05:00:00+00:00",
     "kind": "REANALYSIS",
     "boundary_layer_height": 261.9,
     "wind_u": -2.733,
@@ -1284,8 +1428,8 @@
     "precipitation": 0.0
   },
   {
-    "grid_cell_code": "SEED-GRID-5-7",
-    "ts": "2026-08-21T13:00:00+00:00",
+    "grid_cell_code": "NCR-040-048",
+    "ts": "2026-08-22T05:00:00+00:00",
     "kind": "REANALYSIS",
     "boundary_layer_height": 247.3,
     "wind_u": -3.119,
@@ -1296,8 +1440,8 @@
     "precipitation": 0.0
   },
   {
-    "grid_cell_code": "SEED-GRID-5-8",
-    "ts": "2026-08-21T13:00:00+00:00",
+    "grid_cell_code": "NCR-041-029",
+    "ts": "2026-08-22T05:00:00+00:00",
     "kind": "REANALYSIS",
     "boundary_layer_height": 438.6,
     "wind_u": -1.986,
@@ -1308,8 +1452,8 @@
     "precipitation": 0.0
   },
   {
-    "grid_cell_code": "SEED-GRID-5-9",
-    "ts": "2026-08-21T13:00:00+00:00",
+    "grid_cell_code": "NCR-041-030",
+    "ts": "2026-08-22T05:00:00+00:00",
     "kind": "REANALYSIS",
     "boundary_layer_height": 342.2,
     "wind_u": -4.288,
@@ -1320,8 +1464,8 @@
     "precipitation": 0.0
   },
   {
-    "grid_cell_code": "SEED-GRID-5-10",
-    "ts": "2026-08-21T13:00:00+00:00",
+    "grid_cell_code": "NCR-041-031",
+    "ts": "2026-08-22T05:00:00+00:00",
     "kind": "REANALYSIS",
     "boundary_layer_height": 451.5,
     "wind_u": -2.83,
@@ -1332,8 +1476,8 @@
     "precipitation": 0.0
   },
   {
-    "grid_cell_code": "SEED-GRID-5-11",
-    "ts": "2026-08-21T13:00:00+00:00",
+    "grid_cell_code": "NCR-041-032",
+    "ts": "2026-08-22T05:00:00+00:00",
     "kind": "REANALYSIS",
     "boundary_layer_height": 174.8,
     "wind_u": -3.252,
@@ -1344,8 +1488,8 @@
     "precipitation": 0.0
   },
   {
-    "grid_cell_code": "SEED-GRID-5-12",
-    "ts": "2026-08-21T13:00:00+00:00",
+    "grid_cell_code": "NCR-041-033",
+    "ts": "2026-08-22T05:00:00+00:00",
     "kind": "REANALYSIS",
     "boundary_layer_height": 414.5,
     "wind_u": -4.409,
@@ -1356,8 +1500,8 @@
     "precipitation": 0.0
   },
   {
-    "grid_cell_code": "SEED-GRID-5-13",
-    "ts": "2026-08-21T13:00:00+00:00",
+    "grid_cell_code": "NCR-041-034",
+    "ts": "2026-08-22T05:00:00+00:00",
     "kind": "REANALYSIS",
     "boundary_layer_height": 274.6,
     "wind_u": -4.43,
@@ -1368,8 +1512,8 @@
     "precipitation": 0.0
   },
   {
-    "grid_cell_code": "SEED-GRID-5-14",
-    "ts": "2026-08-21T13:00:00+00:00",
+    "grid_cell_code": "NCR-041-035",
+    "ts": "2026-08-22T05:00:00+00:00",
     "kind": "REANALYSIS",
     "boundary_layer_height": 262.1,
     "wind_u": -3.805,
@@ -1380,8 +1524,8 @@
     "precipitation": 0.0
   },
   {
-    "grid_cell_code": "SEED-GRID-5-15",
-    "ts": "2026-08-21T13:00:00+00:00",
+    "grid_cell_code": "NCR-041-036",
+    "ts": "2026-08-22T05:00:00+00:00",
     "kind": "REANALYSIS",
     "boundary_layer_height": 365.1,
     "wind_u": -4.302,
@@ -1392,8 +1536,8 @@
     "precipitation": 0.0
   },
   {
-    "grid_cell_code": "SEED-GRID-5-16",
-    "ts": "2026-08-21T13:00:00+00:00",
+    "grid_cell_code": "NCR-041-037",
+    "ts": "2026-08-22T05:00:00+00:00",
     "kind": "REANALYSIS",
     "boundary_layer_height": 183.2,
     "wind_u": -2.619,
@@ -1404,8 +1548,8 @@
     "precipitation": 0.0
   },
   {
-    "grid_cell_code": "SEED-GRID-5-17",
-    "ts": "2026-08-21T13:00:00+00:00",
+    "grid_cell_code": "NCR-041-038",
+    "ts": "2026-08-22T05:00:00+00:00",
     "kind": "REANALYSIS",
     "boundary_layer_height": 398.4,
     "wind_u": -1.509,
@@ -1416,8 +1560,8 @@
     "precipitation": 0.0
   },
   {
-    "grid_cell_code": "SEED-GRID-5-18",
-    "ts": "2026-08-21T13:00:00+00:00",
+    "grid_cell_code": "NCR-041-039",
+    "ts": "2026-08-22T05:00:00+00:00",
     "kind": "REANALYSIS",
     "boundary_layer_height": 352.5,
     "wind_u": -1.193,
@@ -1428,8 +1572,8 @@
     "precipitation": 0.0
   },
   {
-    "grid_cell_code": "SEED-GRID-5-19",
-    "ts": "2026-08-21T13:00:00+00:00",
+    "grid_cell_code": "NCR-041-040",
+    "ts": "2026-08-22T05:00:00+00:00",
     "kind": "REANALYSIS",
     "boundary_layer_height": 431.2,
     "wind_u": -3.779,
@@ -1440,8 +1584,8 @@
     "precipitation": 0.0
   },
   {
-    "grid_cell_code": "SEED-GRID-6-0",
-    "ts": "2026-08-21T13:00:00+00:00",
+    "grid_cell_code": "NCR-041-041",
+    "ts": "2026-08-22T05:00:00+00:00",
     "kind": "REANALYSIS",
     "boundary_layer_height": 437.2,
     "wind_u": -4.03,
@@ -1452,8 +1596,8 @@
     "precipitation": 0.0
   },
   {
-    "grid_cell_code": "SEED-GRID-6-1",
-    "ts": "2026-08-21T13:00:00+00:00",
+    "grid_cell_code": "NCR-041-042",
+    "ts": "2026-08-22T05:00:00+00:00",
     "kind": "REANALYSIS",
     "boundary_layer_height": 288.6,
     "wind_u": -2.804,
@@ -1464,8 +1608,8 @@
     "precipitation": 0.0
   },
   {
-    "grid_cell_code": "SEED-GRID-6-2",
-    "ts": "2026-08-21T13:00:00+00:00",
+    "grid_cell_code": "NCR-041-043",
+    "ts": "2026-08-22T05:00:00+00:00",
     "kind": "REANALYSIS",
     "boundary_layer_height": 211.8,
     "wind_u": -2.32,
@@ -1476,8 +1620,8 @@
     "precipitation": 0.0
   },
   {
-    "grid_cell_code": "SEED-GRID-6-3",
-    "ts": "2026-08-21T13:00:00+00:00",
+    "grid_cell_code": "NCR-041-044",
+    "ts": "2026-08-22T05:00:00+00:00",
     "kind": "REANALYSIS",
     "boundary_layer_height": 233.9,
     "wind_u": -2.498,
@@ -1488,8 +1632,8 @@
     "precipitation": 0.0
   },
   {
-    "grid_cell_code": "SEED-GRID-6-4",
-    "ts": "2026-08-21T13:00:00+00:00",
+    "grid_cell_code": "NCR-041-045",
+    "ts": "2026-08-22T05:00:00+00:00",
     "kind": "REANALYSIS",
     "boundary_layer_height": 310.0,
     "wind_u": -2.216,
@@ -1500,8 +1644,8 @@
     "precipitation": 0.0
   },
   {
-    "grid_cell_code": "SEED-GRID-6-5",
-    "ts": "2026-08-21T13:00:00+00:00",
+    "grid_cell_code": "NCR-041-046",
+    "ts": "2026-08-22T05:00:00+00:00",
     "kind": "REANALYSIS",
     "boundary_layer_height": 383.2,
     "wind_u": -2.796,
@@ -1512,8 +1656,8 @@
     "precipitation": 0.0
   },
   {
-    "grid_cell_code": "SEED-GRID-6-6",
-    "ts": "2026-08-21T13:00:00+00:00",
+    "grid_cell_code": "NCR-041-047",
+    "ts": "2026-08-22T05:00:00+00:00",
     "kind": "REANALYSIS",
     "boundary_layer_height": 325.5,
     "wind_u": -4.439,
@@ -1524,8 +1668,8 @@
     "precipitation": 0.0
   },
   {
-    "grid_cell_code": "SEED-GRID-6-7",
-    "ts": "2026-08-21T13:00:00+00:00",
+    "grid_cell_code": "NCR-041-048",
+    "ts": "2026-08-22T05:00:00+00:00",
     "kind": "REANALYSIS",
     "boundary_layer_height": 142.4,
     "wind_u": -4.457,
@@ -1536,8 +1680,8 @@
     "precipitation": 0.0
   },
   {
-    "grid_cell_code": "SEED-GRID-6-8",
-    "ts": "2026-08-21T13:00:00+00:00",
+    "grid_cell_code": "NCR-042-029",
+    "ts": "2026-08-22T05:00:00+00:00",
     "kind": "REANALYSIS",
     "boundary_layer_height": 251.6,
     "wind_u": -3.158,
@@ -1548,8 +1692,8 @@
     "precipitation": 0.0
   },
   {
-    "grid_cell_code": "SEED-GRID-6-9",
-    "ts": "2026-08-21T13:00:00+00:00",
+    "grid_cell_code": "NCR-042-030",
+    "ts": "2026-08-22T05:00:00+00:00",
     "kind": "REANALYSIS",
     "boundary_layer_height": 359.5,
     "wind_u": -2.017,
@@ -1560,8 +1704,8 @@
     "precipitation": 0.0
   },
   {
-    "grid_cell_code": "SEED-GRID-6-10",
-    "ts": "2026-08-21T13:00:00+00:00",
+    "grid_cell_code": "NCR-042-031",
+    "ts": "2026-08-22T05:00:00+00:00",
     "kind": "REANALYSIS",
     "boundary_layer_height": 362.1,
     "wind_u": -4.328,
@@ -1572,8 +1716,8 @@
     "precipitation": 0.0
   },
   {
-    "grid_cell_code": "SEED-GRID-6-11",
-    "ts": "2026-08-21T13:00:00+00:00",
+    "grid_cell_code": "NCR-042-032",
+    "ts": "2026-08-22T05:00:00+00:00",
     "kind": "REANALYSIS",
     "boundary_layer_height": 135.2,
     "wind_u": -4.296,
@@ -1584,8 +1728,8 @@
     "precipitation": 0.0
   },
   {
-    "grid_cell_code": "SEED-GRID-6-12",
-    "ts": "2026-08-21T13:00:00+00:00",
+    "grid_cell_code": "NCR-042-033",
+    "ts": "2026-08-22T05:00:00+00:00",
     "kind": "REANALYSIS",
     "boundary_layer_height": 170.3,
     "wind_u": -3.23,
@@ -1596,8 +1740,8 @@
     "precipitation": 0.0
   },
   {
-    "grid_cell_code": "SEED-GRID-6-13",
-    "ts": "2026-08-21T13:00:00+00:00",
+    "grid_cell_code": "NCR-042-034",
+    "ts": "2026-08-22T05:00:00+00:00",
     "kind": "REANALYSIS",
     "boundary_layer_height": 449.6,
     "wind_u": -3.792,
@@ -1608,8 +1752,8 @@
     "precipitation": 0.0
   },
   {
-    "grid_cell_code": "SEED-GRID-6-14",
-    "ts": "2026-08-21T13:00:00+00:00",
+    "grid_cell_code": "NCR-042-035",
+    "ts": "2026-08-22T05:00:00+00:00",
     "kind": "REANALYSIS",
     "boundary_layer_height": 307.1,
     "wind_u": -1.516,
@@ -1620,8 +1764,8 @@
     "precipitation": 0.0
   },
   {
-    "grid_cell_code": "SEED-GRID-6-15",
-    "ts": "2026-08-21T13:00:00+00:00",
+    "grid_cell_code": "NCR-042-036",
+    "ts": "2026-08-22T05:00:00+00:00",
     "kind": "REANALYSIS",
     "boundary_layer_height": 427.0,
     "wind_u": -1.388,
@@ -1632,8 +1776,8 @@
     "precipitation": 0.0
   },
   {
-    "grid_cell_code": "SEED-GRID-6-16",
-    "ts": "2026-08-21T13:00:00+00:00",
+    "grid_cell_code": "NCR-042-037",
+    "ts": "2026-08-22T05:00:00+00:00",
     "kind": "REANALYSIS",
     "boundary_layer_height": 230.4,
     "wind_u": -2.095,
@@ -1644,8 +1788,8 @@
     "precipitation": 0.0
   },
   {
-    "grid_cell_code": "SEED-GRID-6-17",
-    "ts": "2026-08-21T13:00:00+00:00",
+    "grid_cell_code": "NCR-042-038",
+    "ts": "2026-08-22T05:00:00+00:00",
     "kind": "REANALYSIS",
     "boundary_layer_height": 178.5,
     "wind_u": -2.299,
@@ -1656,8 +1800,8 @@
     "precipitation": 0.0
   },
   {
-    "grid_cell_code": "SEED-GRID-6-18",
-    "ts": "2026-08-21T13:00:00+00:00",
+    "grid_cell_code": "NCR-042-039",
+    "ts": "2026-08-22T05:00:00+00:00",
     "kind": "REANALYSIS",
     "boundary_layer_height": 476.8,
     "wind_u": -2.114,
@@ -1668,8 +1812,8 @@
     "precipitation": 0.0
   },
   {
-    "grid_cell_code": "SEED-GRID-6-19",
-    "ts": "2026-08-21T13:00:00+00:00",
+    "grid_cell_code": "NCR-042-040",
+    "ts": "2026-08-22T05:00:00+00:00",
     "kind": "REANALYSIS",
     "boundary_layer_height": 411.0,
     "wind_u": -1.762,
@@ -1680,8 +1824,8 @@
     "precipitation": 0.0
   },
   {
-    "grid_cell_code": "SEED-GRID-7-0",
-    "ts": "2026-08-21T13:00:00+00:00",
+    "grid_cell_code": "NCR-042-041",
+    "ts": "2026-08-22T05:00:00+00:00",
     "kind": "REANALYSIS",
     "boundary_layer_height": 407.4,
     "wind_u": -3.442,
@@ -1692,8 +1836,8 @@
     "precipitation": 0.0
   },
   {
-    "grid_cell_code": "SEED-GRID-7-1",
-    "ts": "2026-08-21T13:00:00+00:00",
+    "grid_cell_code": "NCR-042-042",
+    "ts": "2026-08-22T05:00:00+00:00",
     "kind": "REANALYSIS",
     "boundary_layer_height": 225.6,
     "wind_u": -2.995,
@@ -1704,8 +1848,8 @@
     "precipitation": 0.0
   },
   {
-    "grid_cell_code": "SEED-GRID-7-2",
-    "ts": "2026-08-21T13:00:00+00:00",
+    "grid_cell_code": "NCR-042-043",
+    "ts": "2026-08-22T05:00:00+00:00",
     "kind": "REANALYSIS",
     "boundary_layer_height": 292.4,
     "wind_u": -1.118,
@@ -1716,8 +1860,8 @@
     "precipitation": 0.0
   },
   {
-    "grid_cell_code": "SEED-GRID-7-3",
-    "ts": "2026-08-21T13:00:00+00:00",
+    "grid_cell_code": "NCR-042-044",
+    "ts": "2026-08-22T05:00:00+00:00",
     "kind": "REANALYSIS",
     "boundary_layer_height": 307.9,
     "wind_u": -1.889,
@@ -1728,8 +1872,8 @@
     "precipitation": 0.0
   },
   {
-    "grid_cell_code": "SEED-GRID-7-4",
-    "ts": "2026-08-21T13:00:00+00:00",
+    "grid_cell_code": "NCR-042-045",
+    "ts": "2026-08-22T05:00:00+00:00",
     "kind": "REANALYSIS",
     "boundary_layer_height": 187.5,
     "wind_u": -1.997,
@@ -1740,8 +1884,8 @@
     "precipitation": 0.0
   },
   {
-    "grid_cell_code": "SEED-GRID-7-5",
-    "ts": "2026-08-21T13:00:00+00:00",
+    "grid_cell_code": "NCR-042-046",
+    "ts": "2026-08-22T05:00:00+00:00",
     "kind": "REANALYSIS",
     "boundary_layer_height": 365.5,
     "wind_u": -3.793,
@@ -1752,8 +1896,8 @@
     "precipitation": 0.0
   },
   {
-    "grid_cell_code": "SEED-GRID-7-6",
-    "ts": "2026-08-21T13:00:00+00:00",
+    "grid_cell_code": "NCR-042-047",
+    "ts": "2026-08-22T05:00:00+00:00",
     "kind": "REANALYSIS",
     "boundary_layer_height": 199.0,
     "wind_u": -4.269,
@@ -1764,8 +1908,8 @@
     "precipitation": 0.0
   },
   {
-    "grid_cell_code": "SEED-GRID-7-7",
-    "ts": "2026-08-21T13:00:00+00:00",
+    "grid_cell_code": "NCR-042-048",
+    "ts": "2026-08-22T05:00:00+00:00",
     "kind": "REANALYSIS",
     "boundary_layer_height": 292.4,
     "wind_u": -1.098,
@@ -1776,8 +1920,8 @@
     "precipitation": 0.0
   },
   {
-    "grid_cell_code": "SEED-GRID-7-8",
-    "ts": "2026-08-21T13:00:00+00:00",
+    "grid_cell_code": "NCR-043-029",
+    "ts": "2026-08-22T05:00:00+00:00",
     "kind": "REANALYSIS",
     "boundary_layer_height": 130.0,
     "wind_u": -4.053,
@@ -1788,8 +1932,8 @@
     "precipitation": 0.0
   },
   {
-    "grid_cell_code": "SEED-GRID-7-9",
-    "ts": "2026-08-21T13:00:00+00:00",
+    "grid_cell_code": "NCR-043-030",
+    "ts": "2026-08-22T05:00:00+00:00",
     "kind": "REANALYSIS",
     "boundary_layer_height": 453.9,
     "wind_u": -1.231,
@@ -1800,8 +1944,8 @@
     "precipitation": 0.0
   },
   {
-    "grid_cell_code": "SEED-GRID-7-10",
-    "ts": "2026-08-21T13:00:00+00:00",
+    "grid_cell_code": "NCR-043-031",
+    "ts": "2026-08-22T05:00:00+00:00",
     "kind": "REANALYSIS",
     "boundary_layer_height": 437.5,
     "wind_u": -2.571,
@@ -1812,8 +1956,8 @@
     "precipitation": 0.0
   },
   {
-    "grid_cell_code": "SEED-GRID-7-11",
-    "ts": "2026-08-21T13:00:00+00:00",
+    "grid_cell_code": "NCR-043-032",
+    "ts": "2026-08-22T05:00:00+00:00",
     "kind": "REANALYSIS",
     "boundary_layer_height": 438.1,
     "wind_u": -1.419,
@@ -1824,8 +1968,8 @@
     "precipitation": 0.0
   },
   {
-    "grid_cell_code": "SEED-GRID-7-12",
-    "ts": "2026-08-21T13:00:00+00:00",
+    "grid_cell_code": "NCR-043-033",
+    "ts": "2026-08-22T05:00:00+00:00",
     "kind": "REANALYSIS",
     "boundary_layer_height": 388.1,
     "wind_u": -1.251,
@@ -1836,8 +1980,8 @@
     "precipitation": 0.0
   },
   {
-    "grid_cell_code": "SEED-GRID-7-13",
-    "ts": "2026-08-21T13:00:00+00:00",
+    "grid_cell_code": "NCR-043-034",
+    "ts": "2026-08-22T05:00:00+00:00",
     "kind": "REANALYSIS",
     "boundary_layer_height": 441.3,
     "wind_u": -3.81,
@@ -1848,8 +1992,8 @@
     "precipitation": 0.0
   },
   {
-    "grid_cell_code": "SEED-GRID-7-14",
-    "ts": "2026-08-21T13:00:00+00:00",
+    "grid_cell_code": "NCR-043-035",
+    "ts": "2026-08-22T05:00:00+00:00",
     "kind": "REANALYSIS",
     "boundary_layer_height": 346.7,
     "wind_u": -2.743,
@@ -1860,8 +2004,8 @@
     "precipitation": 0.0
   },
   {
-    "grid_cell_code": "SEED-GRID-7-15",
-    "ts": "2026-08-21T13:00:00+00:00",
+    "grid_cell_code": "NCR-043-036",
+    "ts": "2026-08-22T05:00:00+00:00",
     "kind": "REANALYSIS",
     "boundary_layer_height": 145.8,
     "wind_u": -4.034,
@@ -1872,8 +2016,8 @@
     "precipitation": 0.0
   },
   {
-    "grid_cell_code": "SEED-GRID-7-16",
-    "ts": "2026-08-21T13:00:00+00:00",
+    "grid_cell_code": "NCR-043-037",
+    "ts": "2026-08-22T05:00:00+00:00",
     "kind": "REANALYSIS",
     "boundary_layer_height": 231.1,
     "wind_u": -2.363,
@@ -1884,8 +2028,8 @@
     "precipitation": 0.0
   },
   {
-    "grid_cell_code": "SEED-GRID-7-17",
-    "ts": "2026-08-21T13:00:00+00:00",
+    "grid_cell_code": "NCR-043-038",
+    "ts": "2026-08-22T05:00:00+00:00",
     "kind": "REANALYSIS",
     "boundary_layer_height": 330.8,
     "wind_u": -2.088,
@@ -1896,8 +2040,8 @@
     "precipitation": 0.0
   },
   {
-    "grid_cell_code": "SEED-GRID-7-18",
-    "ts": "2026-08-21T13:00:00+00:00",
+    "grid_cell_code": "NCR-043-039",
+    "ts": "2026-08-22T05:00:00+00:00",
     "kind": "REANALYSIS",
     "boundary_layer_height": 131.6,
     "wind_u": -4.317,
@@ -1908,8 +2052,8 @@
     "precipitation": 0.0
   },
   {
-    "grid_cell_code": "SEED-GRID-7-19",
-    "ts": "2026-08-21T13:00:00+00:00",
+    "grid_cell_code": "NCR-043-040",
+    "ts": "2026-08-22T05:00:00+00:00",
     "kind": "REANALYSIS",
     "boundary_layer_height": 447.3,
     "wind_u": -1.961,
@@ -1920,8 +2064,8 @@
     "precipitation": 0.0
   },
   {
-    "grid_cell_code": "SEED-GRID-8-0",
-    "ts": "2026-08-21T13:00:00+00:00",
+    "grid_cell_code": "NCR-043-041",
+    "ts": "2026-08-22T05:00:00+00:00",
     "kind": "REANALYSIS",
     "boundary_layer_height": 440.0,
     "wind_u": -4.09,
@@ -1932,8 +2076,8 @@
     "precipitation": 0.0
   },
   {
-    "grid_cell_code": "SEED-GRID-8-1",
-    "ts": "2026-08-21T13:00:00+00:00",
+    "grid_cell_code": "NCR-043-042",
+    "ts": "2026-08-22T05:00:00+00:00",
     "kind": "REANALYSIS",
     "boundary_layer_height": 241.8,
     "wind_u": -3.514,
@@ -1944,8 +2088,8 @@
     "precipitation": 0.0
   },
   {
-    "grid_cell_code": "SEED-GRID-8-2",
-    "ts": "2026-08-21T13:00:00+00:00",
+    "grid_cell_code": "NCR-043-043",
+    "ts": "2026-08-22T05:00:00+00:00",
     "kind": "REANALYSIS",
     "boundary_layer_height": 454.7,
     "wind_u": -2.793,
@@ -1956,8 +2100,8 @@
     "precipitation": 0.0
   },
   {
-    "grid_cell_code": "SEED-GRID-8-3",
-    "ts": "2026-08-21T13:00:00+00:00",
+    "grid_cell_code": "NCR-043-044",
+    "ts": "2026-08-22T05:00:00+00:00",
     "kind": "REANALYSIS",
     "boundary_layer_height": 327.8,
     "wind_u": -3.214,
@@ -1968,8 +2112,8 @@
     "precipitation": 0.0
   },
   {
-    "grid_cell_code": "SEED-GRID-8-4",
-    "ts": "2026-08-21T13:00:00+00:00",
+    "grid_cell_code": "NCR-043-045",
+    "ts": "2026-08-22T05:00:00+00:00",
     "kind": "REANALYSIS",
     "boundary_layer_height": 231.3,
     "wind_u": -2.427,
@@ -1980,8 +2124,8 @@
     "precipitation": 0.0
   },
   {
-    "grid_cell_code": "SEED-GRID-8-5",
-    "ts": "2026-08-21T13:00:00+00:00",
+    "grid_cell_code": "NCR-043-046",
+    "ts": "2026-08-22T05:00:00+00:00",
     "kind": "REANALYSIS",
     "boundary_layer_height": 234.7,
     "wind_u": -3.05,
@@ -1992,8 +2136,8 @@
     "precipitation": 0.0
   },
   {
-    "grid_cell_code": "SEED-GRID-8-6",
-    "ts": "2026-08-21T13:00:00+00:00",
+    "grid_cell_code": "NCR-043-047",
+    "ts": "2026-08-22T05:00:00+00:00",
     "kind": "REANALYSIS",
     "boundary_layer_height": 164.2,
     "wind_u": -2.955,
@@ -2004,8 +2148,8 @@
     "precipitation": 0.0
   },
   {
-    "grid_cell_code": "SEED-GRID-8-7",
-    "ts": "2026-08-21T13:00:00+00:00",
+    "grid_cell_code": "NCR-043-048",
+    "ts": "2026-08-22T05:00:00+00:00",
     "kind": "REANALYSIS",
     "boundary_layer_height": 332.1,
     "wind_u": -4.298,
@@ -2016,8 +2160,8 @@
     "precipitation": 0.0
   },
   {
-    "grid_cell_code": "SEED-GRID-8-8",
-    "ts": "2026-08-21T13:00:00+00:00",
+    "grid_cell_code": "NCR-044-029",
+    "ts": "2026-08-22T05:00:00+00:00",
     "kind": "REANALYSIS",
     "boundary_layer_height": 283.3,
     "wind_u": -1.536,
@@ -2028,8 +2172,8 @@
     "precipitation": 0.0
   },
   {
-    "grid_cell_code": "SEED-GRID-8-9",
-    "ts": "2026-08-21T13:00:00+00:00",
+    "grid_cell_code": "NCR-044-030",
+    "ts": "2026-08-22T05:00:00+00:00",
     "kind": "REANALYSIS",
     "boundary_layer_height": 281.7,
     "wind_u": -4.142,
@@ -2040,8 +2184,8 @@
     "precipitation": 0.0
   },
   {
-    "grid_cell_code": "SEED-GRID-8-10",
-    "ts": "2026-08-21T13:00:00+00:00",
+    "grid_cell_code": "NCR-044-031",
+    "ts": "2026-08-22T05:00:00+00:00",
     "kind": "REANALYSIS",
     "boundary_layer_height": 406.5,
     "wind_u": -3.004,
@@ -2052,8 +2196,8 @@
     "precipitation": 0.0
   },
   {
-    "grid_cell_code": "SEED-GRID-8-11",
-    "ts": "2026-08-21T13:00:00+00:00",
+    "grid_cell_code": "NCR-044-032",
+    "ts": "2026-08-22T05:00:00+00:00",
     "kind": "REANALYSIS",
     "boundary_layer_height": 373.5,
     "wind_u": -4.21,
@@ -2064,8 +2208,8 @@
     "precipitation": 0.0
   },
   {
-    "grid_cell_code": "SEED-GRID-8-12",
-    "ts": "2026-08-21T13:00:00+00:00",
+    "grid_cell_code": "NCR-044-033",
+    "ts": "2026-08-22T05:00:00+00:00",
     "kind": "REANALYSIS",
     "boundary_layer_height": 208.9,
     "wind_u": -1.974,
@@ -2076,8 +2220,8 @@
     "precipitation": 0.0
   },
   {
-    "grid_cell_code": "SEED-GRID-8-13",
-    "ts": "2026-08-21T13:00:00+00:00",
+    "grid_cell_code": "NCR-044-034",
+    "ts": "2026-08-22T05:00:00+00:00",
     "kind": "REANALYSIS",
     "boundary_layer_height": 432.9,
     "wind_u": -3.177,
@@ -2088,8 +2232,8 @@
     "precipitation": 0.0
   },
   {
-    "grid_cell_code": "SEED-GRID-8-14",
-    "ts": "2026-08-21T13:00:00+00:00",
+    "grid_cell_code": "NCR-044-035",
+    "ts": "2026-08-22T05:00:00+00:00",
     "kind": "REANALYSIS",
     "boundary_layer_height": 140.8,
     "wind_u": -3.208,
@@ -2100,8 +2244,8 @@
     "precipitation": 0.0
   },
   {
-    "grid_cell_code": "SEED-GRID-8-15",
-    "ts": "2026-08-21T13:00:00+00:00",
+    "grid_cell_code": "NCR-044-036",
+    "ts": "2026-08-22T05:00:00+00:00",
     "kind": "REANALYSIS",
     "boundary_layer_height": 422.6,
     "wind_u": -2.028,
@@ -2112,8 +2256,8 @@
     "precipitation": 0.0
   },
   {
-    "grid_cell_code": "SEED-GRID-8-16",
-    "ts": "2026-08-21T13:00:00+00:00",
+    "grid_cell_code": "NCR-044-037",
+    "ts": "2026-08-22T05:00:00+00:00",
     "kind": "REANALYSIS",
     "boundary_layer_height": 432.6,
     "wind_u": -2.345,
@@ -2124,8 +2268,8 @@
     "precipitation": 0.0
   },
   {
-    "grid_cell_code": "SEED-GRID-8-17",
-    "ts": "2026-08-21T13:00:00+00:00",
+    "grid_cell_code": "NCR-044-038",
+    "ts": "2026-08-22T05:00:00+00:00",
     "kind": "REANALYSIS",
     "boundary_layer_height": 347.2,
     "wind_u": -2.675,
@@ -2136,8 +2280,8 @@
     "precipitation": 0.0
   },
   {
-    "grid_cell_code": "SEED-GRID-8-18",
-    "ts": "2026-08-21T13:00:00+00:00",
+    "grid_cell_code": "NCR-044-039",
+    "ts": "2026-08-22T05:00:00+00:00",
     "kind": "REANALYSIS",
     "boundary_layer_height": 300.9,
     "wind_u": -4.359,
@@ -2148,8 +2292,8 @@
     "precipitation": 0.0
   },
   {
-    "grid_cell_code": "SEED-GRID-8-19",
-    "ts": "2026-08-21T13:00:00+00:00",
+    "grid_cell_code": "NCR-044-040",
+    "ts": "2026-08-22T05:00:00+00:00",
     "kind": "REANALYSIS",
     "boundary_layer_height": 322.4,
     "wind_u": -4.133,
@@ -2160,8 +2304,8 @@
     "precipitation": 0.0
   },
   {
-    "grid_cell_code": "SEED-GRID-9-0",
-    "ts": "2026-08-21T13:00:00+00:00",
+    "grid_cell_code": "NCR-044-041",
+    "ts": "2026-08-22T05:00:00+00:00",
     "kind": "REANALYSIS",
     "boundary_layer_height": 268.6,
     "wind_u": -2.698,
@@ -2172,8 +2316,8 @@
     "precipitation": 0.0
   },
   {
-    "grid_cell_code": "SEED-GRID-9-1",
-    "ts": "2026-08-21T13:00:00+00:00",
+    "grid_cell_code": "NCR-044-042",
+    "ts": "2026-08-22T05:00:00+00:00",
     "kind": "REANALYSIS",
     "boundary_layer_height": 214.6,
     "wind_u": -1.671,
@@ -2184,8 +2328,8 @@
     "precipitation": 0.0
   },
   {
-    "grid_cell_code": "SEED-GRID-9-2",
-    "ts": "2026-08-21T13:00:00+00:00",
+    "grid_cell_code": "NCR-044-043",
+    "ts": "2026-08-22T05:00:00+00:00",
     "kind": "REANALYSIS",
     "boundary_layer_height": 344.6,
     "wind_u": -2.767,
@@ -2196,8 +2340,8 @@
     "precipitation": 0.0
   },
   {
-    "grid_cell_code": "SEED-GRID-9-3",
-    "ts": "2026-08-21T13:00:00+00:00",
+    "grid_cell_code": "NCR-044-044",
+    "ts": "2026-08-22T05:00:00+00:00",
     "kind": "REANALYSIS",
     "boundary_layer_height": 179.4,
     "wind_u": -2.172,
@@ -2208,8 +2352,8 @@
     "precipitation": 0.0
   },
   {
-    "grid_cell_code": "SEED-GRID-9-4",
-    "ts": "2026-08-21T13:00:00+00:00",
+    "grid_cell_code": "NCR-044-045",
+    "ts": "2026-08-22T05:00:00+00:00",
     "kind": "REANALYSIS",
     "boundary_layer_height": 368.6,
     "wind_u": -2.312,
@@ -2220,8 +2364,8 @@
     "precipitation": 0.0
   },
   {
-    "grid_cell_code": "SEED-GRID-9-5",
-    "ts": "2026-08-21T13:00:00+00:00",
+    "grid_cell_code": "NCR-044-046",
+    "ts": "2026-08-22T05:00:00+00:00",
     "kind": "REANALYSIS",
     "boundary_layer_height": 459.8,
     "wind_u": -1.809,
@@ -2232,8 +2376,8 @@
     "precipitation": 0.0
   },
   {
-    "grid_cell_code": "SEED-GRID-9-6",
-    "ts": "2026-08-21T13:00:00+00:00",
+    "grid_cell_code": "NCR-044-047",
+    "ts": "2026-08-22T05:00:00+00:00",
     "kind": "REANALYSIS",
     "boundary_layer_height": 232.9,
     "wind_u": -1.702,
@@ -2244,8 +2388,8 @@
     "precipitation": 0.0
   },
   {
-    "grid_cell_code": "SEED-GRID-9-7",
-    "ts": "2026-08-21T13:00:00+00:00",
+    "grid_cell_code": "NCR-044-048",
+    "ts": "2026-08-22T05:00:00+00:00",
     "kind": "REANALYSIS",
     "boundary_layer_height": 478.4,
     "wind_u": -2.857,
@@ -2256,8 +2400,8 @@
     "precipitation": 0.0
   },
   {
-    "grid_cell_code": "SEED-GRID-9-8",
-    "ts": "2026-08-21T13:00:00+00:00",
+    "grid_cell_code": "NCR-045-029",
+    "ts": "2026-08-22T05:00:00+00:00",
     "kind": "REANALYSIS",
     "boundary_layer_height": 455.9,
     "wind_u": -4.18,
@@ -2268,8 +2412,8 @@
     "precipitation": 0.0
   },
   {
-    "grid_cell_code": "SEED-GRID-9-9",
-    "ts": "2026-08-21T13:00:00+00:00",
+    "grid_cell_code": "NCR-045-030",
+    "ts": "2026-08-22T05:00:00+00:00",
     "kind": "REANALYSIS",
     "boundary_layer_height": 296.2,
     "wind_u": -4.027,
@@ -2280,8 +2424,8 @@
     "precipitation": 0.0
   },
   {
-    "grid_cell_code": "SEED-GRID-9-10",
-    "ts": "2026-08-21T13:00:00+00:00",
+    "grid_cell_code": "NCR-045-031",
+    "ts": "2026-08-22T05:00:00+00:00",
     "kind": "REANALYSIS",
     "boundary_layer_height": 312.1,
     "wind_u": -1.326,
@@ -2292,8 +2436,8 @@
     "precipitation": 0.0
   },
   {
-    "grid_cell_code": "SEED-GRID-9-11",
-    "ts": "2026-08-21T13:00:00+00:00",
+    "grid_cell_code": "NCR-045-032",
+    "ts": "2026-08-22T05:00:00+00:00",
     "kind": "REANALYSIS",
     "boundary_layer_height": 184.0,
     "wind_u": -2.853,
@@ -2304,8 +2448,8 @@
     "precipitation": 0.0
   },
   {
-    "grid_cell_code": "SEED-GRID-9-12",
-    "ts": "2026-08-21T13:00:00+00:00",
+    "grid_cell_code": "NCR-045-033",
+    "ts": "2026-08-22T05:00:00+00:00",
     "kind": "REANALYSIS",
     "boundary_layer_height": 217.3,
     "wind_u": -3.368,
@@ -2316,8 +2460,8 @@
     "precipitation": 0.0
   },
   {
-    "grid_cell_code": "SEED-GRID-9-13",
-    "ts": "2026-08-21T13:00:00+00:00",
+    "grid_cell_code": "NCR-045-034",
+    "ts": "2026-08-22T05:00:00+00:00",
     "kind": "REANALYSIS",
     "boundary_layer_height": 445.6,
     "wind_u": -3.36,
@@ -2328,8 +2472,8 @@
     "precipitation": 0.0
   },
   {
-    "grid_cell_code": "SEED-GRID-9-14",
-    "ts": "2026-08-21T13:00:00+00:00",
+    "grid_cell_code": "NCR-045-035",
+    "ts": "2026-08-22T05:00:00+00:00",
     "kind": "REANALYSIS",
     "boundary_layer_height": 214.1,
     "wind_u": -2.794,
@@ -2340,8 +2484,8 @@
     "precipitation": 0.0
   },
   {
-    "grid_cell_code": "SEED-GRID-9-15",
-    "ts": "2026-08-21T13:00:00+00:00",
+    "grid_cell_code": "NCR-045-036",
+    "ts": "2026-08-22T05:00:00+00:00",
     "kind": "REANALYSIS",
     "boundary_layer_height": 142.6,
     "wind_u": -3.707,
@@ -2352,8 +2496,8 @@
     "precipitation": 0.0
   },
   {
-    "grid_cell_code": "SEED-GRID-9-16",
-    "ts": "2026-08-21T13:00:00+00:00",
+    "grid_cell_code": "NCR-045-037",
+    "ts": "2026-08-22T05:00:00+00:00",
     "kind": "REANALYSIS",
     "boundary_layer_height": 303.8,
     "wind_u": -4.442,
@@ -2364,8 +2508,8 @@
     "precipitation": 0.0
   },
   {
-    "grid_cell_code": "SEED-GRID-9-17",
-    "ts": "2026-08-21T13:00:00+00:00",
+    "grid_cell_code": "NCR-045-038",
+    "ts": "2026-08-22T05:00:00+00:00",
     "kind": "REANALYSIS",
     "boundary_layer_height": 299.3,
     "wind_u": -3.284,
@@ -2376,8 +2520,8 @@
     "precipitation": 0.0
   },
   {
-    "grid_cell_code": "SEED-GRID-9-18",
-    "ts": "2026-08-21T13:00:00+00:00",
+    "grid_cell_code": "NCR-045-039",
+    "ts": "2026-08-22T05:00:00+00:00",
     "kind": "REANALYSIS",
     "boundary_layer_height": 382.9,
     "wind_u": -3.064,
@@ -2388,8 +2532,8 @@
     "precipitation": 0.0
   },
   {
-    "grid_cell_code": "SEED-GRID-9-19",
-    "ts": "2026-08-21T13:00:00+00:00",
+    "grid_cell_code": "NCR-045-040",
+    "ts": "2026-08-22T05:00:00+00:00",
     "kind": "REANALYSIS",
     "boundary_layer_height": 150.0,
     "wind_u": -4.314,
@@ -2400,8 +2544,8 @@
     "precipitation": 0.0
   },
   {
-    "grid_cell_code": "SEED-GRID-10-0",
-    "ts": "2026-08-21T13:00:00+00:00",
+    "grid_cell_code": "NCR-045-041",
+    "ts": "2026-08-22T05:00:00+00:00",
     "kind": "REANALYSIS",
     "boundary_layer_height": 435.7,
     "wind_u": -1.392,
@@ -2412,8 +2556,8 @@
     "precipitation": 0.0
   },
   {
-    "grid_cell_code": "SEED-GRID-10-1",
-    "ts": "2026-08-21T13:00:00+00:00",
+    "grid_cell_code": "NCR-045-042",
+    "ts": "2026-08-22T05:00:00+00:00",
     "kind": "REANALYSIS",
     "boundary_layer_height": 179.2,
     "wind_u": -2.845,
@@ -2424,8 +2568,8 @@
     "precipitation": 0.0
   },
   {
-    "grid_cell_code": "SEED-GRID-10-2",
-    "ts": "2026-08-21T13:00:00+00:00",
+    "grid_cell_code": "NCR-045-043",
+    "ts": "2026-08-22T05:00:00+00:00",
     "kind": "REANALYSIS",
     "boundary_layer_height": 468.9,
     "wind_u": -1.234,
@@ -2436,8 +2580,8 @@
     "precipitation": 0.0
   },
   {
-    "grid_cell_code": "SEED-GRID-10-3",
-    "ts": "2026-08-21T13:00:00+00:00",
+    "grid_cell_code": "NCR-045-044",
+    "ts": "2026-08-22T05:00:00+00:00",
     "kind": "REANALYSIS",
     "boundary_layer_height": 352.5,
     "wind_u": -3.476,
@@ -2448,8 +2592,8 @@
     "precipitation": 0.0
   },
   {
-    "grid_cell_code": "SEED-GRID-10-4",
-    "ts": "2026-08-21T13:00:00+00:00",
+    "grid_cell_code": "NCR-045-045",
+    "ts": "2026-08-22T05:00:00+00:00",
     "kind": "REANALYSIS",
     "boundary_layer_height": 120.0,
     "wind_u": -1.681,
@@ -2460,8 +2604,8 @@
     "precipitation": 0.0
   },
   {
-    "grid_cell_code": "SEED-GRID-10-5",
-    "ts": "2026-08-21T13:00:00+00:00",
+    "grid_cell_code": "NCR-045-046",
+    "ts": "2026-08-22T05:00:00+00:00",
     "kind": "REANALYSIS",
     "boundary_layer_height": 162.1,
     "wind_u": -1.442,
@@ -2472,8 +2616,8 @@
     "precipitation": 0.0
   },
   {
-    "grid_cell_code": "SEED-GRID-10-6",
-    "ts": "2026-08-21T13:00:00+00:00",
+    "grid_cell_code": "NCR-045-047",
+    "ts": "2026-08-22T05:00:00+00:00",
     "kind": "REANALYSIS",
     "boundary_layer_height": 274.0,
     "wind_u": -4.483,
@@ -2484,8 +2628,8 @@
     "precipitation": 0.0
   },
   {
-    "grid_cell_code": "SEED-GRID-10-7",
-    "ts": "2026-08-21T13:00:00+00:00",
+    "grid_cell_code": "NCR-045-048",
+    "ts": "2026-08-22T05:00:00+00:00",
     "kind": "REANALYSIS",
     "boundary_layer_height": 343.0,
     "wind_u": -1.203,
@@ -2496,8 +2640,8 @@
     "precipitation": 0.0
   },
   {
-    "grid_cell_code": "SEED-GRID-10-8",
-    "ts": "2026-08-21T13:00:00+00:00",
+    "grid_cell_code": "NCR-046-029",
+    "ts": "2026-08-22T05:00:00+00:00",
     "kind": "REANALYSIS",
     "boundary_layer_height": 346.4,
     "wind_u": -2.808,
@@ -2508,8 +2652,8 @@
     "precipitation": 0.0
   },
   {
-    "grid_cell_code": "SEED-GRID-10-9",
-    "ts": "2026-08-21T13:00:00+00:00",
+    "grid_cell_code": "NCR-046-030",
+    "ts": "2026-08-22T05:00:00+00:00",
     "kind": "REANALYSIS",
     "boundary_layer_height": 339.7,
     "wind_u": -1.487,
@@ -2520,8 +2664,8 @@
     "precipitation": 0.0
   },
   {
-    "grid_cell_code": "SEED-GRID-10-10",
-    "ts": "2026-08-21T13:00:00+00:00",
+    "grid_cell_code": "NCR-046-031",
+    "ts": "2026-08-22T05:00:00+00:00",
     "kind": "REANALYSIS",
     "boundary_layer_height": 227.3,
     "wind_u": -2.322,
@@ -2532,8 +2676,8 @@
     "precipitation": 0.0
   },
   {
-    "grid_cell_code": "SEED-GRID-10-11",
-    "ts": "2026-08-21T13:00:00+00:00",
+    "grid_cell_code": "NCR-046-032",
+    "ts": "2026-08-22T05:00:00+00:00",
     "kind": "REANALYSIS",
     "boundary_layer_height": 334.7,
     "wind_u": -4.207,
@@ -2544,8 +2688,8 @@
     "precipitation": 0.0
   },
   {
-    "grid_cell_code": "SEED-GRID-10-12",
-    "ts": "2026-08-21T13:00:00+00:00",
+    "grid_cell_code": "NCR-046-033",
+    "ts": "2026-08-22T05:00:00+00:00",
     "kind": "REANALYSIS",
     "boundary_layer_height": 192.2,
     "wind_u": -3.359,
@@ -2556,8 +2700,8 @@
     "precipitation": 0.0
   },
   {
-    "grid_cell_code": "SEED-GRID-10-13",
-    "ts": "2026-08-21T13:00:00+00:00",
+    "grid_cell_code": "NCR-046-034",
+    "ts": "2026-08-22T05:00:00+00:00",
     "kind": "REANALYSIS",
     "boundary_layer_height": 386.0,
     "wind_u": -1.036,
@@ -2568,8 +2712,8 @@
     "precipitation": 0.0
   },
   {
-    "grid_cell_code": "SEED-GRID-10-14",
-    "ts": "2026-08-21T13:00:00+00:00",
+    "grid_cell_code": "NCR-046-035",
+    "ts": "2026-08-22T05:00:00+00:00",
     "kind": "REANALYSIS",
     "boundary_layer_height": 327.5,
     "wind_u": -1.223,
@@ -2580,8 +2724,8 @@
     "precipitation": 0.0
   },
   {
-    "grid_cell_code": "SEED-GRID-10-15",
-    "ts": "2026-08-21T13:00:00+00:00",
+    "grid_cell_code": "NCR-046-036",
+    "ts": "2026-08-22T05:00:00+00:00",
     "kind": "REANALYSIS",
     "boundary_layer_height": 208.8,
     "wind_u": -3.786,
@@ -2592,8 +2736,8 @@
     "precipitation": 0.0
   },
   {
-    "grid_cell_code": "SEED-GRID-10-16",
-    "ts": "2026-08-21T13:00:00+00:00",
+    "grid_cell_code": "NCR-046-037",
+    "ts": "2026-08-22T05:00:00+00:00",
     "kind": "REANALYSIS",
     "boundary_layer_height": 357.4,
     "wind_u": -2.562,
@@ -2604,8 +2748,8 @@
     "precipitation": 0.0
   },
   {
-    "grid_cell_code": "SEED-GRID-10-17",
-    "ts": "2026-08-21T13:00:00+00:00",
+    "grid_cell_code": "NCR-046-038",
+    "ts": "2026-08-22T05:00:00+00:00",
     "kind": "REANALYSIS",
     "boundary_layer_height": 317.4,
     "wind_u": -1.716,
@@ -2616,8 +2760,8 @@
     "precipitation": 0.0
   },
   {
-    "grid_cell_code": "SEED-GRID-10-18",
-    "ts": "2026-08-21T13:00:00+00:00",
+    "grid_cell_code": "NCR-046-039",
+    "ts": "2026-08-22T05:00:00+00:00",
     "kind": "REANALYSIS",
     "boundary_layer_height": 414.1,
     "wind_u": -2.496,
@@ -2628,8 +2772,8 @@
     "precipitation": 0.0
   },
   {
-    "grid_cell_code": "SEED-GRID-10-19",
-    "ts": "2026-08-21T13:00:00+00:00",
+    "grid_cell_code": "NCR-046-040",
+    "ts": "2026-08-22T05:00:00+00:00",
     "kind": "REANALYSIS",
     "boundary_layer_height": 157.8,
     "wind_u": -2.842,
@@ -2640,8 +2784,8 @@
     "precipitation": 0.0
   },
   {
-    "grid_cell_code": "SEED-GRID-11-0",
-    "ts": "2026-08-21T13:00:00+00:00",
+    "grid_cell_code": "NCR-046-041",
+    "ts": "2026-08-22T05:00:00+00:00",
     "kind": "REANALYSIS",
     "boundary_layer_height": 274.2,
     "wind_u": -2.481,
@@ -2652,8 +2796,8 @@
     "precipitation": 0.0
   },
   {
-    "grid_cell_code": "SEED-GRID-11-1",
-    "ts": "2026-08-21T13:00:00+00:00",
+    "grid_cell_code": "NCR-046-042",
+    "ts": "2026-08-22T05:00:00+00:00",
     "kind": "REANALYSIS",
     "boundary_layer_height": 301.7,
     "wind_u": -4.338,
@@ -2664,8 +2808,8 @@
     "precipitation": 0.0
   },
   {
-    "grid_cell_code": "SEED-GRID-11-2",
-    "ts": "2026-08-21T13:00:00+00:00",
+    "grid_cell_code": "NCR-046-043",
+    "ts": "2026-08-22T05:00:00+00:00",
     "kind": "REANALYSIS",
     "boundary_layer_height": 288.3,
     "wind_u": -2.367,
@@ -2676,8 +2820,8 @@
     "precipitation": 0.0
   },
   {
-    "grid_cell_code": "SEED-GRID-11-3",
-    "ts": "2026-08-21T13:00:00+00:00",
+    "grid_cell_code": "NCR-046-044",
+    "ts": "2026-08-22T05:00:00+00:00",
     "kind": "REANALYSIS",
     "boundary_layer_height": 237.5,
     "wind_u": -2.319,
@@ -2688,8 +2832,8 @@
     "precipitation": 0.0
   },
   {
-    "grid_cell_code": "SEED-GRID-11-4",
-    "ts": "2026-08-21T13:00:00+00:00",
+    "grid_cell_code": "NCR-046-045",
+    "ts": "2026-08-22T05:00:00+00:00",
     "kind": "REANALYSIS",
     "boundary_layer_height": 283.0,
     "wind_u": -1.115,
@@ -2700,8 +2844,8 @@
     "precipitation": 0.0
   },
   {
-    "grid_cell_code": "SEED-GRID-11-5",
-    "ts": "2026-08-21T13:00:00+00:00",
+    "grid_cell_code": "NCR-046-046",
+    "ts": "2026-08-22T05:00:00+00:00",
     "kind": "REANALYSIS",
     "boundary_layer_height": 250.4,
     "wind_u": -3.75,
@@ -2712,8 +2856,8 @@
     "precipitation": 0.0
   },
   {
-    "grid_cell_code": "SEED-GRID-11-6",
-    "ts": "2026-08-21T13:00:00+00:00",
+    "grid_cell_code": "NCR-046-047",
+    "ts": "2026-08-22T05:00:00+00:00",
     "kind": "REANALYSIS",
     "boundary_layer_height": 477.3,
     "wind_u": -3.407,
@@ -2724,8 +2868,8 @@
     "precipitation": 0.0
   },
   {
-    "grid_cell_code": "SEED-GRID-11-7",
-    "ts": "2026-08-21T13:00:00+00:00",
+    "grid_cell_code": "NCR-046-048",
+    "ts": "2026-08-22T05:00:00+00:00",
     "kind": "REANALYSIS",
     "boundary_layer_height": 433.4,
     "wind_u": -4.024,
@@ -2736,8 +2880,8 @@
     "precipitation": 0.0
   },
   {
-    "grid_cell_code": "SEED-GRID-11-8",
-    "ts": "2026-08-21T13:00:00+00:00",
+    "grid_cell_code": "NCR-047-029",
+    "ts": "2026-08-22T05:00:00+00:00",
     "kind": "REANALYSIS",
     "boundary_layer_height": 184.2,
     "wind_u": -3.612,
@@ -2748,8 +2892,8 @@
     "precipitation": 0.0
   },
   {
-    "grid_cell_code": "SEED-GRID-11-9",
-    "ts": "2026-08-21T13:00:00+00:00",
+    "grid_cell_code": "NCR-047-030",
+    "ts": "2026-08-22T05:00:00+00:00",
     "kind": "REANALYSIS",
     "boundary_layer_height": 432.7,
     "wind_u": -2.57,
@@ -2760,8 +2904,8 @@
     "precipitation": 0.0
   },
   {
-    "grid_cell_code": "SEED-GRID-11-10",
-    "ts": "2026-08-21T13:00:00+00:00",
+    "grid_cell_code": "NCR-047-031",
+    "ts": "2026-08-22T05:00:00+00:00",
     "kind": "REANALYSIS",
     "boundary_layer_height": 180.4,
     "wind_u": -2.431,
@@ -2772,8 +2916,8 @@
     "precipitation": 0.0
   },
   {
-    "grid_cell_code": "SEED-GRID-11-11",
-    "ts": "2026-08-21T13:00:00+00:00",
+    "grid_cell_code": "NCR-047-032",
+    "ts": "2026-08-22T05:00:00+00:00",
     "kind": "REANALYSIS",
     "boundary_layer_height": 259.5,
     "wind_u": -1.045,
@@ -2784,8 +2928,8 @@
     "precipitation": 0.0
   },
   {
-    "grid_cell_code": "SEED-GRID-11-12",
-    "ts": "2026-08-21T13:00:00+00:00",
+    "grid_cell_code": "NCR-047-033",
+    "ts": "2026-08-22T05:00:00+00:00",
     "kind": "REANALYSIS",
     "boundary_layer_height": 225.8,
     "wind_u": -3.17,
@@ -2796,8 +2940,8 @@
     "precipitation": 0.0
   },
   {
-    "grid_cell_code": "SEED-GRID-11-13",
-    "ts": "2026-08-21T13:00:00+00:00",
+    "grid_cell_code": "NCR-047-034",
+    "ts": "2026-08-22T05:00:00+00:00",
     "kind": "REANALYSIS",
     "boundary_layer_height": 412.4,
     "wind_u": -1.208,
@@ -2808,8 +2952,8 @@
     "precipitation": 0.0
   },
   {
-    "grid_cell_code": "SEED-GRID-11-14",
-    "ts": "2026-08-21T13:00:00+00:00",
+    "grid_cell_code": "NCR-047-035",
+    "ts": "2026-08-22T05:00:00+00:00",
     "kind": "REANALYSIS",
     "boundary_layer_height": 373.5,
     "wind_u": -2.297,
@@ -2820,8 +2964,8 @@
     "precipitation": 0.0
   },
   {
-    "grid_cell_code": "SEED-GRID-11-15",
-    "ts": "2026-08-21T13:00:00+00:00",
+    "grid_cell_code": "NCR-047-036",
+    "ts": "2026-08-22T05:00:00+00:00",
     "kind": "REANALYSIS",
     "boundary_layer_height": 275.9,
     "wind_u": -3.936,
@@ -2832,8 +2976,8 @@
     "precipitation": 0.0
   },
   {
-    "grid_cell_code": "SEED-GRID-11-16",
-    "ts": "2026-08-21T13:00:00+00:00",
+    "grid_cell_code": "NCR-047-037",
+    "ts": "2026-08-22T05:00:00+00:00",
     "kind": "REANALYSIS",
     "boundary_layer_height": 300.4,
     "wind_u": -3.889,
@@ -2844,8 +2988,8 @@
     "precipitation": 0.0
   },
   {
-    "grid_cell_code": "SEED-GRID-11-17",
-    "ts": "2026-08-21T13:00:00+00:00",
+    "grid_cell_code": "NCR-047-038",
+    "ts": "2026-08-22T05:00:00+00:00",
     "kind": "REANALYSIS",
     "boundary_layer_height": 479.4,
     "wind_u": -2.464,
@@ -2856,8 +3000,8 @@
     "precipitation": 0.0
   },
   {
-    "grid_cell_code": "SEED-GRID-11-18",
-    "ts": "2026-08-21T13:00:00+00:00",
+    "grid_cell_code": "NCR-047-039",
+    "ts": "2026-08-22T05:00:00+00:00",
     "kind": "REANALYSIS",
     "boundary_layer_height": 133.6,
     "wind_u": -1.671,
@@ -2868,8 +3012,8 @@
     "precipitation": 0.0
   },
   {
-    "grid_cell_code": "SEED-GRID-11-19",
-    "ts": "2026-08-21T13:00:00+00:00",
+    "grid_cell_code": "NCR-047-040",
+    "ts": "2026-08-22T05:00:00+00:00",
     "kind": "REANALYSIS",
     "boundary_layer_height": 172.4,
     "wind_u": -2.448,
@@ -2880,8 +3024,8 @@
     "precipitation": 0.0
   },
   {
-    "grid_cell_code": "SEED-GRID-12-0",
-    "ts": "2026-08-21T13:00:00+00:00",
+    "grid_cell_code": "NCR-047-041",
+    "ts": "2026-08-22T05:00:00+00:00",
     "kind": "REANALYSIS",
     "boundary_layer_height": 204.3,
     "wind_u": -2.985,
@@ -2892,8 +3036,8 @@
     "precipitation": 0.0
   },
   {
-    "grid_cell_code": "SEED-GRID-12-1",
-    "ts": "2026-08-21T13:00:00+00:00",
+    "grid_cell_code": "NCR-047-042",
+    "ts": "2026-08-22T05:00:00+00:00",
     "kind": "REANALYSIS",
     "boundary_layer_height": 267.3,
     "wind_u": -1.469,
@@ -2904,8 +3048,8 @@
     "precipitation": 0.0
   },
   {
-    "grid_cell_code": "SEED-GRID-12-2",
-    "ts": "2026-08-21T13:00:00+00:00",
+    "grid_cell_code": "NCR-047-043",
+    "ts": "2026-08-22T05:00:00+00:00",
     "kind": "REANALYSIS",
     "boundary_layer_height": 294.7,
     "wind_u": -2.654,
@@ -2916,8 +3060,8 @@
     "precipitation": 0.0
   },
   {
-    "grid_cell_code": "SEED-GRID-12-3",
-    "ts": "2026-08-21T13:00:00+00:00",
+    "grid_cell_code": "NCR-047-044",
+    "ts": "2026-08-22T05:00:00+00:00",
     "kind": "REANALYSIS",
     "boundary_layer_height": 193.7,
     "wind_u": -3.541,
@@ -2928,8 +3072,8 @@
     "precipitation": 0.0
   },
   {
-    "grid_cell_code": "SEED-GRID-12-4",
-    "ts": "2026-08-21T13:00:00+00:00",
+    "grid_cell_code": "NCR-047-045",
+    "ts": "2026-08-22T05:00:00+00:00",
     "kind": "REANALYSIS",
     "boundary_layer_height": 185.8,
     "wind_u": -2.836,
@@ -2940,8 +3084,8 @@
     "precipitation": 0.0
   },
   {
-    "grid_cell_code": "SEED-GRID-12-5",
-    "ts": "2026-08-21T13:00:00+00:00",
+    "grid_cell_code": "NCR-047-046",
+    "ts": "2026-08-22T05:00:00+00:00",
     "kind": "REANALYSIS",
     "boundary_layer_height": 234.2,
     "wind_u": -1.374,
@@ -2952,8 +3096,8 @@
     "precipitation": 0.0
   },
   {
-    "grid_cell_code": "SEED-GRID-12-6",
-    "ts": "2026-08-21T13:00:00+00:00",
+    "grid_cell_code": "NCR-047-047",
+    "ts": "2026-08-22T05:00:00+00:00",
     "kind": "REANALYSIS",
     "boundary_layer_height": 282.1,
     "wind_u": -2.185,
@@ -2964,8 +3108,8 @@
     "precipitation": 0.0
   },
   {
-    "grid_cell_code": "SEED-GRID-12-7",
-    "ts": "2026-08-21T13:00:00+00:00",
+    "grid_cell_code": "NCR-047-048",
+    "ts": "2026-08-22T05:00:00+00:00",
     "kind": "REANALYSIS",
     "boundary_layer_height": 329.9,
     "wind_u": -2.966,
@@ -2976,8 +3120,8 @@
     "precipitation": 0.0
   },
   {
-    "grid_cell_code": "SEED-GRID-12-8",
-    "ts": "2026-08-21T13:00:00+00:00",
+    "grid_cell_code": "NCR-048-029",
+    "ts": "2026-08-22T05:00:00+00:00",
     "kind": "REANALYSIS",
     "boundary_layer_height": 225.6,
     "wind_u": -1.086,
@@ -2988,8 +3132,8 @@
     "precipitation": 0.0
   },
   {
-    "grid_cell_code": "SEED-GRID-12-9",
-    "ts": "2026-08-21T13:00:00+00:00",
+    "grid_cell_code": "NCR-048-030",
+    "ts": "2026-08-22T05:00:00+00:00",
     "kind": "REANALYSIS",
     "boundary_layer_height": 202.7,
     "wind_u": -3.252,
@@ -3000,8 +3144,8 @@
     "precipitation": 0.0
   },
   {
-    "grid_cell_code": "SEED-GRID-12-10",
-    "ts": "2026-08-21T13:00:00+00:00",
+    "grid_cell_code": "NCR-048-031",
+    "ts": "2026-08-22T05:00:00+00:00",
     "kind": "REANALYSIS",
     "boundary_layer_height": 163.3,
     "wind_u": -1.624,
@@ -3012,8 +3156,8 @@
     "precipitation": 0.0
   },
   {
-    "grid_cell_code": "SEED-GRID-12-11",
-    "ts": "2026-08-21T13:00:00+00:00",
+    "grid_cell_code": "NCR-048-032",
+    "ts": "2026-08-22T05:00:00+00:00",
     "kind": "REANALYSIS",
     "boundary_layer_height": 149.1,
     "wind_u": -2.213,
@@ -3024,8 +3168,8 @@
     "precipitation": 0.0
   },
   {
-    "grid_cell_code": "SEED-GRID-12-12",
-    "ts": "2026-08-21T13:00:00+00:00",
+    "grid_cell_code": "NCR-048-033",
+    "ts": "2026-08-22T05:00:00+00:00",
     "kind": "REANALYSIS",
     "boundary_layer_height": 404.9,
     "wind_u": -1.62,
@@ -3036,8 +3180,8 @@
     "precipitation": 0.0
   },
   {
-    "grid_cell_code": "SEED-GRID-12-13",
-    "ts": "2026-08-21T13:00:00+00:00",
+    "grid_cell_code": "NCR-048-034",
+    "ts": "2026-08-22T05:00:00+00:00",
     "kind": "REANALYSIS",
     "boundary_layer_height": 182.4,
     "wind_u": -1.115,
@@ -3048,8 +3192,8 @@
     "precipitation": 0.0
   },
   {
-    "grid_cell_code": "SEED-GRID-12-14",
-    "ts": "2026-08-21T13:00:00+00:00",
+    "grid_cell_code": "NCR-048-035",
+    "ts": "2026-08-22T05:00:00+00:00",
     "kind": "REANALYSIS",
     "boundary_layer_height": 275.5,
     "wind_u": -2.223,
@@ -3060,8 +3204,8 @@
     "precipitation": 0.0
   },
   {
-    "grid_cell_code": "SEED-GRID-12-15",
-    "ts": "2026-08-21T13:00:00+00:00",
+    "grid_cell_code": "NCR-048-036",
+    "ts": "2026-08-22T05:00:00+00:00",
     "kind": "REANALYSIS",
     "boundary_layer_height": 308.7,
     "wind_u": -1.369,
@@ -3072,8 +3216,8 @@
     "precipitation": 0.0
   },
   {
-    "grid_cell_code": "SEED-GRID-12-16",
-    "ts": "2026-08-21T13:00:00+00:00",
+    "grid_cell_code": "NCR-048-037",
+    "ts": "2026-08-22T05:00:00+00:00",
     "kind": "REANALYSIS",
     "boundary_layer_height": 471.5,
     "wind_u": -3.747,
@@ -3084,8 +3228,8 @@
     "precipitation": 0.0
   },
   {
-    "grid_cell_code": "SEED-GRID-12-17",
-    "ts": "2026-08-21T13:00:00+00:00",
+    "grid_cell_code": "NCR-048-038",
+    "ts": "2026-08-22T05:00:00+00:00",
     "kind": "REANALYSIS",
     "boundary_layer_height": 339.5,
     "wind_u": -1.243,
@@ -3096,8 +3240,8 @@
     "precipitation": 0.0
   },
   {
-    "grid_cell_code": "SEED-GRID-12-18",
-    "ts": "2026-08-21T13:00:00+00:00",
+    "grid_cell_code": "NCR-048-039",
+    "ts": "2026-08-22T05:00:00+00:00",
     "kind": "REANALYSIS",
     "boundary_layer_height": 438.5,
     "wind_u": -1.824,
@@ -3108,8 +3252,8 @@
     "precipitation": 0.0
   },
   {
-    "grid_cell_code": "SEED-GRID-12-19",
-    "ts": "2026-08-21T13:00:00+00:00",
+    "grid_cell_code": "NCR-048-040",
+    "ts": "2026-08-22T05:00:00+00:00",
     "kind": "REANALYSIS",
     "boundary_layer_height": 283.7,
     "wind_u": -2.893,
@@ -3120,8 +3264,8 @@
     "precipitation": 0.0
   },
   {
-    "grid_cell_code": "SEED-GRID-13-0",
-    "ts": "2026-08-21T13:00:00+00:00",
+    "grid_cell_code": "NCR-048-041",
+    "ts": "2026-08-22T05:00:00+00:00",
     "kind": "REANALYSIS",
     "boundary_layer_height": 461.6,
     "wind_u": -1.061,
@@ -3132,8 +3276,8 @@
     "precipitation": 0.0
   },
   {
-    "grid_cell_code": "SEED-GRID-13-1",
-    "ts": "2026-08-21T13:00:00+00:00",
+    "grid_cell_code": "NCR-048-042",
+    "ts": "2026-08-22T05:00:00+00:00",
     "kind": "REANALYSIS",
     "boundary_layer_height": 177.6,
     "wind_u": -3.46,
@@ -3144,8 +3288,8 @@
     "precipitation": 0.0
   },
   {
-    "grid_cell_code": "SEED-GRID-13-2",
-    "ts": "2026-08-21T13:00:00+00:00",
+    "grid_cell_code": "NCR-048-043",
+    "ts": "2026-08-22T05:00:00+00:00",
     "kind": "REANALYSIS",
     "boundary_layer_height": 254.3,
     "wind_u": -1.32,
@@ -3156,8 +3300,8 @@
     "precipitation": 0.0
   },
   {
-    "grid_cell_code": "SEED-GRID-13-3",
-    "ts": "2026-08-21T13:00:00+00:00",
+    "grid_cell_code": "NCR-048-044",
+    "ts": "2026-08-22T05:00:00+00:00",
     "kind": "REANALYSIS",
     "boundary_layer_height": 408.7,
     "wind_u": -1.538,
@@ -3168,8 +3312,8 @@
     "precipitation": 0.0
   },
   {
-    "grid_cell_code": "SEED-GRID-13-4",
-    "ts": "2026-08-21T13:00:00+00:00",
+    "grid_cell_code": "NCR-048-045",
+    "ts": "2026-08-22T05:00:00+00:00",
     "kind": "REANALYSIS",
     "boundary_layer_height": 450.4,
     "wind_u": -4.408,
@@ -3180,8 +3324,8 @@
     "precipitation": 0.0
   },
   {
-    "grid_cell_code": "SEED-GRID-13-5",
-    "ts": "2026-08-21T13:00:00+00:00",
+    "grid_cell_code": "NCR-048-046",
+    "ts": "2026-08-22T05:00:00+00:00",
     "kind": "REANALYSIS",
     "boundary_layer_height": 465.6,
     "wind_u": -2.248,
@@ -3192,8 +3336,8 @@
     "precipitation": 0.0
   },
   {
-    "grid_cell_code": "SEED-GRID-13-6",
-    "ts": "2026-08-21T13:00:00+00:00",
+    "grid_cell_code": "NCR-048-047",
+    "ts": "2026-08-22T05:00:00+00:00",
     "kind": "REANALYSIS",
     "boundary_layer_height": 166.6,
     "wind_u": -1.197,
@@ -3204,8 +3348,8 @@
     "precipitation": 0.0
   },
   {
-    "grid_cell_code": "SEED-GRID-13-7",
-    "ts": "2026-08-21T13:00:00+00:00",
+    "grid_cell_code": "NCR-048-048",
+    "ts": "2026-08-22T05:00:00+00:00",
     "kind": "REANALYSIS",
     "boundary_layer_height": 146.2,
     "wind_u": -2.495,
@@ -3216,8 +3360,8 @@
     "precipitation": 0.0
   },
   {
-    "grid_cell_code": "SEED-GRID-13-8",
-    "ts": "2026-08-21T13:00:00+00:00",
+    "grid_cell_code": "NCR-049-029",
+    "ts": "2026-08-22T05:00:00+00:00",
     "kind": "REANALYSIS",
     "boundary_layer_height": 429.4,
     "wind_u": -2.441,
@@ -3228,8 +3372,8 @@
     "precipitation": 0.0
   },
   {
-    "grid_cell_code": "SEED-GRID-13-9",
-    "ts": "2026-08-21T13:00:00+00:00",
+    "grid_cell_code": "NCR-049-030",
+    "ts": "2026-08-22T05:00:00+00:00",
     "kind": "REANALYSIS",
     "boundary_layer_height": 371.4,
     "wind_u": -1.901,
@@ -3240,8 +3384,8 @@
     "precipitation": 0.0
   },
   {
-    "grid_cell_code": "SEED-GRID-13-10",
-    "ts": "2026-08-21T13:00:00+00:00",
+    "grid_cell_code": "NCR-049-031",
+    "ts": "2026-08-22T05:00:00+00:00",
     "kind": "REANALYSIS",
     "boundary_layer_height": 398.4,
     "wind_u": -2.135,
@@ -3252,8 +3396,8 @@
     "precipitation": 0.0
   },
   {
-    "grid_cell_code": "SEED-GRID-13-11",
-    "ts": "2026-08-21T13:00:00+00:00",
+    "grid_cell_code": "NCR-049-032",
+    "ts": "2026-08-22T05:00:00+00:00",
     "kind": "REANALYSIS",
     "boundary_layer_height": 243.7,
     "wind_u": -2.404,
@@ -3264,8 +3408,8 @@
     "precipitation": 0.0
   },
   {
-    "grid_cell_code": "SEED-GRID-13-12",
-    "ts": "2026-08-21T13:00:00+00:00",
+    "grid_cell_code": "NCR-049-033",
+    "ts": "2026-08-22T05:00:00+00:00",
     "kind": "REANALYSIS",
     "boundary_layer_height": 172.6,
     "wind_u": -3.823,
@@ -3276,8 +3420,8 @@
     "precipitation": 0.0
   },
   {
-    "grid_cell_code": "SEED-GRID-13-13",
-    "ts": "2026-08-21T13:00:00+00:00",
+    "grid_cell_code": "NCR-049-034",
+    "ts": "2026-08-22T05:00:00+00:00",
     "kind": "REANALYSIS",
     "boundary_layer_height": 436.0,
     "wind_u": -3.983,
@@ -3288,8 +3432,8 @@
     "precipitation": 0.0
   },
   {
-    "grid_cell_code": "SEED-GRID-13-14",
-    "ts": "2026-08-21T13:00:00+00:00",
+    "grid_cell_code": "NCR-049-035",
+    "ts": "2026-08-22T05:00:00+00:00",
     "kind": "REANALYSIS",
     "boundary_layer_height": 248.8,
     "wind_u": -2.805,
@@ -3300,8 +3444,8 @@
     "precipitation": 0.0
   },
   {
-    "grid_cell_code": "SEED-GRID-13-15",
-    "ts": "2026-08-21T13:00:00+00:00",
+    "grid_cell_code": "NCR-049-036",
+    "ts": "2026-08-22T05:00:00+00:00",
     "kind": "REANALYSIS",
     "boundary_layer_height": 155.8,
     "wind_u": -3.628,
@@ -3312,8 +3456,8 @@
     "precipitation": 0.0
   },
   {
-    "grid_cell_code": "SEED-GRID-13-16",
-    "ts": "2026-08-21T13:00:00+00:00",
+    "grid_cell_code": "NCR-049-037",
+    "ts": "2026-08-22T05:00:00+00:00",
     "kind": "REANALYSIS",
     "boundary_layer_height": 255.8,
     "wind_u": -2.504,
@@ -3324,8 +3468,8 @@
     "precipitation": 0.0
   },
   {
-    "grid_cell_code": "SEED-GRID-13-17",
-    "ts": "2026-08-21T13:00:00+00:00",
+    "grid_cell_code": "NCR-049-038",
+    "ts": "2026-08-22T05:00:00+00:00",
     "kind": "REANALYSIS",
     "boundary_layer_height": 257.6,
     "wind_u": -1.078,
@@ -3336,8 +3480,8 @@
     "precipitation": 0.0
   },
   {
-    "grid_cell_code": "SEED-GRID-13-18",
-    "ts": "2026-08-21T13:00:00+00:00",
+    "grid_cell_code": "NCR-049-039",
+    "ts": "2026-08-22T05:00:00+00:00",
     "kind": "REANALYSIS",
     "boundary_layer_height": 349.6,
     "wind_u": -4.152,
@@ -3348,8 +3492,8 @@
     "precipitation": 0.0
   },
   {
-    "grid_cell_code": "SEED-GRID-13-19",
-    "ts": "2026-08-21T13:00:00+00:00",
+    "grid_cell_code": "NCR-049-040",
+    "ts": "2026-08-22T05:00:00+00:00",
     "kind": "REANALYSIS",
     "boundary_layer_height": 174.1,
     "wind_u": -1.92,
@@ -3360,8 +3504,8 @@
     "precipitation": 0.0
   },
   {
-    "grid_cell_code": "SEED-GRID-14-0",
-    "ts": "2026-08-21T13:00:00+00:00",
+    "grid_cell_code": "NCR-049-041",
+    "ts": "2026-08-22T05:00:00+00:00",
     "kind": "REANALYSIS",
     "boundary_layer_height": 382.1,
     "wind_u": -3.33,
@@ -3372,8 +3516,8 @@
     "precipitation": 0.0
   },
   {
-    "grid_cell_code": "SEED-GRID-14-1",
-    "ts": "2026-08-21T13:00:00+00:00",
+    "grid_cell_code": "NCR-049-042",
+    "ts": "2026-08-22T05:00:00+00:00",
     "kind": "REANALYSIS",
     "boundary_layer_height": 231.5,
     "wind_u": -3.074,
@@ -3384,8 +3528,8 @@
     "precipitation": 0.0
   },
   {
-    "grid_cell_code": "SEED-GRID-14-2",
-    "ts": "2026-08-21T13:00:00+00:00",
+    "grid_cell_code": "NCR-049-043",
+    "ts": "2026-08-22T05:00:00+00:00",
     "kind": "REANALYSIS",
     "boundary_layer_height": 236.6,
     "wind_u": -2.971,
@@ -3396,8 +3540,8 @@
     "precipitation": 0.0
   },
   {
-    "grid_cell_code": "SEED-GRID-14-3",
-    "ts": "2026-08-21T13:00:00+00:00",
+    "grid_cell_code": "NCR-049-044",
+    "ts": "2026-08-22T05:00:00+00:00",
     "kind": "REANALYSIS",
     "boundary_layer_height": 120.4,
     "wind_u": -1.078,
@@ -3408,8 +3552,8 @@
     "precipitation": 0.0
   },
   {
-    "grid_cell_code": "SEED-GRID-14-4",
-    "ts": "2026-08-21T13:00:00+00:00",
+    "grid_cell_code": "NCR-049-045",
+    "ts": "2026-08-22T05:00:00+00:00",
     "kind": "REANALYSIS",
     "boundary_layer_height": 370.6,
     "wind_u": -2.45,
@@ -3420,8 +3564,8 @@
     "precipitation": 0.0
   },
   {
-    "grid_cell_code": "SEED-GRID-14-5",
-    "ts": "2026-08-21T13:00:00+00:00",
+    "grid_cell_code": "NCR-049-046",
+    "ts": "2026-08-22T05:00:00+00:00",
     "kind": "REANALYSIS",
     "boundary_layer_height": 409.1,
     "wind_u": -2.983,
@@ -3432,8 +3576,8 @@
     "precipitation": 0.0
   },
   {
-    "grid_cell_code": "SEED-GRID-14-6",
-    "ts": "2026-08-21T13:00:00+00:00",
+    "grid_cell_code": "NCR-049-047",
+    "ts": "2026-08-22T05:00:00+00:00",
     "kind": "REANALYSIS",
     "boundary_layer_height": 234.6,
     "wind_u": -1.396,
@@ -3444,8 +3588,8 @@
     "precipitation": 0.0
   },
   {
-    "grid_cell_code": "SEED-GRID-14-7",
-    "ts": "2026-08-21T13:00:00+00:00",
+    "grid_cell_code": "NCR-049-048",
+    "ts": "2026-08-22T05:00:00+00:00",
     "kind": "REANALYSIS",
     "boundary_layer_height": 227.8,
     "wind_u": -2.093,
@@ -3456,8 +3600,8 @@
     "precipitation": 0.0
   },
   {
-    "grid_cell_code": "SEED-GRID-14-8",
-    "ts": "2026-08-21T13:00:00+00:00",
+    "grid_cell_code": "NCR-050-029",
+    "ts": "2026-08-22T05:00:00+00:00",
     "kind": "REANALYSIS",
     "boundary_layer_height": 457.5,
     "wind_u": -2.316,
@@ -3468,8 +3612,8 @@
     "precipitation": 0.0
   },
   {
-    "grid_cell_code": "SEED-GRID-14-9",
-    "ts": "2026-08-21T13:00:00+00:00",
+    "grid_cell_code": "NCR-050-030",
+    "ts": "2026-08-22T05:00:00+00:00",
     "kind": "REANALYSIS",
     "boundary_layer_height": 292.0,
     "wind_u": -2.739,
@@ -3480,8 +3624,8 @@
     "precipitation": 0.0
   },
   {
-    "grid_cell_code": "SEED-GRID-14-10",
-    "ts": "2026-08-21T13:00:00+00:00",
+    "grid_cell_code": "NCR-050-031",
+    "ts": "2026-08-22T05:00:00+00:00",
     "kind": "REANALYSIS",
     "boundary_layer_height": 455.0,
     "wind_u": -3.165,
@@ -3492,8 +3636,8 @@
     "precipitation": 0.0
   },
   {
-    "grid_cell_code": "SEED-GRID-14-11",
-    "ts": "2026-08-21T13:00:00+00:00",
+    "grid_cell_code": "NCR-050-032",
+    "ts": "2026-08-22T05:00:00+00:00",
     "kind": "REANALYSIS",
     "boundary_layer_height": 273.2,
     "wind_u": -1.463,
@@ -3504,8 +3648,8 @@
     "precipitation": 0.0
   },
   {
-    "grid_cell_code": "SEED-GRID-14-12",
-    "ts": "2026-08-21T13:00:00+00:00",
+    "grid_cell_code": "NCR-050-033",
+    "ts": "2026-08-22T05:00:00+00:00",
     "kind": "REANALYSIS",
     "boundary_layer_height": 328.3,
     "wind_u": -4.454,
@@ -3516,8 +3660,8 @@
     "precipitation": 0.0
   },
   {
-    "grid_cell_code": "SEED-GRID-14-13",
-    "ts": "2026-08-21T13:00:00+00:00",
+    "grid_cell_code": "NCR-050-034",
+    "ts": "2026-08-22T05:00:00+00:00",
     "kind": "REANALYSIS",
     "boundary_layer_height": 143.6,
     "wind_u": -2.919,
@@ -3528,8 +3672,8 @@
     "precipitation": 0.0
   },
   {
-    "grid_cell_code": "SEED-GRID-14-14",
-    "ts": "2026-08-21T13:00:00+00:00",
+    "grid_cell_code": "NCR-050-035",
+    "ts": "2026-08-22T05:00:00+00:00",
     "kind": "REANALYSIS",
     "boundary_layer_height": 340.7,
     "wind_u": -4.323,
@@ -3540,8 +3684,8 @@
     "precipitation": 0.0
   },
   {
-    "grid_cell_code": "SEED-GRID-14-15",
-    "ts": "2026-08-21T13:00:00+00:00",
+    "grid_cell_code": "NCR-050-036",
+    "ts": "2026-08-22T05:00:00+00:00",
     "kind": "REANALYSIS",
     "boundary_layer_height": 385.4,
     "wind_u": -3.879,
@@ -3552,8 +3696,8 @@
     "precipitation": 0.0
   },
   {
-    "grid_cell_code": "SEED-GRID-14-16",
-    "ts": "2026-08-21T13:00:00+00:00",
+    "grid_cell_code": "NCR-050-037",
+    "ts": "2026-08-22T05:00:00+00:00",
     "kind": "REANALYSIS",
     "boundary_layer_height": 390.8,
     "wind_u": -1.498,
@@ -3564,8 +3708,8 @@
     "precipitation": 0.0
   },
   {
-    "grid_cell_code": "SEED-GRID-14-17",
-    "ts": "2026-08-21T13:00:00+00:00",
+    "grid_cell_code": "NCR-050-038",
+    "ts": "2026-08-22T05:00:00+00:00",
     "kind": "REANALYSIS",
     "boundary_layer_height": 457.0,
     "wind_u": -2.1,
@@ -3576,8 +3720,8 @@
     "precipitation": 0.0
   },
   {
-    "grid_cell_code": "SEED-GRID-14-18",
-    "ts": "2026-08-21T13:00:00+00:00",
+    "grid_cell_code": "NCR-050-039",
+    "ts": "2026-08-22T05:00:00+00:00",
     "kind": "REANALYSIS",
     "boundary_layer_height": 376.8,
     "wind_u": -2.097,
@@ -3588,8 +3732,8 @@
     "precipitation": 0.0
   },
   {
-    "grid_cell_code": "SEED-GRID-14-19",
-    "ts": "2026-08-21T13:00:00+00:00",
+    "grid_cell_code": "NCR-050-040",
+    "ts": "2026-08-22T05:00:00+00:00",
     "kind": "REANALYSIS",
     "boundary_layer_height": 121.7,
     "wind_u": -2.138,
@@ -3600,8 +3744,8 @@
     "precipitation": 0.0
   },
   {
-    "grid_cell_code": "SEED-GRID-15-0",
-    "ts": "2026-08-21T13:00:00+00:00",
+    "grid_cell_code": "NCR-050-041",
+    "ts": "2026-08-22T05:00:00+00:00",
     "kind": "REANALYSIS",
     "boundary_layer_height": 285.2,
     "wind_u": -2.75,
@@ -3612,8 +3756,8 @@
     "precipitation": 0.0
   },
   {
-    "grid_cell_code": "SEED-GRID-15-1",
-    "ts": "2026-08-21T13:00:00+00:00",
+    "grid_cell_code": "NCR-050-042",
+    "ts": "2026-08-22T05:00:00+00:00",
     "kind": "REANALYSIS",
     "boundary_layer_height": 257.4,
     "wind_u": -1.081,
@@ -3624,8 +3768,8 @@
     "precipitation": 0.0
   },
   {
-    "grid_cell_code": "SEED-GRID-15-2",
-    "ts": "2026-08-21T13:00:00+00:00",
+    "grid_cell_code": "NCR-050-043",
+    "ts": "2026-08-22T05:00:00+00:00",
     "kind": "REANALYSIS",
     "boundary_layer_height": 468.9,
     "wind_u": -4.115,
@@ -3636,8 +3780,8 @@
     "precipitation": 0.0
   },
   {
-    "grid_cell_code": "SEED-GRID-15-3",
-    "ts": "2026-08-21T13:00:00+00:00",
+    "grid_cell_code": "NCR-050-044",
+    "ts": "2026-08-22T05:00:00+00:00",
     "kind": "REANALYSIS",
     "boundary_layer_height": 180.6,
     "wind_u": -3.35,
@@ -3648,8 +3792,8 @@
     "precipitation": 0.0
   },
   {
-    "grid_cell_code": "SEED-GRID-15-4",
-    "ts": "2026-08-21T13:00:00+00:00",
+    "grid_cell_code": "NCR-050-045",
+    "ts": "2026-08-22T05:00:00+00:00",
     "kind": "REANALYSIS",
     "boundary_layer_height": 199.3,
     "wind_u": -2.563,
@@ -3660,8 +3804,8 @@
     "precipitation": 0.0
   },
   {
-    "grid_cell_code": "SEED-GRID-15-5",
-    "ts": "2026-08-21T13:00:00+00:00",
+    "grid_cell_code": "NCR-050-046",
+    "ts": "2026-08-22T05:00:00+00:00",
     "kind": "REANALYSIS",
     "boundary_layer_height": 343.5,
     "wind_u": -4.228,
@@ -3672,8 +3816,8 @@
     "precipitation": 0.0
   },
   {
-    "grid_cell_code": "SEED-GRID-15-6",
-    "ts": "2026-08-21T13:00:00+00:00",
+    "grid_cell_code": "NCR-050-047",
+    "ts": "2026-08-22T05:00:00+00:00",
     "kind": "REANALYSIS",
     "boundary_layer_height": 303.8,
     "wind_u": -1.833,
@@ -3684,8 +3828,8 @@
     "precipitation": 0.0
   },
   {
-    "grid_cell_code": "SEED-GRID-15-7",
-    "ts": "2026-08-21T13:00:00+00:00",
+    "grid_cell_code": "NCR-050-048",
+    "ts": "2026-08-22T05:00:00+00:00",
     "kind": "REANALYSIS",
     "boundary_layer_height": 475.4,
     "wind_u": -1.526,
@@ -3696,8 +3840,8 @@
     "precipitation": 0.0
   },
   {
-    "grid_cell_code": "SEED-GRID-15-8",
-    "ts": "2026-08-21T13:00:00+00:00",
+    "grid_cell_code": "NCR-051-029",
+    "ts": "2026-08-22T05:00:00+00:00",
     "kind": "REANALYSIS",
     "boundary_layer_height": 427.6,
     "wind_u": -1.604,
@@ -3708,8 +3852,8 @@
     "precipitation": 0.0
   },
   {
-    "grid_cell_code": "SEED-GRID-15-9",
-    "ts": "2026-08-21T13:00:00+00:00",
+    "grid_cell_code": "NCR-051-030",
+    "ts": "2026-08-22T05:00:00+00:00",
     "kind": "REANALYSIS",
     "boundary_layer_height": 165.6,
     "wind_u": -3.007,
@@ -3720,8 +3864,8 @@
     "precipitation": 0.0
   },
   {
-    "grid_cell_code": "SEED-GRID-15-10",
-    "ts": "2026-08-21T13:00:00+00:00",
+    "grid_cell_code": "NCR-051-031",
+    "ts": "2026-08-22T05:00:00+00:00",
     "kind": "REANALYSIS",
     "boundary_layer_height": 382.5,
     "wind_u": -2.129,
@@ -3732,8 +3876,8 @@
     "precipitation": 0.0
   },
   {
-    "grid_cell_code": "SEED-GRID-15-11",
-    "ts": "2026-08-21T13:00:00+00:00",
+    "grid_cell_code": "NCR-051-032",
+    "ts": "2026-08-22T05:00:00+00:00",
     "kind": "REANALYSIS",
     "boundary_layer_height": 156.3,
     "wind_u": -1.304,
@@ -3744,8 +3888,8 @@
     "precipitation": 0.0
   },
   {
-    "grid_cell_code": "SEED-GRID-15-12",
-    "ts": "2026-08-21T13:00:00+00:00",
+    "grid_cell_code": "NCR-051-033",
+    "ts": "2026-08-22T05:00:00+00:00",
     "kind": "REANALYSIS",
     "boundary_layer_height": 342.7,
     "wind_u": -2.221,
@@ -3756,8 +3900,8 @@
     "precipitation": 0.0
   },
   {
-    "grid_cell_code": "SEED-GRID-15-13",
-    "ts": "2026-08-21T13:00:00+00:00",
+    "grid_cell_code": "NCR-051-034",
+    "ts": "2026-08-22T05:00:00+00:00",
     "kind": "REANALYSIS",
     "boundary_layer_height": 177.3,
     "wind_u": -2.348,
@@ -3768,8 +3912,8 @@
     "precipitation": 0.0
   },
   {
-    "grid_cell_code": "SEED-GRID-15-14",
-    "ts": "2026-08-21T13:00:00+00:00",
+    "grid_cell_code": "NCR-051-035",
+    "ts": "2026-08-22T05:00:00+00:00",
     "kind": "REANALYSIS",
     "boundary_layer_height": 223.8,
     "wind_u": -4.27,
@@ -3780,8 +3924,8 @@
     "precipitation": 0.0
   },
   {
-    "grid_cell_code": "SEED-GRID-15-15",
-    "ts": "2026-08-21T13:00:00+00:00",
+    "grid_cell_code": "NCR-051-036",
+    "ts": "2026-08-22T05:00:00+00:00",
     "kind": "REANALYSIS",
     "boundary_layer_height": 398.3,
     "wind_u": -1.02,
@@ -3792,8 +3936,8 @@
     "precipitation": 0.0
   },
   {
-    "grid_cell_code": "SEED-GRID-15-16",
-    "ts": "2026-08-21T13:00:00+00:00",
+    "grid_cell_code": "NCR-051-037",
+    "ts": "2026-08-22T05:00:00+00:00",
     "kind": "REANALYSIS",
     "boundary_layer_height": 274.8,
     "wind_u": -2.293,
@@ -3804,8 +3948,8 @@
     "precipitation": 0.0
   },
   {
-    "grid_cell_code": "SEED-GRID-15-17",
-    "ts": "2026-08-21T13:00:00+00:00",
+    "grid_cell_code": "NCR-051-038",
+    "ts": "2026-08-22T05:00:00+00:00",
     "kind": "REANALYSIS",
     "boundary_layer_height": 171.3,
     "wind_u": -3.432,
@@ -3816,8 +3960,8 @@
     "precipitation": 0.0
   },
   {
-    "grid_cell_code": "SEED-GRID-15-18",
-    "ts": "2026-08-21T13:00:00+00:00",
+    "grid_cell_code": "NCR-051-039",
+    "ts": "2026-08-22T05:00:00+00:00",
     "kind": "REANALYSIS",
     "boundary_layer_height": 335.5,
     "wind_u": -2.893,
@@ -3828,8 +3972,8 @@
     "precipitation": 0.0
   },
   {
-    "grid_cell_code": "SEED-GRID-15-19",
-    "ts": "2026-08-21T13:00:00+00:00",
+    "grid_cell_code": "NCR-051-040",
+    "ts": "2026-08-22T05:00:00+00:00",
     "kind": "REANALYSIS",
     "boundary_layer_height": 282.3,
     "wind_u": -3.466,
@@ -3840,8 +3984,8 @@
     "precipitation": 0.0
   },
   {
-    "grid_cell_code": "SEED-GRID-16-0",
-    "ts": "2026-08-21T13:00:00+00:00",
+    "grid_cell_code": "NCR-051-041",
+    "ts": "2026-08-22T05:00:00+00:00",
     "kind": "REANALYSIS",
     "boundary_layer_height": 227.5,
     "wind_u": -2.174,
@@ -3852,8 +3996,8 @@
     "precipitation": 0.0
   },
   {
-    "grid_cell_code": "SEED-GRID-16-1",
-    "ts": "2026-08-21T13:00:00+00:00",
+    "grid_cell_code": "NCR-051-042",
+    "ts": "2026-08-22T05:00:00+00:00",
     "kind": "REANALYSIS",
     "boundary_layer_height": 313.2,
     "wind_u": -2.161,
@@ -3864,8 +4008,8 @@
     "precipitation": 0.0
   },
   {
-    "grid_cell_code": "SEED-GRID-16-2",
-    "ts": "2026-08-21T13:00:00+00:00",
+    "grid_cell_code": "NCR-051-043",
+    "ts": "2026-08-22T05:00:00+00:00",
     "kind": "REANALYSIS",
     "boundary_layer_height": 412.0,
     "wind_u": -3.117,
@@ -3876,8 +4020,8 @@
     "precipitation": 0.0
   },
   {
-    "grid_cell_code": "SEED-GRID-16-3",
-    "ts": "2026-08-21T13:00:00+00:00",
+    "grid_cell_code": "NCR-051-044",
+    "ts": "2026-08-22T05:00:00+00:00",
     "kind": "REANALYSIS",
     "boundary_layer_height": 238.3,
     "wind_u": -2.763,
@@ -3888,8 +4032,8 @@
     "precipitation": 0.0
   },
   {
-    "grid_cell_code": "SEED-GRID-16-4",
-    "ts": "2026-08-21T13:00:00+00:00",
+    "grid_cell_code": "NCR-051-045",
+    "ts": "2026-08-22T05:00:00+00:00",
     "kind": "REANALYSIS",
     "boundary_layer_height": 138.6,
     "wind_u": -2.29,
@@ -3900,8 +4044,8 @@
     "precipitation": 0.0
   },
   {
-    "grid_cell_code": "SEED-GRID-16-5",
-    "ts": "2026-08-21T13:00:00+00:00",
+    "grid_cell_code": "NCR-051-046",
+    "ts": "2026-08-22T05:00:00+00:00",
     "kind": "REANALYSIS",
     "boundary_layer_height": 184.0,
     "wind_u": -2.965,
@@ -3912,8 +4056,8 @@
     "precipitation": 0.0
   },
   {
-    "grid_cell_code": "SEED-GRID-16-6",
-    "ts": "2026-08-21T13:00:00+00:00",
+    "grid_cell_code": "NCR-051-047",
+    "ts": "2026-08-22T05:00:00+00:00",
     "kind": "REANALYSIS",
     "boundary_layer_height": 220.3,
     "wind_u": -1.068,
@@ -3924,8 +4068,8 @@
     "precipitation": 0.0
   },
   {
-    "grid_cell_code": "SEED-GRID-16-7",
-    "ts": "2026-08-21T13:00:00+00:00",
+    "grid_cell_code": "NCR-051-048",
+    "ts": "2026-08-22T05:00:00+00:00",
     "kind": "REANALYSIS",
     "boundary_layer_height": 186.4,
     "wind_u": -3.251,
@@ -3936,8 +4080,8 @@
     "precipitation": 0.0
   },
   {
-    "grid_cell_code": "SEED-GRID-16-8",
-    "ts": "2026-08-21T13:00:00+00:00",
+    "grid_cell_code": "NCR-052-029",
+    "ts": "2026-08-22T05:00:00+00:00",
     "kind": "REANALYSIS",
     "boundary_layer_height": 394.4,
     "wind_u": -2.452,
@@ -3948,8 +4092,8 @@
     "precipitation": 0.0
   },
   {
-    "grid_cell_code": "SEED-GRID-16-9",
-    "ts": "2026-08-21T13:00:00+00:00",
+    "grid_cell_code": "NCR-052-030",
+    "ts": "2026-08-22T05:00:00+00:00",
     "kind": "REANALYSIS",
     "boundary_layer_height": 306.3,
     "wind_u": -1.498,
@@ -3960,8 +4104,8 @@
     "precipitation": 0.0
   },
   {
-    "grid_cell_code": "SEED-GRID-16-10",
-    "ts": "2026-08-21T13:00:00+00:00",
+    "grid_cell_code": "NCR-052-031",
+    "ts": "2026-08-22T05:00:00+00:00",
     "kind": "REANALYSIS",
     "boundary_layer_height": 391.5,
     "wind_u": -2.634,
@@ -3972,8 +4116,8 @@
     "precipitation": 0.0
   },
   {
-    "grid_cell_code": "SEED-GRID-16-11",
-    "ts": "2026-08-21T13:00:00+00:00",
+    "grid_cell_code": "NCR-052-032",
+    "ts": "2026-08-22T05:00:00+00:00",
     "kind": "REANALYSIS",
     "boundary_layer_height": 417.2,
     "wind_u": -1.979,
@@ -3984,8 +4128,8 @@
     "precipitation": 0.0
   },
   {
-    "grid_cell_code": "SEED-GRID-16-12",
-    "ts": "2026-08-21T13:00:00+00:00",
+    "grid_cell_code": "NCR-052-033",
+    "ts": "2026-08-22T05:00:00+00:00",
     "kind": "REANALYSIS",
     "boundary_layer_height": 396.7,
     "wind_u": -2.77,
@@ -3996,8 +4140,8 @@
     "precipitation": 0.0
   },
   {
-    "grid_cell_code": "SEED-GRID-16-13",
-    "ts": "2026-08-21T13:00:00+00:00",
+    "grid_cell_code": "NCR-052-034",
+    "ts": "2026-08-22T05:00:00+00:00",
     "kind": "REANALYSIS",
     "boundary_layer_height": 397.9,
     "wind_u": -1.349,
@@ -4008,8 +4152,8 @@
     "precipitation": 0.0
   },
   {
-    "grid_cell_code": "SEED-GRID-16-14",
-    "ts": "2026-08-21T13:00:00+00:00",
+    "grid_cell_code": "NCR-052-035",
+    "ts": "2026-08-22T05:00:00+00:00",
     "kind": "REANALYSIS",
     "boundary_layer_height": 416.8,
     "wind_u": -2.307,
@@ -4020,8 +4164,8 @@
     "precipitation": 0.0
   },
   {
-    "grid_cell_code": "SEED-GRID-16-15",
-    "ts": "2026-08-21T13:00:00+00:00",
+    "grid_cell_code": "NCR-052-036",
+    "ts": "2026-08-22T05:00:00+00:00",
     "kind": "REANALYSIS",
     "boundary_layer_height": 439.0,
     "wind_u": -2.471,
@@ -4032,8 +4176,8 @@
     "precipitation": 0.0
   },
   {
-    "grid_cell_code": "SEED-GRID-16-16",
-    "ts": "2026-08-21T13:00:00+00:00",
+    "grid_cell_code": "NCR-052-037",
+    "ts": "2026-08-22T05:00:00+00:00",
     "kind": "REANALYSIS",
     "boundary_layer_height": 192.1,
     "wind_u": -3.552,
@@ -4044,8 +4188,8 @@
     "precipitation": 0.0
   },
   {
-    "grid_cell_code": "SEED-GRID-16-17",
-    "ts": "2026-08-21T13:00:00+00:00",
+    "grid_cell_code": "NCR-052-038",
+    "ts": "2026-08-22T05:00:00+00:00",
     "kind": "REANALYSIS",
     "boundary_layer_height": 139.8,
     "wind_u": -1.135,
@@ -4056,8 +4200,8 @@
     "precipitation": 0.0
   },
   {
-    "grid_cell_code": "SEED-GRID-16-18",
-    "ts": "2026-08-21T13:00:00+00:00",
+    "grid_cell_code": "NCR-052-039",
+    "ts": "2026-08-22T05:00:00+00:00",
     "kind": "REANALYSIS",
     "boundary_layer_height": 424.0,
     "wind_u": -2.321,
@@ -4068,8 +4212,8 @@
     "precipitation": 0.0
   },
   {
-    "grid_cell_code": "SEED-GRID-16-19",
-    "ts": "2026-08-21T13:00:00+00:00",
+    "grid_cell_code": "NCR-052-040",
+    "ts": "2026-08-22T05:00:00+00:00",
     "kind": "REANALYSIS",
     "boundary_layer_height": 276.0,
     "wind_u": -3.123,
@@ -4080,8 +4224,8 @@
     "precipitation": 0.0
   },
   {
-    "grid_cell_code": "SEED-GRID-17-0",
-    "ts": "2026-08-21T13:00:00+00:00",
+    "grid_cell_code": "NCR-052-041",
+    "ts": "2026-08-22T05:00:00+00:00",
     "kind": "REANALYSIS",
     "boundary_layer_height": 315.4,
     "wind_u": -3.503,
@@ -4092,8 +4236,8 @@
     "precipitation": 0.0
   },
   {
-    "grid_cell_code": "SEED-GRID-17-1",
-    "ts": "2026-08-21T13:00:00+00:00",
+    "grid_cell_code": "NCR-052-042",
+    "ts": "2026-08-22T05:00:00+00:00",
     "kind": "REANALYSIS",
     "boundary_layer_height": 213.4,
     "wind_u": -4.456,
@@ -4104,8 +4248,8 @@
     "precipitation": 0.0
   },
   {
-    "grid_cell_code": "SEED-GRID-17-2",
-    "ts": "2026-08-21T13:00:00+00:00",
+    "grid_cell_code": "NCR-052-043",
+    "ts": "2026-08-22T05:00:00+00:00",
     "kind": "REANALYSIS",
     "boundary_layer_height": 248.5,
     "wind_u": -2.083,
@@ -4116,8 +4260,8 @@
     "precipitation": 0.0
   },
   {
-    "grid_cell_code": "SEED-GRID-17-3",
-    "ts": "2026-08-21T13:00:00+00:00",
+    "grid_cell_code": "NCR-052-044",
+    "ts": "2026-08-22T05:00:00+00:00",
     "kind": "REANALYSIS",
     "boundary_layer_height": 170.9,
     "wind_u": -1.382,
@@ -4128,8 +4272,8 @@
     "precipitation": 0.0
   },
   {
-    "grid_cell_code": "SEED-GRID-17-4",
-    "ts": "2026-08-21T13:00:00+00:00",
+    "grid_cell_code": "NCR-052-045",
+    "ts": "2026-08-22T05:00:00+00:00",
     "kind": "REANALYSIS",
     "boundary_layer_height": 334.4,
     "wind_u": -1.442,
@@ -4140,8 +4284,8 @@
     "precipitation": 0.0
   },
   {
-    "grid_cell_code": "SEED-GRID-17-5",
-    "ts": "2026-08-21T13:00:00+00:00",
+    "grid_cell_code": "NCR-052-046",
+    "ts": "2026-08-22T05:00:00+00:00",
     "kind": "REANALYSIS",
     "boundary_layer_height": 149.3,
     "wind_u": -1.537,
@@ -4152,8 +4296,8 @@
     "precipitation": 0.0
   },
   {
-    "grid_cell_code": "SEED-GRID-17-6",
-    "ts": "2026-08-21T13:00:00+00:00",
+    "grid_cell_code": "NCR-052-047",
+    "ts": "2026-08-22T05:00:00+00:00",
     "kind": "REANALYSIS",
     "boundary_layer_height": 379.8,
     "wind_u": -2.626,
@@ -4164,8 +4308,8 @@
     "precipitation": 0.0
   },
   {
-    "grid_cell_code": "SEED-GRID-17-7",
-    "ts": "2026-08-21T13:00:00+00:00",
+    "grid_cell_code": "NCR-052-048",
+    "ts": "2026-08-22T05:00:00+00:00",
     "kind": "REANALYSIS",
     "boundary_layer_height": 417.1,
     "wind_u": -1.494,
@@ -4176,8 +4320,8 @@
     "precipitation": 0.0
   },
   {
-    "grid_cell_code": "SEED-GRID-17-8",
-    "ts": "2026-08-21T13:00:00+00:00",
+    "grid_cell_code": "NCR-053-029",
+    "ts": "2026-08-22T05:00:00+00:00",
     "kind": "REANALYSIS",
     "boundary_layer_height": 472.6,
     "wind_u": -1.81,
@@ -4188,8 +4332,8 @@
     "precipitation": 0.0
   },
   {
-    "grid_cell_code": "SEED-GRID-17-9",
-    "ts": "2026-08-21T13:00:00+00:00",
+    "grid_cell_code": "NCR-053-030",
+    "ts": "2026-08-22T05:00:00+00:00",
     "kind": "REANALYSIS",
     "boundary_layer_height": 291.0,
     "wind_u": -4.017,
@@ -4200,8 +4344,8 @@
     "precipitation": 0.0
   },
   {
-    "grid_cell_code": "SEED-GRID-17-10",
-    "ts": "2026-08-21T13:00:00+00:00",
+    "grid_cell_code": "NCR-053-031",
+    "ts": "2026-08-22T05:00:00+00:00",
     "kind": "REANALYSIS",
     "boundary_layer_height": 359.5,
     "wind_u": -1.331,
@@ -4212,8 +4356,8 @@
     "precipitation": 0.0
   },
   {
-    "grid_cell_code": "SEED-GRID-17-11",
-    "ts": "2026-08-21T13:00:00+00:00",
+    "grid_cell_code": "NCR-053-032",
+    "ts": "2026-08-22T05:00:00+00:00",
     "kind": "REANALYSIS",
     "boundary_layer_height": 353.0,
     "wind_u": -1.454,
@@ -4224,8 +4368,8 @@
     "precipitation": 0.0
   },
   {
-    "grid_cell_code": "SEED-GRID-17-12",
-    "ts": "2026-08-21T13:00:00+00:00",
+    "grid_cell_code": "NCR-053-033",
+    "ts": "2026-08-22T05:00:00+00:00",
     "kind": "REANALYSIS",
     "boundary_layer_height": 471.4,
     "wind_u": -2.703,
@@ -4236,8 +4380,8 @@
     "precipitation": 0.0
   },
   {
-    "grid_cell_code": "SEED-GRID-17-13",
-    "ts": "2026-08-21T13:00:00+00:00",
+    "grid_cell_code": "NCR-053-034",
+    "ts": "2026-08-22T05:00:00+00:00",
     "kind": "REANALYSIS",
     "boundary_layer_height": 443.8,
     "wind_u": -1.594,
@@ -4248,8 +4392,8 @@
     "precipitation": 0.0
   },
   {
-    "grid_cell_code": "SEED-GRID-17-14",
-    "ts": "2026-08-21T13:00:00+00:00",
+    "grid_cell_code": "NCR-053-035",
+    "ts": "2026-08-22T05:00:00+00:00",
     "kind": "REANALYSIS",
     "boundary_layer_height": 455.3,
     "wind_u": -3.024,
@@ -4260,8 +4404,8 @@
     "precipitation": 0.0
   },
   {
-    "grid_cell_code": "SEED-GRID-17-15",
-    "ts": "2026-08-21T13:00:00+00:00",
+    "grid_cell_code": "NCR-053-036",
+    "ts": "2026-08-22T05:00:00+00:00",
     "kind": "REANALYSIS",
     "boundary_layer_height": 158.5,
     "wind_u": -1.671,
@@ -4272,8 +4416,8 @@
     "precipitation": 0.0
   },
   {
-    "grid_cell_code": "SEED-GRID-17-16",
-    "ts": "2026-08-21T13:00:00+00:00",
+    "grid_cell_code": "NCR-053-037",
+    "ts": "2026-08-22T05:00:00+00:00",
     "kind": "REANALYSIS",
     "boundary_layer_height": 475.3,
     "wind_u": -1.823,
@@ -4284,8 +4428,8 @@
     "precipitation": 0.0
   },
   {
-    "grid_cell_code": "SEED-GRID-17-17",
-    "ts": "2026-08-21T13:00:00+00:00",
+    "grid_cell_code": "NCR-053-038",
+    "ts": "2026-08-22T05:00:00+00:00",
     "kind": "REANALYSIS",
     "boundary_layer_height": 184.1,
     "wind_u": -3.311,
@@ -4296,8 +4440,8 @@
     "precipitation": 0.0
   },
   {
-    "grid_cell_code": "SEED-GRID-17-18",
-    "ts": "2026-08-21T13:00:00+00:00",
+    "grid_cell_code": "NCR-053-039",
+    "ts": "2026-08-22T05:00:00+00:00",
     "kind": "REANALYSIS",
     "boundary_layer_height": 236.8,
     "wind_u": -3.039,
@@ -4308,8 +4452,8 @@
     "precipitation": 0.0
   },
   {
-    "grid_cell_code": "SEED-GRID-17-19",
-    "ts": "2026-08-21T13:00:00+00:00",
+    "grid_cell_code": "NCR-053-040",
+    "ts": "2026-08-22T05:00:00+00:00",
     "kind": "REANALYSIS",
     "boundary_layer_height": 443.8,
     "wind_u": -1.321,
@@ -4320,8 +4464,8 @@
     "precipitation": 0.0
   },
   {
-    "grid_cell_code": "SEED-GRID-18-0",
-    "ts": "2026-08-21T13:00:00+00:00",
+    "grid_cell_code": "NCR-053-041",
+    "ts": "2026-08-22T05:00:00+00:00",
     "kind": "REANALYSIS",
     "boundary_layer_height": 161.4,
     "wind_u": -3.687,
@@ -4332,8 +4476,8 @@
     "precipitation": 0.0
   },
   {
-    "grid_cell_code": "SEED-GRID-18-1",
-    "ts": "2026-08-21T13:00:00+00:00",
+    "grid_cell_code": "NCR-053-042",
+    "ts": "2026-08-22T05:00:00+00:00",
     "kind": "REANALYSIS",
     "boundary_layer_height": 378.4,
     "wind_u": -1.262,
@@ -4344,8 +4488,8 @@
     "precipitation": 0.0
   },
   {
-    "grid_cell_code": "SEED-GRID-18-2",
-    "ts": "2026-08-21T13:00:00+00:00",
+    "grid_cell_code": "NCR-053-043",
+    "ts": "2026-08-22T05:00:00+00:00",
     "kind": "REANALYSIS",
     "boundary_layer_height": 131.0,
     "wind_u": -4.093,
@@ -4356,8 +4500,8 @@
     "precipitation": 0.0
   },
   {
-    "grid_cell_code": "SEED-GRID-18-3",
-    "ts": "2026-08-21T13:00:00+00:00",
+    "grid_cell_code": "NCR-053-044",
+    "ts": "2026-08-22T05:00:00+00:00",
     "kind": "REANALYSIS",
     "boundary_layer_height": 294.1,
     "wind_u": -3.6,
@@ -4368,8 +4512,8 @@
     "precipitation": 0.0
   },
   {
-    "grid_cell_code": "SEED-GRID-18-4",
-    "ts": "2026-08-21T13:00:00+00:00",
+    "grid_cell_code": "NCR-053-045",
+    "ts": "2026-08-22T05:00:00+00:00",
     "kind": "REANALYSIS",
     "boundary_layer_height": 474.7,
     "wind_u": -2.762,
@@ -4380,8 +4524,8 @@
     "precipitation": 0.0
   },
   {
-    "grid_cell_code": "SEED-GRID-18-5",
-    "ts": "2026-08-21T13:00:00+00:00",
+    "grid_cell_code": "NCR-053-046",
+    "ts": "2026-08-22T05:00:00+00:00",
     "kind": "REANALYSIS",
     "boundary_layer_height": 149.2,
     "wind_u": -1.075,
@@ -4392,8 +4536,8 @@
     "precipitation": 0.0
   },
   {
-    "grid_cell_code": "SEED-GRID-18-6",
-    "ts": "2026-08-21T13:00:00+00:00",
+    "grid_cell_code": "NCR-053-047",
+    "ts": "2026-08-22T05:00:00+00:00",
     "kind": "REANALYSIS",
     "boundary_layer_height": 297.7,
     "wind_u": -2.293,
@@ -4404,8 +4548,8 @@
     "precipitation": 0.0
   },
   {
-    "grid_cell_code": "SEED-GRID-18-7",
-    "ts": "2026-08-21T13:00:00+00:00",
+    "grid_cell_code": "NCR-053-048",
+    "ts": "2026-08-22T05:00:00+00:00",
     "kind": "REANALYSIS",
     "boundary_layer_height": 303.1,
     "wind_u": -3.875,
@@ -4416,8 +4560,8 @@
     "precipitation": 0.0
   },
   {
-    "grid_cell_code": "SEED-GRID-18-8",
-    "ts": "2026-08-21T13:00:00+00:00",
+    "grid_cell_code": "NCR-054-029",
+    "ts": "2026-08-22T05:00:00+00:00",
     "kind": "REANALYSIS",
     "boundary_layer_height": 131.1,
     "wind_u": -1.837,
@@ -4428,8 +4572,8 @@
     "precipitation": 0.0
   },
   {
-    "grid_cell_code": "SEED-GRID-18-9",
-    "ts": "2026-08-21T13:00:00+00:00",
+    "grid_cell_code": "NCR-054-030",
+    "ts": "2026-08-22T05:00:00+00:00",
     "kind": "REANALYSIS",
     "boundary_layer_height": 352.0,
     "wind_u": -2.465,
@@ -4440,8 +4584,8 @@
     "precipitation": 0.0
   },
   {
-    "grid_cell_code": "SEED-GRID-18-10",
-    "ts": "2026-08-21T13:00:00+00:00",
+    "grid_cell_code": "NCR-054-031",
+    "ts": "2026-08-22T05:00:00+00:00",
     "kind": "REANALYSIS",
     "boundary_layer_height": 276.7,
     "wind_u": -1.418,
@@ -4452,8 +4596,8 @@
     "precipitation": 0.0
   },
   {
-    "grid_cell_code": "SEED-GRID-18-11",
-    "ts": "2026-08-21T13:00:00+00:00",
+    "grid_cell_code": "NCR-054-032",
+    "ts": "2026-08-22T05:00:00+00:00",
     "kind": "REANALYSIS",
     "boundary_layer_height": 207.0,
     "wind_u": -2.131,
@@ -4464,8 +4608,8 @@
     "precipitation": 0.0
   },
   {
-    "grid_cell_code": "SEED-GRID-18-12",
-    "ts": "2026-08-21T13:00:00+00:00",
+    "grid_cell_code": "NCR-054-033",
+    "ts": "2026-08-22T05:00:00+00:00",
     "kind": "REANALYSIS",
     "boundary_layer_height": 385.2,
     "wind_u": -1.128,
@@ -4476,8 +4620,8 @@
     "precipitation": 0.0
   },
   {
-    "grid_cell_code": "SEED-GRID-18-13",
-    "ts": "2026-08-21T13:00:00+00:00",
+    "grid_cell_code": "NCR-054-034",
+    "ts": "2026-08-22T05:00:00+00:00",
     "kind": "REANALYSIS",
     "boundary_layer_height": 337.2,
     "wind_u": -2.796,
@@ -4488,8 +4632,8 @@
     "precipitation": 0.0
   },
   {
-    "grid_cell_code": "SEED-GRID-18-14",
-    "ts": "2026-08-21T13:00:00+00:00",
+    "grid_cell_code": "NCR-054-035",
+    "ts": "2026-08-22T05:00:00+00:00",
     "kind": "REANALYSIS",
     "boundary_layer_height": 338.5,
     "wind_u": -1.189,
@@ -4500,8 +4644,8 @@
     "precipitation": 0.0
   },
   {
-    "grid_cell_code": "SEED-GRID-18-15",
-    "ts": "2026-08-21T13:00:00+00:00",
+    "grid_cell_code": "NCR-054-036",
+    "ts": "2026-08-22T05:00:00+00:00",
     "kind": "REANALYSIS",
     "boundary_layer_height": 464.7,
     "wind_u": -2.831,
@@ -4512,8 +4656,8 @@
     "precipitation": 0.0
   },
   {
-    "grid_cell_code": "SEED-GRID-18-16",
-    "ts": "2026-08-21T13:00:00+00:00",
+    "grid_cell_code": "NCR-054-037",
+    "ts": "2026-08-22T05:00:00+00:00",
     "kind": "REANALYSIS",
     "boundary_layer_height": 123.0,
     "wind_u": -3.031,
@@ -4524,8 +4668,8 @@
     "precipitation": 0.0
   },
   {
-    "grid_cell_code": "SEED-GRID-18-17",
-    "ts": "2026-08-21T13:00:00+00:00",
+    "grid_cell_code": "NCR-054-038",
+    "ts": "2026-08-22T05:00:00+00:00",
     "kind": "REANALYSIS",
     "boundary_layer_height": 470.9,
     "wind_u": -1.573,
@@ -4536,8 +4680,8 @@
     "precipitation": 0.0
   },
   {
-    "grid_cell_code": "SEED-GRID-18-18",
-    "ts": "2026-08-21T13:00:00+00:00",
+    "grid_cell_code": "NCR-054-039",
+    "ts": "2026-08-22T05:00:00+00:00",
     "kind": "REANALYSIS",
     "boundary_layer_height": 437.6,
     "wind_u": -2.378,
@@ -4548,8 +4692,8 @@
     "precipitation": 0.0
   },
   {
-    "grid_cell_code": "SEED-GRID-18-19",
-    "ts": "2026-08-21T13:00:00+00:00",
+    "grid_cell_code": "NCR-054-040",
+    "ts": "2026-08-22T05:00:00+00:00",
     "kind": "REANALYSIS",
     "boundary_layer_height": 121.3,
     "wind_u": -2.183,
@@ -4560,8 +4704,8 @@
     "precipitation": 0.0
   },
   {
-    "grid_cell_code": "SEED-GRID-19-0",
-    "ts": "2026-08-21T13:00:00+00:00",
+    "grid_cell_code": "NCR-054-041",
+    "ts": "2026-08-22T05:00:00+00:00",
     "kind": "REANALYSIS",
     "boundary_layer_height": 304.8,
     "wind_u": -2.808,
@@ -4572,8 +4716,8 @@
     "precipitation": 0.0
   },
   {
-    "grid_cell_code": "SEED-GRID-19-1",
-    "ts": "2026-08-21T13:00:00+00:00",
+    "grid_cell_code": "NCR-054-042",
+    "ts": "2026-08-22T05:00:00+00:00",
     "kind": "REANALYSIS",
     "boundary_layer_height": 268.9,
     "wind_u": -4.368,
@@ -4584,8 +4728,8 @@
     "precipitation": 0.0
   },
   {
-    "grid_cell_code": "SEED-GRID-19-2",
-    "ts": "2026-08-21T13:00:00+00:00",
+    "grid_cell_code": "NCR-054-043",
+    "ts": "2026-08-22T05:00:00+00:00",
     "kind": "REANALYSIS",
     "boundary_layer_height": 371.5,
     "wind_u": -1.265,
@@ -4596,8 +4740,8 @@
     "precipitation": 0.0
   },
   {
-    "grid_cell_code": "SEED-GRID-19-3",
-    "ts": "2026-08-21T13:00:00+00:00",
+    "grid_cell_code": "NCR-054-044",
+    "ts": "2026-08-22T05:00:00+00:00",
     "kind": "REANALYSIS",
     "boundary_layer_height": 175.9,
     "wind_u": -1.25,
@@ -4608,8 +4752,8 @@
     "precipitation": 0.0
   },
   {
-    "grid_cell_code": "SEED-GRID-19-4",
-    "ts": "2026-08-21T13:00:00+00:00",
+    "grid_cell_code": "NCR-054-045",
+    "ts": "2026-08-22T05:00:00+00:00",
     "kind": "REANALYSIS",
     "boundary_layer_height": 293.3,
     "wind_u": -3.191,
@@ -4620,8 +4764,8 @@
     "precipitation": 0.0
   },
   {
-    "grid_cell_code": "SEED-GRID-19-5",
-    "ts": "2026-08-21T13:00:00+00:00",
+    "grid_cell_code": "NCR-054-046",
+    "ts": "2026-08-22T05:00:00+00:00",
     "kind": "REANALYSIS",
     "boundary_layer_height": 434.8,
     "wind_u": -3.548,
@@ -4632,8 +4776,8 @@
     "precipitation": 0.0
   },
   {
-    "grid_cell_code": "SEED-GRID-19-6",
-    "ts": "2026-08-21T13:00:00+00:00",
+    "grid_cell_code": "NCR-054-047",
+    "ts": "2026-08-22T05:00:00+00:00",
     "kind": "REANALYSIS",
     "boundary_layer_height": 251.6,
     "wind_u": -3.183,
@@ -4644,8 +4788,8 @@
     "precipitation": 0.0
   },
   {
-    "grid_cell_code": "SEED-GRID-19-7",
-    "ts": "2026-08-21T13:00:00+00:00",
+    "grid_cell_code": "NCR-054-048",
+    "ts": "2026-08-22T05:00:00+00:00",
     "kind": "REANALYSIS",
     "boundary_layer_height": 400.8,
     "wind_u": -2.48,
@@ -4653,150 +4797,6 @@
     "temp_2m": 10.65,
     "relative_humidity": 80.9,
     "surface_pressure": 101405.0,
-    "precipitation": 0.0
-  },
-  {
-    "grid_cell_code": "SEED-GRID-19-8",
-    "ts": "2026-08-21T13:00:00+00:00",
-    "kind": "REANALYSIS",
-    "boundary_layer_height": 164.5,
-    "wind_u": -1.34,
-    "wind_v": -2.455,
-    "temp_2m": 10.22,
-    "relative_humidity": 59.5,
-    "surface_pressure": 99914.6,
-    "precipitation": 0.0
-  },
-  {
-    "grid_cell_code": "SEED-GRID-19-9",
-    "ts": "2026-08-21T13:00:00+00:00",
-    "kind": "REANALYSIS",
-    "boundary_layer_height": 260.9,
-    "wind_u": -3.033,
-    "wind_v": -2.464,
-    "temp_2m": 12.89,
-    "relative_humidity": 83.5,
-    "surface_pressure": 100558.2,
-    "precipitation": 0.0
-  },
-  {
-    "grid_cell_code": "SEED-GRID-19-10",
-    "ts": "2026-08-21T13:00:00+00:00",
-    "kind": "REANALYSIS",
-    "boundary_layer_height": 278.9,
-    "wind_u": -3.024,
-    "wind_v": -0.593,
-    "temp_2m": 11.82,
-    "relative_humidity": 62.6,
-    "surface_pressure": 99860.7,
-    "precipitation": 0.0
-  },
-  {
-    "grid_cell_code": "SEED-GRID-19-11",
-    "ts": "2026-08-21T13:00:00+00:00",
-    "kind": "REANALYSIS",
-    "boundary_layer_height": 327.0,
-    "wind_u": -4.021,
-    "wind_v": -2.681,
-    "temp_2m": 16.86,
-    "relative_humidity": 55.4,
-    "surface_pressure": 99655.3,
-    "precipitation": 0.0
-  },
-  {
-    "grid_cell_code": "SEED-GRID-19-12",
-    "ts": "2026-08-21T13:00:00+00:00",
-    "kind": "REANALYSIS",
-    "boundary_layer_height": 310.3,
-    "wind_u": -1.883,
-    "wind_v": -3.014,
-    "temp_2m": 16.0,
-    "relative_humidity": 72.6,
-    "surface_pressure": 101232.2,
-    "precipitation": 0.0
-  },
-  {
-    "grid_cell_code": "SEED-GRID-19-13",
-    "ts": "2026-08-21T13:00:00+00:00",
-    "kind": "REANALYSIS",
-    "boundary_layer_height": 216.5,
-    "wind_u": -1.512,
-    "wind_v": -1.921,
-    "temp_2m": 12.98,
-    "relative_humidity": 91.5,
-    "surface_pressure": 101478.1,
-    "precipitation": 0.0
-  },
-  {
-    "grid_cell_code": "SEED-GRID-19-14",
-    "ts": "2026-08-21T13:00:00+00:00",
-    "kind": "REANALYSIS",
-    "boundary_layer_height": 270.4,
-    "wind_u": -2.092,
-    "wind_v": -2.384,
-    "temp_2m": 11.33,
-    "relative_humidity": 62.7,
-    "surface_pressure": 99514.4,
-    "precipitation": 0.0
-  },
-  {
-    "grid_cell_code": "SEED-GRID-19-15",
-    "ts": "2026-08-21T13:00:00+00:00",
-    "kind": "REANALYSIS",
-    "boundary_layer_height": 295.8,
-    "wind_u": -2.084,
-    "wind_v": -0.72,
-    "temp_2m": 11.21,
-    "relative_humidity": 83.0,
-    "surface_pressure": 101019.7,
-    "precipitation": 0.0
-  },
-  {
-    "grid_cell_code": "SEED-GRID-19-16",
-    "ts": "2026-08-21T13:00:00+00:00",
-    "kind": "REANALYSIS",
-    "boundary_layer_height": 405.3,
-    "wind_u": -2.531,
-    "wind_v": -2.016,
-    "temp_2m": 9.38,
-    "relative_humidity": 65.5,
-    "surface_pressure": 101457.7,
-    "precipitation": 0.0
-  },
-  {
-    "grid_cell_code": "SEED-GRID-19-17",
-    "ts": "2026-08-21T13:00:00+00:00",
-    "kind": "REANALYSIS",
-    "boundary_layer_height": 357.8,
-    "wind_u": -3.968,
-    "wind_v": -1.655,
-    "temp_2m": 17.96,
-    "relative_humidity": 68.1,
-    "surface_pressure": 100916.9,
-    "precipitation": 0.0
-  },
-  {
-    "grid_cell_code": "SEED-GRID-19-18",
-    "ts": "2026-08-21T13:00:00+00:00",
-    "kind": "REANALYSIS",
-    "boundary_layer_height": 446.0,
-    "wind_u": -2.992,
-    "wind_v": -1.335,
-    "temp_2m": 12.95,
-    "relative_humidity": 69.2,
-    "surface_pressure": 101375.5,
-    "precipitation": 0.0
-  },
-  {
-    "grid_cell_code": "SEED-GRID-19-19",
-    "ts": "2026-08-21T13:00:00+00:00",
-    "kind": "REANALYSIS",
-    "boundary_layer_height": 394.0,
-    "wind_u": -1.635,
-    "wind_v": -0.67,
-    "temp_2m": 18.33,
-    "relative_humidity": 85.1,
-    "surface_pressure": 100768.7,
     "precipitation": 0.0
   }
 ]
