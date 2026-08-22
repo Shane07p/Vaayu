@@ -28,6 +28,7 @@
         <jts.version>1.20.0</jts.version>
         <springdoc.version>2.7.0</springdoc.version>
         <resilience4j.version>2.2.0</resilience4j.version>
+        <cloud.sql.socket-factory.version>1.29.0</cloud.sql.socket-factory.version>
     </properties>
 
     <dependencies>
@@ -90,6 +91,12 @@
             <groupId>org.postgresql</groupId>
             <artifactId>postgresql</artifactId>
             <scope>runtime</scope>
+        </dependency>
+        <!-- Cloud Run authenticates database connections through the Cloud SQL Java Connector. -->
+        <dependency>
+            <groupId>com.google.cloud.sql</groupId>
+            <artifactId>postgres-socket-factory</artifactId>
+            <version>${cloud.sql.socket-factory.version}</version>
         </dependency>
 
         <!-- API documentation -->
