@@ -1,6 +1,17 @@
 import rawCities from "@/public/cities.json";
 import rawCountries from "@/public/processed_countries.json";
 import rawStates from "@/public/processed_states.json";
+import rawContinents from "@/public/processed_continents.json";
+
+export interface ContinentLocation {
+  id: string;
+  name: string;
+  lat: number;
+  lon: number;
+  aqi: number;
+  pm25: number;
+  category: string;
+}
 
 export interface CountryLocation {
   id: string;
@@ -43,3 +54,4 @@ export type GeoLocationPoint = CityLocation;
 export const GEO_COORDINATES: CityLocation[] = rawCities as CityLocation[];
 export const COUNTRIES: CountryLocation[] = rawCountries as CountryLocation[];
 export const STATES: StateLocation[] = rawStates as StateLocation[];
+export const CONTINENTS: ContinentLocation[] = rawContinents as ContinentLocation[];

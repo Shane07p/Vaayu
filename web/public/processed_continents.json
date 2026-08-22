@@ -1,0 +1,56 @@
+[
+  {
+    "id": "cont_1",
+    "name": "Asia",
+    "lat": 34.0479,
+    "lon": 100.6197,
+    "aqi": 145,
+    "pm25": 65,
+    "category": "Unhealthy for Sensitive Groups"
+  },
+  {
+    "id": "cont_2",
+    "name": "Europe",
+    "lat": 54.526,
+    "lon": 15.2551,
+    "aqi": 45,
+    "pm25": 12,
+    "category": "Good"
+  },
+  {
+    "id": "cont_3",
+    "name": "Africa",
+    "lat": 8.7832,
+    "lon": 34.5085,
+    "aqi": 85,
+    "pm25": 28,
+    "category": "Moderate"
+  },
+  {
+    "id": "cont_4",
+    "name": "North America",
+    "lat": 42.535,
+    "lon": -100.9168,
+    "aqi": 55,
+    "pm25": 15,
+    "category": "Moderate"
+  },
+  {
+    "id": "cont_5",
+    "name": "South America",
+    "lat": -8.7832,
+    "lon": -55.4915,
+    "aqi": 65,
+    "pm25": 18,
+    "category": "Moderate"
+  },
+  {
+    "id": "cont_6",
+    "name": "Oceania",
+    "lat": -22.7359,
+    "lon": 140.0188,
+    "aqi": 30,
+    "pm25": 8,
+    "category": "Good"
+  }
+]
