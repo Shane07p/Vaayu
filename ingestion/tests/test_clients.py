@@ -33,7 +33,7 @@ def test_cpcb_live_client_unwraps_the_sanctioned_response(
 
 def test_openaq_uses_v3_results_and_does_not_call_live_without_a_key():
     fixture = OpenAqSource(None).fetch()
-    assert fixture[0]["id"] == 8118
+    assert fixture[0]["station_source"] == "OPENAQ"
 
 
 def test_firms_parses_csv_live_response(monkeypatch: pytest.MonkeyPatch):

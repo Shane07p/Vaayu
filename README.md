@@ -85,6 +85,23 @@ An upstream failure in live mode surfaces `SOURCE_UNAVAILABLE`. It **never** fal
 fixtures — presenting cached values as fresh telemetry would be fabricating evidence, which
 is the failure mode this project most wants to avoid.
 
+### OpenAQ historical backfill
+
+Set `OPENAQ_API_KEY` to use the OpenAQ v3 source; it is sent only in the
+`X-API-Key` request header. The default command retrieves the configured 90-day
+UTC window for the shared Delhi-NCR box (`76.8,28.2,77.6,28.9`), paginates every
+PM2.5 sensor response, and persists readings through the standard ingestion
+writer. The `--days` window is intentionally constrained to 60–90 days.
+
+```bash
+cd ingestion
+uv run vaayu-openaq --days 90
+uv run vaayu-openaq --days 90 --dry-run
+```
+
+Only OpenAQ values reported in µg/m³ are retained. Requests use v3 sensor
+measurement endpoints; v1 and v2 are retired and are never called.
+
 ## What the schema enforces
 
 Some of this project's credibility claims are structural rather than conventional:

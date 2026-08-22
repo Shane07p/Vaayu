@@ -49,22 +49,40 @@ def _cpcb_timestamp(value: object) -> datetime:
     return parsed.astimezone(ZoneInfo("UTC"))
 
 
+def _station_timestamp(record: dict) -> datetime:
+    """Parse a canonical station timestamp without losing its timezone."""
+    if record.get("station_source") != "OPENAQ":
+        return _cpcb_timestamp(record.get("last_update"))
+
+    value = record.get("last_update")
+    if not isinstance(value, str):
+        raise ValueError("OpenAQ reading has no UTC timestamp")
+    try:
+        parsed = datetime.fromisoformat(value.replace("Z", "+00:00"))
+    except ValueError as exc:
+        raise ValueError("OpenAQ reading has an invalid UTC timestamp") from exc
+    if parsed.tzinfo is None:
+        raise ValueError("OpenAQ reading timestamp must include a timezone")
+    return parsed.astimezone(ZoneInfo("UTC"))
+
+
 def write_station_readings(records: list[dict], mode: str) -> int:
-    """Upsert CPCB station metadata and their pollutant readings atomically."""
-    grouped: dict[tuple[str, datetime], dict] = defaultdict(dict)
+    """Upsert canonical CPCB and OpenAQ station readings atomically."""
+    grouped: dict[tuple[str, str, datetime], dict] = defaultdict(dict)
     for record in records:
         station_name = record.get("station")
         if not isinstance(station_name, str) or not station_name:
-            raise ValueError("CPCB record has no station name")
-        timestamp = _cpcb_timestamp(record.get("last_update"))
-        entry = grouped[(station_name, timestamp)]
+            raise ValueError("station reading has no station name")
+        station_source = str(record.get("station_source") or "CPCB")
+        timestamp = _station_timestamp(record)
+        entry = grouped[(station_source, station_name, timestamp)]
         entry.update(record)
         pollutant = str(record.get("pollutant_id", "")).upper().replace(".", "")
         if pollutant in {"PM25", "PM10", "NO2", "SO2", "CO", "O3"}:
             entry[pollutant] = _as_float(record.get("pollutant_avg"))
 
     with engine.begin() as connection:
-        for (name, timestamp), record in grouped.items():
+        for (station_source, name, timestamp), record in grouped.items():
             latitude = _as_float(record.get("latitude"))
             longitude = _as_float(record.get("longitude"))
             if (
@@ -73,8 +91,8 @@ def write_station_readings(records: list[dict], mode: str) -> int:
                 or not -90 <= latitude <= 90
                 or not -180 <= longitude <= 180
             ):
-                raise ValueError(f"CPCB record for {name!r} has invalid coordinates")
-            code = _station_code(name, "CPCB")
+                raise ValueError(f"station reading for {name!r} has invalid coordinates")
+            code = _station_code(name, station_source)
             station_id = connection.execute(
                 text(
                     """
