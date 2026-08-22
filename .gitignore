@@ -16,10 +16,19 @@ node_modules/
 .next/
 out/
 
-# Secrets — never commit
+# Secrets — never commit.
+# Patterns are deliberately broad: a copy saved as `env` or `.env.local` holds
+# exactly the same live keys as `.env`, and only the exact name was matched
+# before, so such a copy was staged for a public push.
 .env
+.env.*
+!.env.example
+env
+env.*
+*.env
 secrets/
 *-sa.json
+*service-account*.json
 
 # OS / IDE
 .DS_Store

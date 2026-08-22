@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import java.time.OffsetDateTime;
 import java.time.ZoneOffset;
 import java.time.format.DateTimeFormatter;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -13,6 +14,7 @@ import org.springframework.jdbc.core.namedparam.NamedParameterJdbcOperations;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.vaayu.grap.AqiScale;
 import org.vaayu.grap.GrapProperties;
 import org.vaayu.grap.GrapService;
 
@@ -77,8 +79,12 @@ public class AlertWriterService {
                 .addValue("issuedAt", forecast.issuedAt())
                 .addValue("horizonHours", forecast.horizonHours())
                 .addValue("predictedAqi", forecast.aqi())
-                .addValue("ciLow", Math.round(forecast.ciLow()))
-                .addValue("ciHigh", Math.round(forecast.ciHigh()))
+                // forecast.ci_low/ci_high bound pm25 in ug/m3; alert.ci_low/ci_high
+                // bound predicted_aqi on the AQI scale. Copying them across
+                // unconverted produced intervals that did not contain their own
+                // point estimate, such as "AQI 428, interval 146 to 196".
+                .addValue("ciLow", AqiScale.fromPm25(forecast.ciLow()))
+                .addValue("ciHigh", AqiScale.fromPm25(forecast.ciHigh()))
                 .addValue("stage", stage.get().stage())
                 .addValue("basis", grap.statutoryBasis(stage.get()))
                 .addValue("jurisdiction", String.join(",", NCR_JURISDICTION))
@@ -128,19 +134,33 @@ public class AlertWriterService {
                         ORDER BY impact.impact_rank ASC, cluster.detection_date DESC
                         LIMIT 1
                         """,
-                        (rs, row) -> new DominantCluster(
-                                rs.getString("code"), rs.getLong("downwind_population"),
-                                rs.getDouble("trajectory_confidence"),
-                                rs.getInt("consecutive_days_unactioned"), rs.getString("source")))
+                        (rs, row) -> {
+                            long population = rs.getLong("downwind_population");
+                            Long downwindPopulation = rs.wasNull() ? null : population;
+                            double confidence = rs.getDouble("trajectory_confidence");
+                            Double trajectoryConfidence = rs.wasNull() ? null : confidence;
+                            return new DominantCluster(
+                                    rs.getString("code"),
+                                    downwindPopulation,
+                                    trajectoryConfidence,
+                                    rs.getInt("consecutive_days_unactioned"),
+                                    rs.getString("source"));
+                        })
                 .stream()
                 .findFirst();
     }
 
     private String dominantSourceJson(DominantCluster cluster) {
-        return json(Map.of(
-                "type", "crop_residue_transport",
-                "clusters", List.of(cluster.code()),
-                "trajectory_confidence", cluster.trajectoryConfidence()));
+        // Map.of throws on null values, and a null confidence must not become 0.0.
+        // The key is omitted when unknown, so a consumer sees an absent field
+        // rather than a confident zero.
+        Map<String, Object> payload = new LinkedHashMap<>();
+        payload.put("type", "crop_residue_transport");
+        payload.put("clusters", List.of(cluster.code()));
+        if (cluster.trajectoryConfidence() != null) {
+            payload.put("trajectory_confidence", cluster.trajectoryConfidence());
+        }
+        return json(payload);
     }
 
     private String escalationJson(DominantCluster cluster) {
@@ -160,7 +180,13 @@ public class AlertWriterService {
             long id, OffsetDateTime issuedAt, int horizonHours, int aqi, double ciLow, double ciHigh,
             String modelVersion, String source) {}
 
+    /**
+     * Boxed types on purpose. downwind_population and trajectory_confidence are
+     * nullable, and ResultSet.getLong/getDouble return 0 and 0.0 for SQL NULL.
+     * That turned "we do not know" into "we are confident it is zero", which is
+     * the failure this project least wants to make in an alert an officer acts on.
+     */
     private record DominantCluster(
-            String code, long downwindPopulation, double trajectoryConfidence,
+            String code, Long downwindPopulation, Double trajectoryConfidence,
             int consecutiveDaysUnactioned, String source) {}
 }
