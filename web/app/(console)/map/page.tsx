@@ -2,13 +2,20 @@ import { MapShell } from "@/components/map-shell";
 import { fetchGrid, fetchStations, fetchWorklist } from "@/lib/api";
 import type { GridPrediction, Station, WorklistItem } from "@/lib/schemas";
 
+// Delhi-NCR pilot extent: min lon, min lat, max lon, max lat.
+// Matches NCR_BBOX in ml/src/vaayu_ml/build_grid.py.
+const NCR_BBOX = "76.80,28.20,77.60,28.90";
+
 export default async function MapPage() {
   let grid: GridPrediction[] = [];
   let stations: Station[] = [];
   let worklist: WorklistItem[] = [];
   try {
     [grid, stations, worklist] = await Promise.all([
-      fetchGrid("76.9,28.4,77.1,28.6"),
+      // Covers the whole Delhi-NCR pilot grid. A tighter box silently returned
+      // only the old demo cells once the real grid was built over a different
+      // extent, so the map rendered stale seed rows and looked empty.
+      fetchGrid(NCR_BBOX),
       fetchStations(),
       fetchWorklist(),
     ]);

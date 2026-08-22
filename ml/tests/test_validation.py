@@ -45,9 +45,7 @@ def test_interval_coverage_counts_inclusive_bounds():
 
 
 def test_fire_clusters_use_real_geodesic_distance():
-    labels = cluster_fire_detections(
-        [(28.61, 77.21), (28.62, 77.21), (29.5, 77.21)], eps_km=5
-    )
+    labels = cluster_fire_detections([(28.61, 77.21), (28.62, 77.21), (29.5, 77.21)], eps_km=5)
     assert labels[0] == labels[1]
     assert labels[2] == -1
 

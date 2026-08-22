@@ -1,4 +1,4 @@
-﻿"""Lagrangian back-trajectory approximation.
+"""Lagrangian back-trajectory approximation.
 
 This is a single-particle approximation — no diffusion, no chemistry, no
 vertical mixing. Accuracy degrades beyond ~48 h and in complex terrain.

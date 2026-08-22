@@ -1,4 +1,4 @@
-﻿import pandas as pd
+import pandas as pd
 
 from vaayu_ml.attribution.rank import rank_fire_clusters
 from vaayu_ml.trajectory import back_trajectory
@@ -6,15 +6,17 @@ from vaayu_ml.trajectory import back_trajectory
 
 def run() -> None:
     print("Loading fire clusters...")
-    clusters = pd.DataFrame({
-        "id": [1, 2],
-        "code": ["HR-01", "PB-02"],
-        "lat": [29.5, 30.2],
-        "lon": [76.8, 75.9],
-        "total_frp": [450.5, 1200.0],
-        "detection_count": [5, 15],
-        "trajectory_confidence": [0.75, 0.90],
-    })
+    clusters = pd.DataFrame(
+        {
+            "id": [1, 2],
+            "code": ["HR-01", "PB-02"],
+            "lat": [29.5, 30.2],
+            "lon": [76.8, 75.9],
+            "total_frp": [450.5, 1200.0],
+            "detection_count": [5, 15],
+            "trajectory_confidence": [0.75, 0.90],
+        }
+    )
 
     # Wind blowing from north-west toward Delhi — westerly flow
     def constant_wind(lat: float, lon: float):  # noqa: ANN202
