@@ -18,7 +18,7 @@ attribution — wired into India's existing GRAP and stubble-burning enforcement
 
 | Directory | Stack |
 |---|---|
-| `backend/` | Java 25 · Spring Boot 3.4 · Maven |
+| `backend/` | Java 21 · Spring Boot 3.4 · Maven |
 | `ingestion/` | Python 3.11 · uv |
 | `ml/` | Python 3.11 · uv |
 | `web/` | Next.js 16 · React 19 · pnpm |
@@ -63,13 +63,13 @@ Only needed if you want to run a component outside Docker.
 
 | Component | Toolchain | Commands |
 |---|---|---|
-| `backend/` | JDK 25 | `./mvnw test`, `./mvnw spring-boot:run` |
+| `backend/` | JDK 21 | `./mvnw test`, `./mvnw spring-boot:run` |
 | `ingestion/` | [uv](https://docs.astral.sh/uv/) | `uv sync --extra dev`, `uv run pytest` |
 | `ml/` | uv | `uv sync --extra dev`, `uv run pytest` |
 | `web/` | Node 22+, pnpm 11 | `pnpm install`, `pnpm dev` |
 
 uv fetches Python 3.11 itself, so your system Python version does not matter.
-The Maven build targets Java 25 regardless of which JDK you have installed.
+The Maven build targets Java 21 regardless of which JDK you have installed.
 Node must be 22 or newer — pnpm 11 does not run on Node 20.
 
 ## Data modes

@@ -32,10 +32,37 @@ function getTierLabel(tier: number): string {
  * Full‑screen MapLibre map that occupies the viewport.
  * Renders compact text AQI markers, top-right location search, and floating cell inspection card.
  */
+/**
+ * Flat fallback used when the basemap style cannot load.
+ *
+ * The AQI markers are the point of this map; the basemap is context. A style
+ * that fails to resolve never fires MapLibre's `load` event, and every layer
+ * and the setMap call below depend on it, so without a fallback the map stays
+ * permanently blank with no markers and no error.
+ *
+ * Note for deployment: /map-style.json points at tile.openstreetmap.org. The
+ * OSM Foundation tile usage policy does not permit a deployed application to
+ * use those servers, so a keyed provider is needed before this ships publicly.
+ * https://operations.osmfoundation.org/policies/tiles/
+ */
+const FALLBACK_STYLE: maplibregl.StyleSpecification = {
+  version: 8,
+  sources: {},
+  layers: [
+    {
+      id: 'background',
+      type: 'background',
+      paint: { 'background-color': '#111111' },
+    },
+  ],
+};
+
 const FullScreenMap: React.FC = () => {
   const mapContainer = useRef<HTMLDivElement>(null);
   const [map, setMap] = useState<maplibregl.Map | null>(null);
   const { selectedCellData, locationName, markerInfo, dataSource, lastUpdated, loading, clearSelection } = useAQIStore();
+  const styleFailed = useRef(false);
+  const [basemapDegraded, setBasemapDegraded] = useState(false);
 
   useEffect(() => {
     if (!mapContainer.current) return;
@@ -47,6 +74,25 @@ const FullScreenMap: React.FC = () => {
       zoom: 9.2,
       pitch: 0,
       bearing: 0,
+    });
+
+    // Without this, a map failure is indistinguishable from a map with no data:
+    // an empty canvas and a silent console. MapLibre reports style and tile
+    // problems here and nowhere else.
+    mapInstance.on('error', (event) => {
+      const message = event.error?.message ?? 'Map failed to render';
+      console.error('Map error:', message);
+
+      // The basemap is decoration; the AQI markers are the point. If the style
+      // cannot load, fall back to a flat background so the map still functions
+      // rather than staying blank forever. This matters because setMap below is
+      // only reached from the load handler, and load never fires on a style that
+      // fails to resolve, so the marker layer would never receive a map at all.
+      if (!styleFailed.current && /style|glyphs|sprite/i.test(message)) {
+        styleFailed.current = true;
+        setBasemapDegraded(true);
+        mapInstance.setStyle(FALLBACK_STYLE);
+      }
     });
 
     mapInstance.on('load', () => {
@@ -177,6 +223,16 @@ const FullScreenMap: React.FC = () => {
                 </>
               )}
             </div>
+
+            {basemapDegraded && (
+
+              <p className="mb-2 rounded border border-amber-800/60 bg-amber-950/30 px-2 py-1 text-[10px] font-mono text-amber-300">
+
+                Basemap unavailable — geography is not shown. AQI markers are unaffected.
+
+              </p>
+
+            )}
 
             {/* Data source badge */}
             <div className="mt-3 flex items-center justify-between">

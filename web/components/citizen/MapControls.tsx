@@ -5,7 +5,14 @@ import React, { useState, useEffect, useRef } from 'react';
 import type { Map } from 'maplibre-gl';
 import { useAQIStore } from '@/store/aqiStore';
 
-import { GEO_COORDINATES, GeoLocationPoint } from '@/lib/coordinates';
+import { loadGeoReferenceData } from '@/lib/coordinates';
+
+/** The subset of a Nominatim search result this component reads. */
+interface NominatimResult {
+  display_name: string;
+  lat: string;
+  lon: string;
+}
 
 interface SuggestionItem {
   display_name: string;
@@ -41,18 +48,27 @@ const MapControls: React.FC<Props> = ({ map }) => {
 
   // Debounced search for locations using OpenStreetMap Nominatim + local fallbacks
   useEffect(() => {
-    if (!query.trim() || query.length < 2) {
-      setSuggestions([]);
-      setSearching(false);
-      return;
-    }
+    // Clearing happens inside the timer rather than synchronously in the effect
+    // body. A synchronous setState here triggers a cascading render on every
+    // keystroke, which the react-hooks lint rule flags.
+    const tooShort = !query.trim() || query.length < 2;
 
     const timer = setTimeout(async () => {
+      if (tooShort) {
+        setSuggestions([]);
+        setSearching(false);
+        return;
+      }
       setSearching(true);
       const qLower = query.toLowerCase().trim();
 
+      // Fetched rather than bundled; see lib/coordinates.ts. Awaiting inside
+      // the debounced handler keeps the megabyte off the critical path: the
+      // first search pays for it, subsequent ones hit the cached promise.
+      const { cities } = await loadGeoReferenceData();
+
       // Local match against all 510+ Indian cities & places first
-      const localMatches: SuggestionItem[] = GEO_COORDINATES.filter((loc) =>
+      const localMatches: SuggestionItem[] = cities.filter((loc) =>
         loc.name.toLowerCase().includes(qLower) ||
         loc.state.toLowerCase().includes(qLower) ||
         (loc.stateCode && loc.stateCode.toLowerCase().includes(qLower))
@@ -78,7 +94,7 @@ const MapControls: React.FC<Props> = ({ map }) => {
 
         if (res.ok) {
           const data = await res.json();
-          const remoteMatches: SuggestionItem[] = data.map((item: any) => ({
+          const remoteMatches: SuggestionItem[] = (data as NominatimResult[]).map((item) => ({
             display_name: item.display_name,
             lat: parseFloat(item.lat),
             lon: parseFloat(item.lon),

@@ -143,7 +143,7 @@ export const useAQIStore = create<AQIState>()(
         const maxLat = (lat + 0.2).toFixed(4);
         const bbox = `${minLon},${minLat},${maxLon},${maxLat}`;
 
-        let gridList = await fetchGrid(bbox);
+        const gridList = await fetchGrid(bbox);
         if (gridList && gridList.length > 0) {
           // We got real API data!
           const midCell = gridList[Math.floor(gridList.length / 2)] ?? gridList[0];

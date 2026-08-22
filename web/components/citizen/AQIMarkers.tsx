@@ -5,14 +5,12 @@
 // If ANY two markers at the current tier collide → entire tier is
 // hidden and the next tier up (state → country → continent) is shown.
 //
-import React, { useEffect, useRef, useCallback } from 'react';
+import React, { useEffect, useMemo, useRef, useState, useCallback } from 'react';
 import maplibregl, { Map } from 'maplibre-gl';
 import { useAQIStore } from '@/store/aqiStore';
 import {
-  GEO_COORDINATES,
-  COUNTRIES,
-  STATES,
-  CONTINENTS,
+  loadGeoReferenceData,
+  GeoReferenceData,
   CountryLocation,
   StateLocation,
   CityLocation,
@@ -50,30 +48,37 @@ interface DataPoint {
   tier: number; // 0-continent  1-country  2-state  3-city
 }
 
-/* ───── Build the four flat arrays once ───── */
-const ALL_DATA: DataPoint[][] = [
-  // tier 0 — continents
-  CONTINENTS.map((c: ContinentLocation) => ({
-    id: c.id, name: c.name, lat: c.lat, lon: c.lon,
-    aqi: c.aqi, pm25: c.pm25, category: c.category, tier: 0,
-  })),
-  // tier 1 — countries
-  COUNTRIES.map((c: CountryLocation) => ({
-    id: c.id, name: c.name, lat: c.lat, lon: c.lon,
-    aqi: c.aqi, pm25: c.pm25, category: c.category, tier: 1,
-  })),
-  // tier 2 — states
-  STATES.map((c: StateLocation) => ({
-    id: c.id, name: c.name, lat: c.lat, lon: c.lon,
-    aqi: c.aqi, pm25: c.pm25, category: c.category, tier: 2,
-  })),
-  // tier 3 — cities
-  GEO_COORDINATES.map((c: CityLocation) => ({
-    id: c.id, name: c.name, lat: c.lat, lon: c.lon,
-    aqi: c.aqi, pm25: c.pm25,
-    category: c.category || getAqiCategory(c.aqi), tier: 3,
-  })),
-];
+/* ───── Build the four flat arrays from fetched reference data ───── */
+// Previously a module-level constant built from static JSON imports, which
+// pulled roughly a megabyte of data into the client bundle. The data now
+// arrives over the network, so the tiers are derived once it lands.
+function buildTiers(data: GeoReferenceData): DataPoint[][] {
+  return [
+    // tier 0 — continents
+    data.continents.map((c: ContinentLocation) => ({
+      id: c.id, name: c.name, lat: c.lat, lon: c.lon,
+      aqi: c.aqi, pm25: c.pm25, category: c.category, tier: 0,
+    })),
+    // tier 1 — countries
+    data.countries.map((c: CountryLocation) => ({
+      id: c.id, name: c.name, lat: c.lat, lon: c.lon,
+      aqi: c.aqi, pm25: c.pm25, category: c.category, tier: 1,
+    })),
+    // tier 2 — states
+    data.states.map((c: StateLocation) => ({
+      id: c.id, name: c.name, lat: c.lat, lon: c.lon,
+      aqi: c.aqi, pm25: c.pm25, category: c.category, tier: 2,
+    })),
+    // tier 3 — cities
+    data.cities.map((c: CityLocation) => ({
+      id: c.id, name: c.name, lat: c.lat, lon: c.lon,
+      aqi: c.aqi, pm25: c.pm25,
+      category: c.category || getAqiCategory(c.aqi), tier: 3,
+    })),
+  ];
+}
+
+const NO_TIERS: DataPoint[][] = [[], [], [], []];
 
 /* ───── Props ───── */
 interface Props { map: Map | null; }
@@ -84,6 +89,23 @@ const COLLISION_PX = 40;
 /* ───── Component ───── */
 const AQIMarkers: React.FC<Props> = ({ map }) => {
   const { selectCell, loadLocationData } = useAQIStore();
+  const [geoData, setGeoData] = useState<GeoReferenceData | null>(null);
+
+  // Fetched rather than bundled; see lib/coordinates.ts.
+  useEffect(() => {
+    let cancelled = false;
+    loadGeoReferenceData().then((data) => {
+      if (!cancelled) setGeoData(data);
+    });
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+
+  const allData = useMemo(
+    () => (geoData ? buildTiers(geoData) : NO_TIERS),
+    [geoData],
+  );
   // Store live markers so we can remove them on the next cycle
   const liveMarkers = useRef<maplibregl.Marker[]>([]);
   const rafId = useRef<number>(0);
@@ -184,7 +206,7 @@ const AQIMarkers: React.FC<Props> = ({ map }) => {
 
         for (let tier = startTier; tier >= 0; tier--) {
           // Filter to viewport only
-          const inView = ALL_DATA[tier].filter(
+          const inView = allData[tier].filter(
             (p) =>
               p.lat >= bounds.getSouth() &&
               p.lat <= bounds.getNorth() &&
@@ -225,7 +247,7 @@ const AQIMarkers: React.FC<Props> = ({ map }) => {
 
         // If even continents collide (unlikely), just show continents anyway
         if (chosenPoints.length === 0 && startTier >= 0) {
-          const inView = ALL_DATA[0].filter(
+          const inView = allData[0].filter(
             (p) =>
               p.lat >= bounds.getSouth() &&
               p.lat <= bounds.getNorth() &&
@@ -264,7 +286,10 @@ const AQIMarkers: React.FC<Props> = ({ map }) => {
       liveMarkers.current.forEach((m) => m.remove());
       liveMarkers.current = [];
     };
-  }, [map, buildElement]);
+    // allData is a dependency because the reference data now arrives over the
+    // network rather than being bundled. Without it this effect would run once
+    // against empty tiers and never draw a marker.
+  }, [map, buildElement, allData]);
 
   return null;
 };
