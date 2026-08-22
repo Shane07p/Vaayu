@@ -35,12 +35,26 @@ gcloud sql instances create "$DB_INSTANCE" \
   --database-version=POSTGRES_16 --region="$REGION" \
   --cpu=1 --memory=3840MiB --availability-type=zonal
 gcloud sql databases create "$DB_NAME" --instance="$DB_INSTANCE"
-gcloud sql users create "$DB_USER" --instance="$DB_INSTANCE"
+gcloud sql users create "$DB_USER" --instance="$DB_INSTANCE" \
+  --database-roles=cloudsqlsuperuser
 gcloud sql users set-password "$DB_USER" --instance="$DB_INSTANCE" --prompt-for-password
 ```
 
 Cloud SQL for PostgreSQL supports PostGIS. Use the database-user password as
-the value for `vaayu-db-password` below.
+the value for `vaayu-db-password` below. Before the first API deploy, connect
+as the instance administrator and make the application user the database owner:
+
+```bash
+gcloud sql connect "$DB_INSTANCE" --user=postgres --database=postgres
+```
+
+```sql
+ALTER DATABASE <DB_NAME> OWNER TO <DB_USER>;
+```
+
+This changes database ownership only; it does not initialize `public` or create
+any project object. The `cloudsqlsuperuser` role is required for Flyway's first
+`CREATE EXTENSION postgis` migration.
 
 ## Secrets and runtime identities
 
