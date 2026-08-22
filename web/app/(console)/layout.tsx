@@ -1,18 +1,6 @@
-/**
- * Authority console shell.
- *
- * Intended for CAQM, DPCC, and District Magistrate users. Auth-gated in
- * deployment; currently open, see backend SecurityConfig.
- */
-
-import Link from "next/link";
-
-const NAV = [
-  { href: "/map", label: "Map" },
-  { href: "/forecast", label: "Forecast" },
-  { href: "/worklist", label: "Worklist" },
-  { href: "/alerts", label: "Alerts" },
-];
+import { Sidebar } from "@/components/sidebar";
+import { Topbar } from "@/components/topbar";
+import { AtmosphericBackground } from "@/components/citizen/atmospheric-background";
 
 export default function ConsoleLayout({
   children,
@@ -20,20 +8,25 @@ export default function ConsoleLayout({
   children: React.ReactNode;
 }) {
   return (
-    <div className="min-h-screen">
-      <header className="border-b">
-        <div className="mx-auto flex max-w-7xl items-center gap-6 px-6 py-4">
-          <span className="font-semibold tracking-tight">VAAYU Console</span>
-          <nav className="flex gap-4 text-sm">
-            {NAV.map((item) => (
-              <Link key={item.href} href={item.href} className="hover:underline">
-                {item.label}
-              </Link>
-            ))}
-          </nav>
+    <div className="relative flex min-h-screen bg-[#070a0e] text-slate-100 antialiased font-sans">
+      {/* Underlying Atmospheric Blurred Background Layer */}
+      <AtmosphericBackground
+        imageSrc="/backgrounds/normal.png"
+        overlayOpacity={0.92}
+        blur={28}
+        className="fixed inset-0"
+      />
+
+      {/* Fixed Desktop Sidebar */}
+      <Sidebar />
+
+      {/* Main Console Content Area */}
+      <div className="flex-1 flex flex-col min-w-0 bg-transparent relative z-10">
+        <Topbar />
+        <div className="flex-1 p-6 md:p-8 overflow-y-auto">
+          {children}
         </div>
-      </header>
-      {children}
+      </div>
     </div>
   );
 }

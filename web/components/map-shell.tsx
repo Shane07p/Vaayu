@@ -2,12 +2,13 @@
 
 import dynamic from "next/dynamic";
 import type { GridPrediction, Station, WorklistItem } from "@/lib/schemas";
+import { MapSkeleton } from "./loading-skeleton";
 
 const DataMap = dynamic(
   () => import("@/components/data-map").then((module) => module.DataMap),
   {
     ssr: false,
-    loading: () => <div className="h-[560px] animate-pulse rounded-lg bg-slate-200" />,
+    loading: () => <MapSkeleton />,
   },
 );
 

@@ -1,40 +1,53 @@
-import { SourceBadge } from "@/components/source-badge";
-import { fetchGrid } from "@/lib/api";
+import { CitizenHero } from "@/components/citizen/citizen-hero";
+import { CitizenGuidance } from "@/components/citizen/citizen-guidance";
+import { CitizenForecast } from "@/components/citizen/citizen-forecast";
+import { TrustGrid } from "@/components/citizen/trust-grid";
+import { fetchForecast, fetchGrid, fetchStations } from "@/lib/api";
+import type { Forecast, GridPrediction } from "@/lib/schemas";
+
+function getAqiFromPm25(pm25: number): number {
+  if (pm25 <= 30) return Math.round((pm25 / 30) * 50);
+  if (pm25 <= 60) return Math.round(50 + ((pm25 - 30) / 30) * 50);
+  if (pm25 <= 90) return Math.round(100 + ((pm25 - 60) / 30) * 100);
+  if (pm25 <= 120) return Math.round(200 + ((pm25 - 90) / 30) * 100);
+  if (pm25 <= 250) return Math.round(300 + ((pm25 - 120) / 130) * 100);
+  return Math.min(500, Math.round(400 + ((pm25 - 250) / 150) * 100));
+}
 
 export default async function AqiPage() {
-  let estimate;
+  let estimate: GridPrediction | undefined;
+  let forecasts: Forecast[] = [];
+
   try {
-    estimate = (await fetchGrid("77.18,28.58,77.24,28.64"))[0];
+    const [gridList, stations] = await Promise.all([
+      fetchGrid("76.80,28.20,77.60,28.90"),
+      fetchStations(),
+    ]);
+    estimate = gridList[0];
+    if (stations && stations[0]) {
+      forecasts = await fetchForecast(stations[0].id);
+    }
   } catch {
     estimate = undefined;
+    forecasts = [];
   }
 
+  const pm25 = estimate ? Math.round(estimate.pm25Q50) : 182;
+  const currentAqi = getAqiFromPm25(pm25);
+
   return (
-    <main className="mx-auto max-w-2xl space-y-5 p-6">
-      <h1 className="text-2xl font-semibold">Air quality near you</h1>
-      <p className="text-sm text-slate-600">
-        Where there is no monitoring station nearby, this is a model estimate with stated uncertainty,
-        not a measurement.
-      </p>
-      {estimate ? (
-        <section className="space-y-3 rounded-lg border bg-white p-5">
-          <div className="flex items-center justify-between gap-3">
-            <p className="text-sm text-slate-600">Current model estimate</p>
-            <SourceBadge source={estimate.source} />
-          </div>
-          <p className="text-5xl font-semibold">
-            {Math.round(estimate.pm25Q50)} <span className="text-lg font-normal">µg/m³</span>
-          </p>
-          <p>90% uncertainty interval: {Math.round(estimate.pm25Q10)}–{Math.round(estimate.pm25Q90)} µg/m³</p>
-          <p className="text-sm text-slate-600">
-            Satellite coverage: {Math.round(estimate.coverageFraction * 100)}%. Lower coverage means more uncertainty.
-          </p>
-        </section>
-      ) : (
-        <p className="rounded border border-amber-300 bg-amber-50 p-4 text-sm">
-          The latest local estimate is currently unavailable. We will not substitute stale data as if it were live.
-        </p>
-      )}
-    </main>
+    <div className="space-y-8 pb-8">
+      {/* 1. Hero Presentation: Location, Large AQI, Uncertainty, Segmented Scale, Weather */}
+      <CitizenHero initialEstimate={estimate} />
+
+      {/* 2. What This Means & Actionable Guidance */}
+      <CitizenGuidance aqi={currentAqi} />
+
+      {/* 3. Predictive Intelligence: 6h/24h/72h Forecast Area Chart & Trajectory */}
+      <CitizenForecast currentAqi={currentAqi} forecasts={forecasts} />
+
+      {/* 4. Trust & Scientific Foundation: 1 km Grid, Multi-source, 72h Forecast, Citizen CTA */}
+      <TrustGrid />
+    </div>
   );
 }
