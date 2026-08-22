@@ -2,7 +2,7 @@
 import React, { useEffect } from 'react';
 import maplibregl, { Map } from 'maplibre-gl';
 import { useAQIStore } from '@/store/aqiStore';
-import { GEO_COORDINATES, GeoLocationPoint } from '@/lib/coordinates';
+import { GEO_COORDINATES, COUNTRIES, STATES, CountryLocation, StateLocation, CityLocation } from '@/lib/coordinates';
 
 // Map AQI value to severity text color (clean, muted, professional)
 export const getAqiTextColor = (aqi: number): string => {
@@ -27,18 +27,35 @@ interface Props {
   map: Map | null;
 }
 
+type MarkerType = 'country' | 'state' | 'city';
+
+interface MarkerData {
+  marker: maplibregl.Marker;
+  el: HTMLElement;
+  type: MarkerType;
+}
+
 const AQIMarkers: React.FC<Props> = ({ map }) => {
   const { selectedCellId, selectCell, loadLocationData } = useAQIStore();
 
   useEffect(() => {
     if (!map) return;
-    const markersData: { marker: maplibregl.Marker; el: HTMLElement; tier: number }[] = [];
+    const markersData: MarkerData[] = [];
 
-    GEO_COORDINATES.forEach((loc: GeoLocationPoint) => {
-      const aqi = loc.aqi;
-      const isSelected = selectedCellId === loc.id;
+    const createMarker = (
+      id: string | number,
+      name: string,
+      subtitle: string,
+      lat: number,
+      lon: number,
+      aqi: number,
+      category: string,
+      pm25: number,
+      type: MarkerType,
+      sizeMultiplier: number = 1
+    ) => {
+      const isSelected = selectedCellId === id;
       const textColor = getAqiTextColor(aqi);
-      const category = loc.category || getAqiCategory(aqi);
 
       // Outer wrapper element positioned strictly by MapLibre
       const el = document.createElement('div');
@@ -51,104 +68,146 @@ const AQIMarkers: React.FC<Props> = ({ map }) => {
       el.style.display = 'flex';
       el.style.flexDirection = 'column';
       el.style.alignItems = 'center';
-      el.title = `${loc.name}, ${loc.state}\nAQI: ${aqi} · ${category}\nPM2.5: ${loc.pm25} µg/m³\nClick to inspect`;
+      el.style.transition = 'opacity 0.4s ease, visibility 0.4s ease'; // Smooth fade transition
+      el.style.opacity = '0'; // Start hidden, will be updated by zoom listener
+      el.style.visibility = 'hidden';
+      el.style.pointerEvents = 'none'; // Only interactive when visible
+      
+      // UI Improvement: add a subtle backdrop/container for better visibility
+      const container = document.createElement('div');
+      container.style.display = 'flex';
+      container.style.flexDirection = 'column';
+      container.style.alignItems = 'center';
+      container.style.padding = '4px 6px';
+      container.style.borderRadius = '8px';
+      container.style.background = isSelected ? 'rgba(15, 23, 42, 0.85)' : 'rgba(15, 23, 42, 0.6)';
+      container.style.backdropFilter = 'blur(4px)';
+      container.style.border = `1px solid ${isSelected ? textColor : 'rgba(255,255,255,0.1)'}`;
+      container.style.transition = 'all 0.2s ease';
+      container.style.boxShadow = isSelected ? `0 0 12px ${textColor}66` : '0 4px 6px -1px rgba(0, 0, 0, 0.5)';
+      
+      el.title = `${name}${subtitle ? ', ' + subtitle : ''}\nAQI: ${aqi} · ${category}\nPM2.5: ${pm25} µg/m³\nClick to inspect`;
 
-      // Inner text-only AQI number element (no box, no background)
+      // Inner text-only AQI number element
       const innerNum = document.createElement('span');
       innerNum.className = `aqi-text-num ${isSelected ? 'selected' : ''}`;
       innerNum.textContent = `${aqi}`;
       innerNum.style.color = textColor;
-      innerNum.style.fontSize = '12px';
-      innerNum.style.fontWeight = '700';
+      innerNum.style.fontSize = `${13 * sizeMultiplier}px`;
+      innerNum.style.fontWeight = '800';
       innerNum.style.fontFamily = 'ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace';
-      innerNum.style.display = 'inline-block';
       innerNum.style.lineHeight = '1';
       innerNum.style.userSelect = 'none';
       innerNum.style.whiteSpace = 'nowrap';
-      innerNum.style.transition = 'transform 0.15s cubic-bezier(0.4, 0, 0.2, 1), filter 0.15s ease, text-shadow 0.15s ease';
-      innerNum.style.textShadow = isSelected
-        ? `0 0 10px ${textColor}, 0 0 16px ${textColor}99, 0 1px 3px rgba(0,0,0,0.95)`
-        : '0 1px 3px rgba(0, 0, 0, 0.95), 0 0 2px rgba(0, 0, 0, 0.9)';
-      innerNum.style.filter = isSelected ? 'brightness(1.4)' : 'brightness(1)';
-      if (isSelected) {
-        innerNum.style.transform = 'scale(1.25)';
-      }
-
-      // City / Place Name label underneath the number
+      innerNum.style.textShadow = `0 1px 2px rgba(0,0,0,0.8), 0 0 8px ${textColor}88`; // Stronger glow
+      
+      // Place Name label underneath the number
       const innerLabel = document.createElement('span');
       innerLabel.className = 'aqi-place-label';
-      innerLabel.textContent = loc.name;
-      innerLabel.style.color = isSelected ? '#ffffff' : '#94a3b8';
-      innerLabel.style.fontSize = '9px';
-      innerLabel.style.fontWeight = '500';
+      innerLabel.textContent = name;
+      innerLabel.style.color = isSelected ? '#ffffff' : '#e2e8f0';
+      innerLabel.style.fontSize = `${10 * sizeMultiplier}px`;
+      innerLabel.style.fontWeight = '600';
       innerLabel.style.fontFamily = 'ui-sans-serif, system-ui, -apple-system, sans-serif';
       innerLabel.style.lineHeight = '1.2';
       innerLabel.style.marginTop = '2px';
-      innerLabel.style.textShadow = '0 1px 2px rgba(0,0,0,0.95), 0 0 2px rgba(0,0,0,0.9)';
+      innerLabel.style.textShadow = '0 1px 3px rgba(0,0,0,0.9)';
       innerLabel.style.userSelect = 'none';
       innerLabel.style.whiteSpace = 'nowrap';
-      innerLabel.style.pointerEvents = 'none';
-      innerLabel.style.transition = 'color 0.15s ease';
 
-      el.appendChild(innerNum);
-      el.appendChild(innerLabel);
+      container.appendChild(innerNum);
+      container.appendChild(innerLabel);
+      el.appendChild(container);
 
-      // Hover effects on inner elements — leaves MapLibre translate transform intact
+      // Hover effects
       el.onmouseenter = () => {
-        innerNum.style.transform = 'scale(1.3)';
-        innerNum.style.filter = 'brightness(1.5)';
-        innerNum.style.textShadow = `0 0 10px ${textColor}, 0 0 18px ${textColor}bb, 0 1px 3px #000`;
-        innerLabel.style.color = '#f1f5f9';
+        container.style.transform = 'scale(1.15)';
+        container.style.background = 'rgba(15, 23, 42, 0.9)';
+        container.style.borderColor = textColor;
+        container.style.boxShadow = `0 0 15px ${textColor}88`;
+        innerNum.style.filter = 'brightness(1.2)';
         el.style.zIndex = '50';
       };
 
       el.onmouseleave = () => {
-        innerNum.style.transform = isSelected ? 'scale(1.25)' : 'scale(1)';
-        innerNum.style.filter = isSelected ? 'brightness(1.4)' : 'brightness(1)';
-        innerNum.style.textShadow = isSelected
-          ? `0 0 10px ${textColor}, 0 0 16px ${textColor}99, 0 1px 3px rgba(0,0,0,0.95)`
-          : '0 1px 3px rgba(0, 0, 0, 0.95), 0 0 2px rgba(0, 0, 0, 0.9)';
-        innerLabel.style.color = isSelected ? '#ffffff' : '#94a3b8';
+        container.style.transform = 'scale(1)';
+        container.style.background = isSelected ? 'rgba(15, 23, 42, 0.85)' : 'rgba(15, 23, 42, 0.6)';
+        container.style.borderColor = isSelected ? textColor : 'rgba(255,255,255,0.1)';
+        container.style.boxShadow = isSelected ? `0 0 12px ${textColor}66` : '0 4px 6px -1px rgba(0, 0, 0, 0.5)';
+        innerNum.style.filter = 'brightness(1)';
         el.style.zIndex = isSelected ? '10' : '1';
       };
 
       el.onclick = (e) => {
         e.stopPropagation();
-        selectCell(loc.id);
-        const displayName = `${loc.name}, ${loc.state}`;
-        loadLocationData(loc.lat, loc.lon, displayName, map);
+        selectCell(id as number);
+        const displayName = `${name}${subtitle ? ', ' + subtitle : ''}`;
+        loadLocationData(lat, lon, displayName, map);
+        
+        // Optionally zoom in if it's a country or state
+        if (type === 'country') {
+            map.flyTo({ center: [lon, lat], zoom: 5 });
+        } else if (type === 'state') {
+            map.flyTo({ center: [lon, lat], zoom: 6.5 });
+        }
       };
 
       if (
-        Number.isFinite(loc.lon) &&
-        Number.isFinite(loc.lat) &&
-        loc.lat >= -90 &&
-        loc.lat <= 90 &&
-        loc.lon >= -180 &&
-        loc.lon <= 180
+        Number.isFinite(lon) &&
+        Number.isFinite(lat) &&
+        lat >= -90 &&
+        lat <= 90 &&
+        lon >= -180 &&
+        lon <= 180
       ) {
         const marker = new maplibregl.Marker({ element: el })
-          .setLngLat([loc.lon, loc.lat])
+          .setLngLat([lon, lat])
           .addTo(map);
-        markersData.push({ marker, el, tier: loc.tier || 3 });
+        markersData.push({ marker, el, type });
       }
+    };
+
+    // 1. Create Country Markers
+    COUNTRIES.forEach((loc: CountryLocation) => {
+        createMarker(loc.id, loc.name, '', loc.lat, loc.lon, loc.aqi, loc.category, loc.pm25, 'country', 1.2);
+    });
+
+    // 2. Create State Markers
+    STATES.forEach((loc: StateLocation) => {
+        createMarker(loc.id, loc.name, loc.country, loc.lat, loc.lon, loc.aqi, loc.category, loc.pm25, 'state', 1.1);
+    });
+
+    // 3. Create City Markers
+    GEO_COORDINATES.forEach((loc: CityLocation) => {
+        createMarker(loc.id, loc.name, loc.state, loc.lat, loc.lon, loc.aqi, loc.category || getAqiCategory(loc.aqi), loc.pm25, 'city', 1.0);
     });
 
     const updateVisibility = () => {
       const zoom = map.getZoom();
-      const isCountryLevel = zoom < 5;
-      const isStateLevel = zoom >= 5 && zoom < 6.5;
+      // Define thresholds
+      // Zoom < 4.5: Countries only
+      // Zoom 4.5 to 6.5: States only
+      // Zoom > 6.5: Cities only
       
-      markersData.forEach(({ el, tier }) => {
-        if (isCountryLevel) {
-          // Show only tier 1 cities when zoomed way out
-          el.style.display = tier === 1 ? 'flex' : 'none';
-        } else if (isStateLevel) {
-          // Show tier 1 & 2 cities at state level
-          el.style.display = tier <= 2 ? 'flex' : 'none';
+      markersData.forEach(({ el, type }) => {
+        let isVisible = false;
+
+        if (zoom < 4.5) {
+            isVisible = type === 'country';
+        } else if (zoom >= 4.5 && zoom < 6.5) {
+            isVisible = type === 'state';
         } else {
-          // Show all cities when zoomed in
-          el.style.display = 'flex';
+            isVisible = type === 'city';
+        }
+
+        if (isVisible) {
+            el.style.opacity = '1';
+            el.style.visibility = 'visible';
+            el.style.pointerEvents = 'auto';
+        } else {
+            el.style.opacity = '0';
+            el.style.visibility = 'hidden';
+            el.style.pointerEvents = 'none';
         }
       });
     };
@@ -167,4 +226,3 @@ const AQIMarkers: React.FC<Props> = ({ map }) => {
 };
 
 export default AQIMarkers;
-
