@@ -1,16 +1,18 @@
-import rawCoordinates from "@/public/coordinates.json";
+import rawCities from "@/public/cities.json";
 
-export interface GeoLocationPoint {
+export interface CityLocation {
   id: number;
-  code: string;
   name: string;
-  city: string;
   state: string;
+  stateCode: string;
   lat: number;
   lon: number;
-  pm25: number;
   aqi: number;
+  pm25: number;
   category: string;
 }
 
-export const GEO_COORDINATES: GeoLocationPoint[] = rawCoordinates as GeoLocationPoint[];
+// Re-export with legacy name for backward compatibility
+export type GeoLocationPoint = CityLocation;
+
+export const GEO_COORDINATES: CityLocation[] = rawCities as CityLocation[];

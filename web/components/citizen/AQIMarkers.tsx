@@ -51,7 +51,7 @@ const AQIMarkers: React.FC<Props> = ({ map }) => {
       el.style.display = 'flex';
       el.style.flexDirection = 'column';
       el.style.alignItems = 'center';
-      el.title = `${loc.name}, ${loc.city} (${loc.state})\nAQI: ${aqi} · ${category}\nPM2.5: ${loc.pm25} µg/m³\nClick to inspect`;
+      el.title = `${loc.name}, ${loc.state}\nAQI: ${aqi} · ${category}\nPM2.5: ${loc.pm25} µg/m³\nClick to inspect`;
 
       // Inner text-only AQI number element (no box, no background)
       const innerNum = document.createElement('span');
@@ -115,7 +115,7 @@ const AQIMarkers: React.FC<Props> = ({ map }) => {
       el.onclick = (e) => {
         e.stopPropagation();
         selectCell(loc.id);
-        const displayName = `${loc.name}, ${loc.city}, ${loc.state}`;
+        const displayName = `${loc.name}, ${loc.state}`;
         loadLocationData(loc.lat, loc.lon, displayName, map);
       };
 

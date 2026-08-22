@@ -51,13 +51,13 @@ const MapControls: React.FC<Props> = ({ map }) => {
       setSearching(true);
       const qLower = query.toLowerCase().trim();
 
-      // Local match against all 75+ Indian cities & Delhi places first
+      // Local match against all 510+ Indian cities & places first
       const localMatches: SuggestionItem[] = GEO_COORDINATES.filter((loc) =>
         loc.name.toLowerCase().includes(qLower) ||
-        loc.city.toLowerCase().includes(qLower) ||
-        loc.state.toLowerCase().includes(qLower)
-      ).map((loc) => ({
-        display_name: `${loc.name}, ${loc.city}, ${loc.state}`,
+        loc.state.toLowerCase().includes(qLower) ||
+        (loc.stateCode && loc.stateCode.toLowerCase().includes(qLower))
+      ).slice(0, 15).map((loc) => ({
+        display_name: `${loc.name}, ${loc.state}`,
         lat: loc.lat,
         lon: loc.lon,
         aqi: loc.aqi,
