@@ -32,7 +32,7 @@ const AQIMarkers: React.FC<Props> = ({ map }) => {
 
   useEffect(() => {
     if (!map) return;
-    const markers: maplibregl.Marker[] = [];
+    const markersData: { marker: maplibregl.Marker; el: HTMLElement; tier: number }[] = [];
 
     GEO_COORDINATES.forEach((loc: GeoLocationPoint) => {
       const aqi = loc.aqi;
@@ -130,13 +130,36 @@ const AQIMarkers: React.FC<Props> = ({ map }) => {
         const marker = new maplibregl.Marker({ element: el })
           .setLngLat([loc.lon, loc.lat])
           .addTo(map);
-        markers.push(marker);
+        markersData.push({ marker, el, tier: loc.tier || 3 });
       }
     });
 
+    const updateVisibility = () => {
+      const zoom = map.getZoom();
+      const isCountryLevel = zoom < 5;
+      const isStateLevel = zoom >= 5 && zoom < 6.5;
+      
+      markersData.forEach(({ el, tier }) => {
+        if (isCountryLevel) {
+          // Show only tier 1 cities when zoomed way out
+          el.style.display = tier === 1 ? 'flex' : 'none';
+        } else if (isStateLevel) {
+          // Show tier 1 & 2 cities at state level
+          el.style.display = tier <= 2 ? 'flex' : 'none';
+        } else {
+          // Show all cities when zoomed in
+          el.style.display = 'flex';
+        }
+      });
+    };
+
+    map.on('zoom', updateVisibility);
+    updateVisibility(); // initial state
+
     // Cleanup markers when unmounting
     return () => {
-      markers.forEach((m) => m.remove());
+      map.off('zoom', updateVisibility);
+      markersData.forEach((m) => m.marker.remove());
     };
   }, [map, selectedCellId, selectCell, loadLocationData]);
 
