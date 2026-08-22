@@ -32,6 +32,7 @@
       CONSOLE_SHARED_SECRET: ${CONSOLE_SHARED_SECRET:-dev-only-not-a-real-secret}
       GEMINI_API_KEY: ${GEMINI_API_KEY:-}
       GEMINI_MODEL: ${GEMINI_MODEL:-gemini-2.0-flash}
+      WEB_ALLOWED_ORIGIN: ${WEB_ALLOWED_ORIGIN:-http://localhost:3000}
     ports:
       - "8080:8080"
     healthcheck:
@@ -47,10 +48,9 @@
       backend:
         condition: service_healthy
     environment:
-      # NEXT_PUBLIC_API_URL is used by browser-side code (if any).
-      # NEXT_PUBLIC_API_URL is set to the public-facing address for the browser.
-      # Server-side RSC fetches use the internal Docker service name.
-      NEXT_PUBLIC_API_URL: http://localhost:8080
+      # Browser requests stay on the web origin and are proxied by the Next.js
+      # route handler. This remains valid after deployment without baking a URL.
+      NEXT_PUBLIC_API_URL: /api
       # Internal API URL used by Next.js RSC (server-side) to call the backend
       # container directly over the Docker network - avoids NAT round-trip.
       INTERNAL_API_URL: http://backend:8080
