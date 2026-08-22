@@ -47,8 +47,18 @@ public class AlertWriterService {
                         SELECT f.id, f.issued_at, f.horizon_hours, f.aqi, f.ci_low, f.ci_high,
                                f.model_version, f.source
                         FROM forecast f
+                        -- The subquery must carry the same horizon filter as the
+                        -- outer query. Without it, a batch that issued only 6h
+                        -- forecasts sets MAX(issued_at) to a timestamp for which no
+                        -- 24h or 72h row exists, the candidate set comes back empty,
+                        -- and the scheduled job issues no alert at all -- silently,
+                        -- because "no candidate" and "nothing to warn about" look
+                        -- identical from here.
                         WHERE f.horizon_hours IN (24, 72)
-                          AND f.issued_at = (SELECT MAX(issued_at) FROM forecast)
+                          AND f.issued_at = (
+                              SELECT MAX(issued_at) FROM forecast
+                              WHERE horizon_hours IN (24, 72)
+                          )
                         ORDER BY f.aqi DESC, f.horizon_hours ASC, f.id ASC
                         LIMIT 1
                         """,

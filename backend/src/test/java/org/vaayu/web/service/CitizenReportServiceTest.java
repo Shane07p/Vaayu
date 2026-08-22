@@ -56,15 +56,23 @@ class CitizenReportServiceTest {
     }
 
     @Test
-    void rejects_malformed_model_output_without_storing_a_band() {
+    void leaves_report_pending_when_model_output_is_unusable() {
+        // Previously this stamped the citizen's report REJECTED. The assessment
+        // being malformed -- an unknown band, a confidence outside [0,1] -- is our
+        // failure, not the submitter's, and REJECTED is terminal with no
+        // reprocessing path. PENDING keeps the report eligible for a later pass
+        // and matches how a genuine upstream outage is already handled.
+        // REJECTED stays reserved for an actual judgement about the submission.
         when(gemini.classify("https://storage.example/report.jpg"))
                 .thenReturn(new GeminiAssessment("HAZY", 1.2, "not valid", false));
 
         var response = service.submit(new CitizenReportRequest(28.6, 77.2, "https://storage.example/report.jpg"));
 
-        assertThat(response.status()).isEqualTo("REJECTED");
+        assertThat(response.status()).isEqualTo("PENDING");
         assertThat(response.band()).isNull();
-        verify(jdbc).update(contains("status = 'REJECTED'"), anyMap());
+        assertThat(response.sourceUnavailable()).isTrue();
+        verify(jdbc, never()).update(contains("REJECTED"), anyMap());
+        verify(jdbc, never()).update(contains("gemini_band"), anyMap());
     }
 
     @Test
