@@ -146,7 +146,12 @@ const AQIMarkers: React.FC<Props> = ({ map }) => {
       el.onclick = (e) => {
         e.stopPropagation();
         selectCell(pt.id as number);
-        loadLocationData(pt.lat, pt.lon, pt.name, map);
+        loadLocationData(pt.lat, pt.lon, pt.name, map, {
+          aqi: pt.aqi,
+          pm25: pt.pm25,
+          category: pt.category,
+          tier: pt.tier,
+        });
         if (pt.tier === 0)      map?.flyTo({ center: [pt.lon, pt.lat], zoom: 3.5 });
         else if (pt.tier === 1) map?.flyTo({ center: [pt.lon, pt.lat], zoom: 5.5 });
         else if (pt.tier === 2) map?.flyTo({ center: [pt.lon, pt.lat], zoom: 7.5 });

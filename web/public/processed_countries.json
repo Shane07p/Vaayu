@@ -355,7 +355,7 @@
     "capital": "Beijing",
     "lat": 35,
     "lon": 105,
-    "aqi": 156,
+    "aqi": 400,
     "pm25": 70,
     "category": "Unhealthy"
   },

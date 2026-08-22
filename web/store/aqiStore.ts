@@ -46,6 +46,14 @@ function generateGridForArea(centerLon: number, centerLat: number, basePrefix = 
   return cells;
 }
 
+/** Data from the clicked marker (known before API call) */
+export interface MarkerInfo {
+  aqi: number;
+  pm25: number;
+  category: string;
+  tier: number; // 0-continent 1-country 2-state 3-city
+}
+
 interface AQIState {
   selectedCellId: number | null;
   selectedCellData: GridPrediction | null;
@@ -56,6 +64,10 @@ interface AQIState {
   locationCoords: { lat: number; lng: number } | null;
   locationName: string;
   lastUpdated: string;
+  /** Marker-level AQI info (the value shown on the map label) */
+  markerInfo: MarkerInfo | null;
+  /** Whether the displayed data came from a live API or fallback */
+  dataSource: 'API' | 'MARKER' | 'GENERATED';
   // actions
   loadGrid: (data: GridPrediction[]) => void;
   selectCell: (id: number) => void;
@@ -65,8 +77,9 @@ interface AQIState {
   setLoading: (loading: boolean) => void;
   setLocationName: (name: string) => void;
   setLocationCoords: (coords: { lat: number; lng: number } | null) => void;
-  loadLocationData: (lat: number, lon: number, name: string, map?: Map | null) => Promise<void>;
+  loadLocationData: (lat: number, lon: number, name: string, map?: Map | null, marker?: MarkerInfo) => Promise<void>;
   locateMe: (map?: Map | null) => Promise<void>;
+  clearSelection: () => void;
 }
 
 export const useAQIStore = create<AQIState>()(
@@ -80,6 +93,8 @@ export const useAQIStore = create<AQIState>()(
     locationCoords: { lat: 28.6139, lng: 77.209 },
     locationName: 'Delhi-NCR · Central Pilot',
     lastUpdated: new Date().toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit' }) + ' IST',
+    markerInfo: null,
+    dataSource: 'GENERATED',
     loadGrid: (data) => {
       set({
         gridData: data,
@@ -97,8 +112,15 @@ export const useAQIStore = create<AQIState>()(
     setLoading: (loading) => set({ loading }),
     setLocationName: (name) => set({ locationName: name }),
     setLocationCoords: (coords) => set({ locationCoords: coords }),
-    loadLocationData: async (lat, lon, name, map) => {
-      set({ loading: true, locationName: name, locationCoords: { lat, lng: lon } });
+    clearSelection: () => set({ selectedCellId: null, selectedCellData: null, markerInfo: null }),
+    loadLocationData: async (lat, lon, name, map, marker) => {
+      set({
+        loading: true,
+        locationName: name,
+        locationCoords: { lat, lng: lon },
+        markerInfo: marker || null,
+        dataSource: marker ? 'MARKER' : 'GENERATED',
+      });
       const now = new Date();
       set({
         lastUpdated: `${now.toLocaleDateString("en-IN", { day: "2-digit", month: "short" }).toUpperCase()} · ${now.toLocaleTimeString("en-IN", { hour: "2-digit", minute: "2-digit" })} IST`,
@@ -122,18 +144,28 @@ export const useAQIStore = create<AQIState>()(
         const bbox = `${minLon},${minLat},${maxLon},${maxLat}`;
 
         let gridList = await fetchGrid(bbox);
-        if (!gridList || gridList.length === 0) {
-          // In development or when outside Delhi bbox, generate realistic local surface
+        if (gridList && gridList.length > 0) {
+          // We got real API data!
+          const midCell = gridList[Math.floor(gridList.length / 2)] ?? gridList[0];
+          set({
+            gridData: gridList,
+            selectedCellData: midCell,
+            selectedCellId: midCell?.gridCellId ?? null,
+            dataSource: 'API',
+          });
+        } else {
+          // No API data — use the marker's known AQI as-is
+          // Still generate a grid for background rendering
           const prefix = name.split(",")[0].trim().toUpperCase().slice(0, 3);
-          gridList = generateGridForArea(lon, lat, prefix);
+          const fallbackGrid = generateGridForArea(lon, lat, prefix);
+          const midCell = fallbackGrid[Math.floor(fallbackGrid.length / 2)];
+          set({
+            gridData: fallbackGrid,
+            selectedCellData: midCell,
+            selectedCellId: midCell.gridCellId,
+            dataSource: marker ? 'MARKER' : 'GENERATED',
+          });
         }
-
-        const midCell = gridList[Math.floor(gridList.length / 2)] ?? gridList[0];
-        set({
-          gridData: gridList,
-          selectedCellData: midCell,
-          selectedCellId: midCell?.gridCellId ?? null,
-        });
       } catch (err) {
         console.error("Error loading grid for location:", err);
         const prefix = name.split(",")[0].trim().toUpperCase().slice(0, 3);
@@ -143,6 +175,7 @@ export const useAQIStore = create<AQIState>()(
           gridData: fallbackGrid,
           selectedCellData: midCell,
           selectedCellId: midCell.gridCellId,
+          dataSource: marker ? 'MARKER' : 'GENERATED',
         });
       } finally {
         set({ loading: false });
@@ -170,4 +203,3 @@ export const useAQIStore = create<AQIState>()(
     },
   }))
 );
-

@@ -8,6 +8,25 @@ import AQIMarkers, { getAqiTextColor, getAqiCategory } from '@/components/citize
 import MapControls from '@/components/citizen/MapControls';
 import { useAQIStore } from '@/store/aqiStore';
 import { SourceBadge } from '@/components/source-badge';
+import Image from 'next/image';
+
+/** Get the correct AQI severity image path based on AQI value */
+function getAqiImage(aqi: number): string {
+  if (aqi <= 50) return '/aqi-images/Green.png';
+  if (aqi <= 100) return '/aqi-images/Yellow.png';
+  if (aqi <= 150) return '/aqi-images/Orange.png';
+  if (aqi <= 200) return '/aqi-images/Pink.png';
+  if (aqi <= 300) return '/aqi-images/Purple.png';
+  return '/aqi-images/Red.png';
+}
+
+/** Tier label */
+function getTierLabel(tier: number): string {
+  if (tier === 0) return 'Continent';
+  if (tier === 1) return 'Country';
+  if (tier === 2) return 'State';
+  return 'City';
+}
 
 /**
  * Full‑screen MapLibre map that occupies the viewport.
@@ -16,7 +35,7 @@ import { SourceBadge } from '@/components/source-badge';
 const FullScreenMap: React.FC = () => {
   const mapContainer = useRef<HTMLDivElement>(null);
   const [map, setMap] = useState<maplibregl.Map | null>(null);
-  const { selectedCellData, locationName, selectCell } = useAQIStore();
+  const { selectedCellData, locationName, markerInfo, dataSource, lastUpdated, loading, clearSelection } = useAQIStore();
 
   useEffect(() => {
     if (!mapContainer.current) return;
@@ -44,9 +63,29 @@ const FullScreenMap: React.FC = () => {
     };
   }, []);
 
-  const aqi = selectedCellData ? Math.round((selectedCellData.pm25Q50 / 250) * 500) : null;
-  const aqiColor = aqi !== null ? getAqiTextColor(aqi) : '#34d399';
-  const aqiCategory = aqi !== null ? getAqiCategory(aqi) : 'Good';
+  // Determine the AQI to display — prefer marker data, fall back to grid cell
+  const displayAqi = markerInfo
+    ? markerInfo.aqi
+    : selectedCellData
+      ? Math.round((selectedCellData.pm25Q50 / 250) * 500)
+      : null;
+
+  const displayPm25 = markerInfo
+    ? markerInfo.pm25
+    : selectedCellData
+      ? Math.round(selectedCellData.pm25Q50)
+      : null;
+
+  const displayCategory = markerInfo
+    ? markerInfo.category
+    : displayAqi !== null
+      ? getAqiCategory(displayAqi)
+      : 'Good';
+
+  const aqiColor = displayAqi !== null ? getAqiTextColor(displayAqi) : '#34d399';
+  const aqiImage = displayAqi !== null ? getAqiImage(displayAqi) : '/aqi-images/Green.png';
+
+  const showCard = markerInfo !== null || selectedCellData !== null;
 
   return (
     <div className="fixed inset-0 w-screen h-screen z-0 overflow-hidden bg-[#070a0e]">
@@ -59,67 +98,101 @@ const FullScreenMap: React.FC = () => {
       {/* Top-Right Search & Navigation Controls */}
       <MapControls map={map} />
 
-      {/* Bottom-Left Selected Cell Inspector Overlay */}
-      {selectedCellData && aqi !== null && (
-        <div className="absolute bottom-6 left-4 sm:left-6 z-20 max-w-sm w-[calc(100vw-2rem)] sm:w-80 bg-[#080d12]/92 border border-white/15 rounded-2xl p-4 shadow-2xl backdrop-blur-xl animate-fade-in text-slate-100">
-          <div className="flex items-start justify-between gap-2 border-b border-white/10 pb-2.5 mb-3">
-            <div>
-              <div className="flex items-center gap-1.5">
-                <span className="w-2 h-2 rounded-full" style={{ backgroundColor: aqiColor }} />
-                <span className="text-xs font-mono font-bold tracking-wider uppercase text-slate-200">
-                  {locationName}
-                </span>
-              </div>
-              <div className="text-[10px] font-mono text-slate-400 mt-0.5">
-                Cell: {selectedCellData.code} · {selectedCellData.lat.toFixed(3)}°N, {selectedCellData.lon.toFixed(3)}°E
-              </div>
+      {/* Bottom-Left Selected Location Inspector Overlay */}
+      {showCard && displayAqi !== null && (
+        <div className="absolute bottom-6 left-4 sm:left-6 z-20 max-w-sm w-[calc(100vw-2rem)] sm:w-80 bg-[#080d12]/95 border border-white/10 rounded-2xl shadow-2xl backdrop-blur-xl animate-fade-in text-slate-100 overflow-hidden">
+          
+          {/* AQI Severity Image Banner */}
+          <div className="relative w-full h-28 overflow-hidden">
+            <Image
+              src={aqiImage}
+              alt={`AQI ${displayCategory}`}
+              fill
+              className="object-cover opacity-70"
+              sizes="320px"
+              priority
+            />
+            {/* Gradient overlay so text reads cleanly */}
+            <div className="absolute inset-0 bg-gradient-to-t from-[#080d12] via-[#080d12]/60 to-transparent" />
+            
+            {/* AQI value overlay on the image */}
+            <div className="absolute bottom-3 left-4 flex items-baseline gap-2">
+              <span className="text-4xl font-mono font-black tracking-tight" style={{ color: aqiColor }}>
+                {displayAqi}
+              </span>
+              <span className="text-sm font-semibold" style={{ color: aqiColor }}>
+                {displayCategory}
+              </span>
             </div>
+
+            {/* Close button */}
             <button
-              onClick={() => selectCell(-1)}
-              className="text-slate-400 hover:text-slate-200 text-xs p-1"
+              onClick={clearSelection}
+              className="absolute top-2 right-2 bg-black/50 hover:bg-black/70 text-slate-300 hover:text-white rounded-full w-6 h-6 flex items-center justify-center text-xs transition-colors"
               title="Close card"
             >
               ✕
             </button>
           </div>
 
-          <div className="flex items-center justify-between gap-3 mb-3">
-            <div>
-              <div className="text-[10px] font-mono uppercase tracking-widest text-slate-400">
-                Air Quality Index
-              </div>
-              <div className="flex items-baseline gap-2 mt-0.5">
-                <span className="text-3xl font-mono font-bold" style={{ color: aqiColor }}>
-                  {aqi}
-                </span>
-                <span className="text-xs font-mono font-semibold" style={{ color: aqiColor }}>
-                  {aqiCategory}
-                </span>
-              </div>
-            </div>
-            <SourceBadge source={selectedCellData.source ?? 'CACHED'} />
-          </div>
-
-          <div className="grid grid-cols-2 gap-2 pt-2 border-t border-white/10 text-[11px] font-mono">
-            <div className="bg-white/[0.04] p-2 rounded-xl border border-white/5">
-              <span className="text-slate-400 block text-[9px] uppercase">PM2.5 Estimate</span>
-              <span className="font-bold text-slate-100">{Math.round(selectedCellData.pm25Q50)} µg/m³</span>
-            </div>
-            <div className="bg-white/[0.04] p-2 rounded-xl border border-white/5">
-              <span className="text-slate-400 block text-[9px] uppercase">90% Uncertainty</span>
-              <span className="text-slate-300">
-                {Math.round(selectedCellData.pm25Q10)}–{Math.round(selectedCellData.pm25Q90)}
+          {/* Location Info */}
+          <div className="p-4 pt-3">
+            <div className="flex items-center gap-1.5 mb-1">
+              <span className="w-2 h-2 rounded-full flex-shrink-0" style={{ backgroundColor: aqiColor }} />
+              <span className="text-xs font-mono font-bold tracking-wider uppercase text-slate-200 truncate">
+                {locationName}
               </span>
             </div>
-            <div className="bg-white/[0.04] p-2 rounded-xl border border-white/5">
-              <span className="text-slate-400 block text-[9px] uppercase">Coverage</span>
-              <span className="text-slate-300">{Math.round(selectedCellData.coverageFraction * 100)}%</span>
+
+            {markerInfo && (
+              <div className="text-[10px] font-mono text-slate-400 mb-3">
+                {getTierLabel(markerInfo.tier)} Level · {lastUpdated}
+              </div>
+            )}
+
+            {/* Data Grid */}
+            <div className="grid grid-cols-2 gap-2 text-[11px] font-mono">
+              <div className="bg-white/[0.04] p-2.5 rounded-xl border border-white/5">
+                <span className="text-slate-400 block text-[9px] uppercase tracking-wider">PM2.5</span>
+                <span className="font-bold text-slate-100 text-sm">{displayPm25} µg/m³</span>
+              </div>
+              <div className="bg-white/[0.04] p-2.5 rounded-xl border border-white/5">
+                <span className="text-slate-400 block text-[9px] uppercase tracking-wider">AQI Level</span>
+                <span className="font-bold text-sm" style={{ color: aqiColor }}>{displayAqi}</span>
+              </div>
+
+              {/* Show grid cell info if we have real API data */}
+              {dataSource === 'API' && selectedCellData && (
+                <>
+                  <div className="bg-white/[0.04] p-2.5 rounded-xl border border-white/5">
+                    <span className="text-slate-400 block text-[9px] uppercase tracking-wider">90% Range</span>
+                    <span className="text-slate-300">
+                      {Math.round(selectedCellData.pm25Q10)}–{Math.round(selectedCellData.pm25Q90)}
+                    </span>
+                  </div>
+                  <div className="bg-white/[0.04] p-2.5 rounded-xl border border-white/5">
+                    <span className="text-slate-400 block text-[9px] uppercase tracking-wider">Coverage</span>
+                    <span className="text-slate-300">{Math.round(selectedCellData.coverageFraction * 100)}%</span>
+                  </div>
+                </>
+              )}
             </div>
-            <div className="bg-white/[0.04] p-2 rounded-xl border border-white/5">
-              <span className="text-slate-400 block text-[9px] uppercase">Model Version</span>
-              <span className="text-slate-300 truncate">{selectedCellData.modelVersion}</span>
+
+            {/* Data source badge */}
+            <div className="mt-3 flex items-center justify-between">
+              <span className="text-[9px] font-mono text-slate-500 uppercase tracking-wider">
+                {dataSource === 'API' ? 'Live Data' : dataSource === 'MARKER' ? 'Reference Data' : 'Estimated'}
+              </span>
+              {selectedCellData && <SourceBadge source={dataSource === 'API' ? selectedCellData.source : 'CACHED'} />}
             </div>
           </div>
+        </div>
+      )}
+
+      {/* Loading indicator */}
+      {loading && (
+        <div className="absolute bottom-6 left-1/2 -translate-x-1/2 z-30 bg-[#080d12]/90 border border-white/10 rounded-full px-4 py-2 text-xs font-mono text-slate-300 backdrop-blur-xl">
+          Loading…
         </div>
       )}
     </div>
@@ -127,4 +200,3 @@ const FullScreenMap: React.FC = () => {
 };
 
 export default FullScreenMap;
-
