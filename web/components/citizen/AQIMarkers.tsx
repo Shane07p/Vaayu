@@ -1,21 +1,36 @@
 // web/components/citizen/AQIMarkers.tsx
-import React, { useEffect, useRef } from 'react';
+//
+// Lazy, viewport-only, tier-cascading AQI markers.
+// Creates DOM elements ONLY for what is currently visible.
+// If ANY two markers at the current tier collide → entire tier is
+// hidden and the next tier up (state → country → continent) is shown.
+//
+import React, { useEffect, useRef, useCallback } from 'react';
 import maplibregl, { Map } from 'maplibre-gl';
 import { useAQIStore } from '@/store/aqiStore';
-import { GEO_COORDINATES, COUNTRIES, STATES, CONTINENTS, CountryLocation, StateLocation, CityLocation, ContinentLocation } from '@/lib/coordinates';
+import {
+  GEO_COORDINATES,
+  COUNTRIES,
+  STATES,
+  CONTINENTS,
+  CountryLocation,
+  StateLocation,
+  CityLocation,
+  ContinentLocation,
+} from '@/lib/coordinates';
 
-// Map AQI value to severity text color (clean, muted, professional)
+/* ───── colour helpers (unchanged) ───── */
 export const getAqiTextColor = (aqi: number): string => {
-  if (aqi <= 50) return '#34d399'; // GOOD (emerald-400)
-  if (aqi <= 100) return '#fbbf24'; // MODERATE (amber-400)
-  if (aqi <= 150) return '#fb923c'; // POOR (orange-400)
-  if (aqi <= 200) return '#f472b6'; // UNHEALTHY (pink-400)
-  if (aqi <= 300) return '#c084fc'; // SEVERE (purple-400)
-  return '#f87171'; // HAZARDOUS (red-400)
+  if (aqi <= 50)  return '#34d399';
+  if (aqi <= 100) return '#fbbf24';
+  if (aqi <= 150) return '#fb923c';
+  if (aqi <= 200) return '#f472b6';
+  if (aqi <= 300) return '#c084fc';
+  return '#f87171';
 };
 
 export const getAqiCategory = (aqi: number): string => {
-  if (aqi <= 50) return 'Good';
+  if (aqi <= 50)  return 'Good';
   if (aqi <= 100) return 'Moderate';
   if (aqi <= 150) return 'Unhealthy for Sensitive Groups';
   if (aqi <= 200) return 'Unhealthy';
@@ -23,266 +38,228 @@ export const getAqiCategory = (aqi: number): string => {
   return 'Hazardous';
 };
 
-interface Props {
-  map: Map | null;
-}
-
-type MarkerTier = 0 | 1 | 2 | 3; // 0: Continent, 1: Country, 2: State, 3: City
-
-interface MarkerData {
+/* ───── Normalised data-point (no DOM yet) ───── */
+interface DataPoint {
   id: string | number;
-  marker: maplibregl.Marker;
-  el: HTMLElement;
-  tier: MarkerTier;
   name: string;
-  parentName: string | null;
-  lon: number;
   lat: number;
+  lon: number;
+  aqi: number;
+  pm25: number;
+  category: string;
+  tier: number; // 0-continent  1-country  2-state  3-city
 }
 
+/* ───── Build the four flat arrays once ───── */
+const ALL_DATA: DataPoint[][] = [
+  // tier 0 — continents
+  CONTINENTS.map((c: ContinentLocation) => ({
+    id: c.id, name: c.name, lat: c.lat, lon: c.lon,
+    aqi: c.aqi, pm25: c.pm25, category: c.category, tier: 0,
+  })),
+  // tier 1 — countries
+  COUNTRIES.map((c: CountryLocation) => ({
+    id: c.id, name: c.name, lat: c.lat, lon: c.lon,
+    aqi: c.aqi, pm25: c.pm25, category: c.category, tier: 1,
+  })),
+  // tier 2 — states
+  STATES.map((c: StateLocation) => ({
+    id: c.id, name: c.name, lat: c.lat, lon: c.lon,
+    aqi: c.aqi, pm25: c.pm25, category: c.category, tier: 2,
+  })),
+  // tier 3 — cities
+  GEO_COORDINATES.map((c: CityLocation) => ({
+    id: c.id, name: c.name, lat: c.lat, lon: c.lon,
+    aqi: c.aqi, pm25: c.pm25,
+    category: c.category || getAqiCategory(c.aqi), tier: 3,
+  })),
+];
+
+/* ───── Props ───── */
+interface Props { map: Map | null; }
+
+/* ───── Collision threshold in pixels ───── */
+const COLLISION_PX = 40;
+
+/* ───── Component ───── */
 const AQIMarkers: React.FC<Props> = ({ map }) => {
-  const { selectedCellId, selectCell, loadLocationData } = useAQIStore();
-  const markersRef = useRef<MarkerData[]>([]);
+  const { selectCell, loadLocationData } = useAQIStore();
+  // Store live markers so we can remove them on the next cycle
+  const liveMarkers = useRef<maplibregl.Marker[]>([]);
+  const rafId = useRef<number>(0);
 
-  useEffect(() => {
-    if (!map) return;
-    const markersData: MarkerData[] = [];
+  /* Build a single DOM marker element – called only for items we actually show */
+  const buildElement = useCallback(
+    (pt: DataPoint) => {
+      const textColor = getAqiTextColor(pt.aqi);
+      const fontSize = pt.tier === 0 ? 16 : pt.tier === 1 ? 14 : pt.tier === 2 ? 12 : 11;
+      const labelSize = pt.tier === 0 ? 10 : pt.tier === 1 ? 9 : 8;
 
-    const createMarker = (
-      id: string | number,
-      name: string,
-      parentName: string | null,
-      lat: number,
-      lon: number,
-      aqi: number,
-      category: string,
-      pm25: number,
-      tier: MarkerTier
-    ) => {
-      const isSelected = selectedCellId === id;
-      const textColor = getAqiTextColor(aqi);
-
-      // Outer wrapper element positioned strictly by MapLibre
       const el = document.createElement('div');
-      el.className = 'aqi-place-marker-wrap';
-      el.style.background = 'transparent';
-      el.style.border = 'none';
-      el.style.padding = '0';
-      el.style.margin = '0';
-      el.style.cursor = 'pointer';
       el.style.display = 'flex';
       el.style.flexDirection = 'column';
       el.style.alignItems = 'center';
-      // Ultra fast transition for visibility
-      el.style.transition = 'opacity 0.2s ease';
-      el.style.opacity = '0';
-      el.style.pointerEvents = 'none';
-      el.style.position = 'absolute'; // For fast DOM updates
-      
-      el.title = `${name}\nAQI: ${aqi} · ${category}\nPM2.5: ${pm25} µg/m³\nClick to inspect`;
+      el.style.cursor = 'pointer';
+      el.style.pointerEvents = 'auto';
+      el.title = `${pt.name}\nAQI: ${pt.aqi} · ${pt.category}\nPM2.5: ${pt.pm25} µg/m³`;
 
-      // Ultra-minimalist UI: Just the number with a tight, heavy text-shadow
-      const innerNum = document.createElement('span');
-      innerNum.className = `aqi-text-num ${isSelected ? 'selected' : ''}`;
-      innerNum.textContent = `${aqi}`;
-      innerNum.style.color = textColor;
-      innerNum.style.fontSize = tier === 0 ? '16px' : tier === 1 ? '15px' : tier === 2 ? '13px' : '12px';
-      innerNum.style.fontWeight = '900';
-      innerNum.style.fontFamily = 'ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace';
-      innerNum.style.lineHeight = '1';
-      innerNum.style.userSelect = 'none';
-      innerNum.style.whiteSpace = 'nowrap';
-      // Minimalist outline shadow so it doesn't conflict with map text
-      innerNum.style.textShadow = `
-        -1px -1px 0 #000,  
-         1px -1px 0 #000,
-        -1px  1px 0 #000,
-         1px  1px 0 #000,
-         0px  0px 6px #000,
-         0px  0px 10px ${textColor}88
-      `;
-      
-      // Place Name label underneath the number (very subtle)
-      const innerLabel = document.createElement('span');
-      innerLabel.className = 'aqi-place-label';
-      innerLabel.textContent = name;
-      innerLabel.style.color = isSelected ? '#ffffff' : '#cbd5e1';
-      innerLabel.style.fontSize = tier === 0 ? '11px' : tier === 1 ? '10px' : '9px';
-      innerLabel.style.fontWeight = '600';
-      innerLabel.style.fontFamily = 'ui-sans-serif, system-ui, -apple-system, sans-serif';
-      innerLabel.style.lineHeight = '1.2';
-      innerLabel.style.marginTop = '2px';
-      innerLabel.style.textShadow = '-1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000';
-      innerLabel.style.userSelect = 'none';
-      innerLabel.style.whiteSpace = 'nowrap';
+      // AQI number
+      const num = document.createElement('span');
+      num.textContent = `${pt.aqi}`;
+      num.style.color = textColor;
+      num.style.fontSize = `${fontSize}px`;
+      num.style.fontWeight = '800';
+      num.style.fontFamily = 'ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,monospace';
+      num.style.lineHeight = '1';
+      num.style.userSelect = 'none';
+      num.style.textShadow =
+        '-1px -1px 0 #0a0a0a, 1px -1px 0 #0a0a0a, -1px 1px 0 #0a0a0a, 1px 1px 0 #0a0a0a, 0 0 4px #000';
+      num.style.transition = 'transform .12s ease';
 
-      el.appendChild(innerNum);
-      if (tier <= 2) {
-          el.appendChild(innerLabel); // Only show text for State and above to reduce clutter
-      }
+      // Name label (only show for continent/country/state, hide for cities to reduce noise)
+      const label = document.createElement('span');
+      label.textContent = pt.name;
+      label.style.color = '#cbd5e1';
+      label.style.fontSize = `${labelSize}px`;
+      label.style.fontWeight = '600';
+      label.style.fontFamily = 'ui-sans-serif,system-ui,-apple-system,sans-serif';
+      label.style.lineHeight = '1.1';
+      label.style.marginTop = '1px';
+      label.style.userSelect = 'none';
+      label.style.textShadow =
+        '-1px -1px 0 #0a0a0a, 1px -1px 0 #0a0a0a, -1px 1px 0 #0a0a0a, 1px 1px 0 #0a0a0a';
 
-      // Hover effects
+      el.appendChild(num);
+      if (pt.tier <= 2) el.appendChild(label);
+
+      // Hover
       el.onmouseenter = () => {
-        innerNum.style.transform = 'scale(1.2)';
-        innerNum.style.textShadow = `-1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000, 0 0 15px ${textColor}`;
+        num.style.transform = 'scale(1.25)';
         el.style.zIndex = '50';
       };
-
       el.onmouseleave = () => {
-        innerNum.style.transform = 'scale(1)';
-        innerNum.style.textShadow = `
-          -1px -1px 0 #000,  
-           1px -1px 0 #000,
-          -1px  1px 0 #000,
-           1px  1px 0 #000,
-           0px  0px 6px #000,
-           0px  0px 10px ${textColor}88
-        `;
-        el.style.zIndex = isSelected ? '10' : '1';
+        num.style.transform = 'scale(1)';
+        el.style.zIndex = '1';
       };
 
+      // Click
       el.onclick = (e) => {
         e.stopPropagation();
-        selectCell(id as number);
-        loadLocationData(lat, lon, name, map);
-        
-        // Zoom in when clicking a higher-level region
-        if (tier === 0) map.flyTo({ center: [lon, lat], zoom: 3.5 });
-        else if (tier === 1) map.flyTo({ center: [lon, lat], zoom: 5.5 });
-        else if (tier === 2) map.flyTo({ center: [lon, lat], zoom: 7.5 });
+        selectCell(pt.id as number);
+        loadLocationData(pt.lat, pt.lon, pt.name, map);
+        if (pt.tier === 0)      map?.flyTo({ center: [pt.lon, pt.lat], zoom: 3.5 });
+        else if (pt.tier === 1) map?.flyTo({ center: [pt.lon, pt.lat], zoom: 5.5 });
+        else if (pt.tier === 2) map?.flyTo({ center: [pt.lon, pt.lat], zoom: 7.5 });
       };
 
-      if (Number.isFinite(lon) && Number.isFinite(lat) && lat >= -90 && lat <= 90 && lon >= -180 && lon <= 180) {
-        const marker = new maplibregl.Marker({ element: el })
-          .setLngLat([lon, lat])
-          .addTo(map);
-        markersData.push({ id, marker, el, tier, name, parentName, lon, lat });
-      }
-    };
+      return el;
+    },
+    [map, selectCell, loadLocationData],
+  );
 
-    // 1. Continents (Tier 0)
-    CONTINENTS.forEach((loc: ContinentLocation) => {
-        createMarker(loc.id, loc.name, null, loc.lat, loc.lon, loc.aqi, loc.category, loc.pm25, 0);
-    });
+  useEffect(() => {
+    if (!map) return;
 
-    // 2. Countries (Tier 1)
-    COUNTRIES.forEach((loc: CountryLocation) => {
-        // We don't have continent mapping in countries.json right now, so parentName is null
-        createMarker(loc.id, loc.name, null, loc.lat, loc.lon, loc.aqi, loc.category, loc.pm25, 1);
-    });
+    /* ───── Core render cycle ───── */
+    const render = () => {
+      if (rafId.current) cancelAnimationFrame(rafId.current);
 
-    // 3. States (Tier 2)
-    STATES.forEach((loc: StateLocation) => {
-        createMarker(loc.id, loc.name, loc.country, loc.lat, loc.lon, loc.aqi, loc.category, loc.pm25, 2);
-    });
-
-    // 4. Cities (Tier 3)
-    GEO_COORDINATES.forEach((loc: CityLocation) => {
-        createMarker(loc.id, loc.name, loc.state, loc.lat, loc.lon, loc.aqi, loc.category || getAqiCategory(loc.aqi), loc.pm25, 3);
-    });
-
-    markersRef.current = markersData;
-
-    let rafId: number;
-    
-    // The core smart collision and rendering logic
-    const updateVisibility = () => {
-      if (rafId) cancelAnimationFrame(rafId);
-      
-      rafId = requestAnimationFrame(() => {
+      rafId.current = requestAnimationFrame(() => {
         const zoom = map.getZoom();
         const bounds = map.getBounds();
-        
-        // Determine the ideal target tier for this zoom level
-        let targetTier: MarkerTier = 3;
-        if (zoom < 3) targetTier = 0;
-        else if (zoom < 4.5) targetTier = 1;
-        else if (zoom < 6.5) targetTier = 2;
 
-        // 1. Reset all to hidden
-        markersData.forEach(m => {
-            m.el.style.opacity = '0';
-            m.el.style.pointerEvents = 'none';
-        });
+        // Choose starting tier from zoom
+        let startTier = 3;
+        if (zoom < 3)        startTier = 0;
+        else if (zoom < 4.5) startTier = 1;
+        else if (zoom < 6.5) startTier = 2;
 
-        // 2. Get candidates that are within the current map viewport bounds
-        const candidates = markersData.filter(m => 
-            bounds.contains([m.lon, m.lat])
-        );
+        // Find the best tier that has no collisions
+        let chosenPoints: DataPoint[] = [];
 
-        // We will project candidates to screen coordinates to check for pixel collisions
-        const projected = candidates.map(c => ({
-            ...c,
-            pt: map.project([c.lon, c.lat])
-        }));
+        for (let tier = startTier; tier >= 0; tier--) {
+          // Filter to viewport only
+          const inView = ALL_DATA[tier].filter(
+            (p) =>
+              p.lat >= bounds.getSouth() &&
+              p.lat <= bounds.getNorth() &&
+              p.lon >= bounds.getWest() &&
+              p.lon <= bounds.getEast(),
+          );
 
-        const visibleIds = new Set<string | number>();
-        const COLLISION_RADIUS = 35; // Pixels distance before they are considered "colliding"
+          if (inView.length === 0) {
+            // Nothing in viewport at this tier, try the next one up
+            continue;
+          }
 
-        // We process from highest priority (targetTier) up to Continents (0)
-        // If two markers at current level collide, we try to show their parent instead.
-        const processLevel = (level: number) => {
-            const levelMarkers = projected.filter(m => m.tier === level);
-            
-            for (let i = 0; i < levelMarkers.length; i++) {
-                const m1 = levelMarkers[i];
-                let collided = false;
-                
-                // Check collision against already visible markers
-                for (const vid of Array.from(visibleIds)) {
-                    const vMarker = projected.find(p => p.id === vid);
-                    if (vMarker && Math.hypot(vMarker.pt.x - m1.pt.x, vMarker.pt.y - m1.pt.y) < COLLISION_RADIUS) {
-                        collided = true;
-                        break;
-                    }
-                }
+          // Project each to screen pixels
+          const projected = inView.map((p) => ({
+            ...p,
+            pt: map.project([p.lon, p.lat]),
+          }));
 
-                // Check collision against other markers in the SAME level
-                if (!collided) {
-                    for (let j = i + 1; j < levelMarkers.length; j++) {
-                        const m2 = levelMarkers[j];
-                        if (Math.hypot(m1.pt.x - m2.pt.x, m1.pt.y - m2.pt.y) < COLLISION_RADIUS) {
-                            collided = true;
-                            // Since m1 collides with m2, we should ideally promote them to their parent.
-                            // To keep it simple: if collision happens, neither is shown, and we rely on the NEXT level up loop to fill the gap.
-                            break;
-                        }
-                    }
-                }
-
-                if (!collided) {
-                    visibleIds.add(m1.id);
-                }
+          // Check if ANY two collide
+          let hasCollision = false;
+          outer: for (let i = 0; i < projected.length; i++) {
+            for (let j = i + 1; j < projected.length; j++) {
+              const dx = projected[i].pt.x - projected[j].pt.x;
+              const dy = projected[i].pt.y - projected[j].pt.y;
+              if (dx * dx + dy * dy < COLLISION_PX * COLLISION_PX) {
+                hasCollision = true;
+                break outer;
+              }
             }
-        };
+          }
 
-        // Try to place the target tier first, then fill gaps with higher tiers (state, country, continent)
-        for (let t = targetTier; t >= 0; t--) {
-            processLevel(t);
+          if (!hasCollision) {
+            chosenPoints = inView;
+            break; // this tier fits
+          }
+          // else: collision → loop continues, tier-- (promote to parent)
         }
 
-        // Apply visibility
-        markersData.forEach(m => {
-            if (visibleIds.has(m.id)) {
-                m.el.style.opacity = '1';
-                m.el.style.pointerEvents = 'auto';
-            }
+        // If even continents collide (unlikely), just show continents anyway
+        if (chosenPoints.length === 0 && startTier >= 0) {
+          const inView = ALL_DATA[0].filter(
+            (p) =>
+              p.lat >= bounds.getSouth() &&
+              p.lat <= bounds.getNorth() &&
+              p.lon >= bounds.getWest() &&
+              p.lon <= bounds.getEast(),
+          );
+          chosenPoints = inView;
+        }
+
+        // ─── Diff: remove old markers, add new ones ───
+        // Remove all existing markers
+        liveMarkers.current.forEach((m) => m.remove());
+        liveMarkers.current = [];
+
+        // Create new ones ONLY for chosen points
+        chosenPoints.forEach((pt) => {
+          const el = buildElement(pt);
+          const marker = new maplibregl.Marker({ element: el })
+            .setLngLat([pt.lon, pt.lat])
+            .addTo(map);
+          liveMarkers.current.push(marker);
         });
       });
     };
 
-    map.on('zoom', updateVisibility);
-    map.on('move', updateVisibility);
-    updateVisibility(); // initial state
+    // Debounce-ish: use 'moveend' instead of 'move' to avoid running every frame
+    map.on('moveend', render);
+    map.on('zoomend', render);
+    // Also run once on initial load
+    render();
 
-    // Cleanup markers when unmounting
     return () => {
-      if (rafId) cancelAnimationFrame(rafId);
-      map.off('zoom', updateVisibility);
-      map.off('move', updateVisibility);
-      markersData.forEach((m) => m.marker.remove());
+      if (rafId.current) cancelAnimationFrame(rafId.current);
+      map.off('moveend', render);
+      map.off('zoomend', render);
+      liveMarkers.current.forEach((m) => m.remove());
+      liveMarkers.current = [];
     };
-  }, [map, selectedCellId, selectCell, loadLocationData]);
+  }, [map, buildElement]);
 
   return null;
 };
