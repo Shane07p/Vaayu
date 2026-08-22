@@ -5,28 +5,13 @@ import React, { useState, useEffect, useRef } from 'react';
 import type { Map } from 'maplibre-gl';
 import { useAQIStore } from '@/store/aqiStore';
 
-// Common Indian cities for instant offline / fallback autocomplete
-const POPULAR_LOCATIONS = [
-  { name: "Ahmedabad, Gujarat", lat: 23.0225, lon: 72.5714 },
-  { name: "Gandhinagar, Gujarat", lat: 23.2156, lon: 72.6369 },
-  { name: "Delhi (Central NCR)", lat: 28.6139, lon: 77.2090 },
-  { name: "Mumbai, Maharashtra", lat: 19.0760, lon: 72.8777 },
-  { name: "Surat, Gujarat", lat: 21.1702, lon: 72.8311 },
-  { name: "Vadodara, Gujarat", lat: 22.3072, lon: 73.1812 },
-  { name: "Bengaluru, Karnataka", lat: 12.9716, lon: 77.5946 },
-  { name: "Pune, Maharashtra", lat: 18.5204, lon: 73.8567 },
-  { name: "Jaipur, Rajasthan", lat: 26.9124, lon: 75.7873 },
-  { name: "Lucknow, Uttar Pradesh", lat: 26.8467, lon: 80.9462 },
-  { name: "Kolkata, West Bengal", lat: 22.5726, lon: 88.3639 },
-  { name: "Hyderabad, Telangana", lat: 17.3850, lon: 78.4867 },
-  { name: "Gurugram, Haryana", lat: 28.4595, lon: 77.0266 },
-  { name: "Noida, Uttar Pradesh", lat: 28.5355, lon: 77.3910 },
-];
+import { GEO_COORDINATES, GeoLocationPoint } from '@/lib/coordinates';
 
 interface SuggestionItem {
   display_name: string;
   lat: number;
   lon: number;
+  aqi?: number;
 }
 
 interface Props {
@@ -66,13 +51,16 @@ const MapControls: React.FC<Props> = ({ map }) => {
       setSearching(true);
       const qLower = query.toLowerCase().trim();
 
-      // Local match first
-      const localMatches: SuggestionItem[] = POPULAR_LOCATIONS.filter((loc) =>
-        loc.name.toLowerCase().includes(qLower)
+      // Local match against all 75+ Indian cities & Delhi places first
+      const localMatches: SuggestionItem[] = GEO_COORDINATES.filter((loc) =>
+        loc.name.toLowerCase().includes(qLower) ||
+        loc.city.toLowerCase().includes(qLower) ||
+        loc.state.toLowerCase().includes(qLower)
       ).map((loc) => ({
-        display_name: loc.name,
+        display_name: `${loc.name}, ${loc.city}, ${loc.state}`,
         lat: loc.lat,
         lon: loc.lon,
+        aqi: loc.aqi,
       }));
 
       try {
