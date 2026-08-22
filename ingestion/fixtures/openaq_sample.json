@@ -1,9 +1,24 @@
 [
   {
-    "id": 8118,
-    "name": "New Delhi US Embassy",
-    "locality": "New Delhi",
-    "country": {"code": "IN", "name": "India"},
-    "coordinates": {"latitude": 28.5921, "longitude": 77.2279}
+    "station": "New Delhi US Embassy",
+    "city": "New Delhi",
+    "state": "India",
+    "latitude": 28.5921,
+    "longitude": 77.2279,
+    "last_update": "2026-08-19T00:00:00Z",
+    "pollutant_id": "PM2.5",
+    "pollutant_avg": 78.4,
+    "station_source": "OPENAQ"
+  },
+  {
+    "station": "New Delhi US Embassy",
+    "city": "New Delhi",
+    "state": "India",
+    "latitude": 28.5921,
+    "longitude": 77.2279,
+    "last_update": "2026-08-19T01:00:00Z",
+    "pollutant_id": "PM2.5",
+    "pollutant_avg": 82.1,
+    "station_source": "OPENAQ"
   }
 ]

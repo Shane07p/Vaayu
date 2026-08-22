@@ -1,0 +1,36 @@
+spring:
+  datasource:
+    # Cloud Run supplies a Cloud SQL JDBC Socket Factory URL. Do not default this
+    # in production: an omitted database configuration must fail at startup.
+    url: ${SPRING_DATASOURCE_URL}
+    username: ${POSTGRES_USER}
+    password: ${POSTGRES_PASSWORD}
+    hikari:
+      maximum-pool-size: ${DB_POOL_SIZE:5}
+      minimum-idle: ${DB_POOL_MIN_IDLE:0}
+      connection-timeout: ${DB_CONNECTION_TIMEOUT_MS:10000}
+
+  flyway:
+    # Flyway is the only schema initializer. A fresh Cloud SQL database must be
+    # empty so V1 creates PostGIS and the remaining migrations run in order.
+    baseline-on-migrate: false
+    validate-on-migrate: true
+    clean-disabled: true
+
+vaayu:
+  web:
+    # The Cloud Run web service origin is mandatory in production; wildcard CORS
+    # is deliberately not supported.
+    allowed-origin: ${WEB_ALLOWED_ORIGIN}
+  console:
+    shared-secret: ${CONSOLE_SHARED_SECRET}
+  gemini:
+    api-key: ${GEMINI_API_KEY}
+
+management:
+  endpoint:
+    health:
+      show-details: never
+
+server:
+  port: ${PORT:8080}

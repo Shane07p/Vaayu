@@ -12,6 +12,8 @@ WORKDIR /app
 RUN corepack enable
 COPY --from=deps /app/node_modules ./node_modules
 COPY . .
+ARG NEXT_PUBLIC_API_URL=/api
+ENV NEXT_PUBLIC_API_URL=$NEXT_PUBLIC_API_URL
 RUN pnpm build
 
 FROM node:22-alpine
@@ -22,4 +24,4 @@ COPY --from=build /app/.next ./.next
 COPY --from=build /app/package.json ./
 COPY --from=build /app/node_modules ./node_modules
 EXPOSE 3000
-CMD ["node_modules/.bin/next", "start"]
+CMD ["node_modules/.bin/next", "start", "--hostname", "0.0.0.0"]
