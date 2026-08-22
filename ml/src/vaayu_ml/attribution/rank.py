@@ -4,6 +4,18 @@ import math
 
 import pandas as pd
 
+# A cluster further than this from every trajectory waypoint is not meaningfully
+# on the path, so the trajectory tells us nothing about its transport time.
+TRAJECTORY_CORRIDOR_KM = 50.0
+
+# Coarse transport speed, used only when no trajectory places the cluster.
+# Roughly 10 km/h matches typical winter advection into the NCR.
+ASSUMED_TRANSPORT_KMH = 10.0
+
+# Used for ranking only when confidence is unknown, so clusters stay comparable.
+# Never written to the database as a measured value.
+DEFAULT_SCORING_CONFIDENCE = 0.5
+
 
 def impact_score(
     total_frp: float,
@@ -72,11 +84,22 @@ def rank_fire_clusters(
         return r_earth * 2 * math.atan2(math.sqrt(a), math.sqrt(1 - a))
 
     waypoints = trajectories.get(receptor, [])
-    pop = population_grid["population"].sum() if population_grid is not None else 18_400_000
+    # Deliberately NOT a per-cluster exposure figure.
+    #
+    # This is the population of the whole analysis grid. It was previously
+    # written to fire_cluster_impact.downwind_population, which reads as "this
+    # cluster threatens N people" -- but the same N was stored for every
+    # cluster, so it also cancelled out of the ranking entirely. It is retained
+    # here only as the scale term in impact_score, and downwind_population is
+    # left null until a real wind-cone intersection computes it per cluster.
+    grid_population = (
+        population_grid["population"].sum() if population_grid is not None else 18_400_000
+    )
 
     scores = []
     transport_hrs = []
     intersections = []
+    confidences = []
 
     for _, cluster in df.iterrows():
         c_lat, c_lon = float(cluster["lat"]), float(cluster["lon"])
@@ -89,7 +112,15 @@ def rank_fire_clusters(
                 if dist < min_dist:
                     min_dist = dist
                     t_hours = h
-            intersection = 1.0 if min_dist <= 50.0 else 0.0
+            intersection = 1.0 if min_dist <= TRAJECTORY_CORRIDOR_KM else 0.0
+            if not intersection:
+                # Off the corridor. t_hours came from the nearest waypoint's
+                # index regardless of how far off-path the cluster was, so a
+                # cluster hundreds of kilometres away could still collect a
+                # short transport time and the favourable decay that goes with
+                # it. Outside the corridor the trajectory says nothing useful
+                # about this cluster, so fall back to straight-line distance.
+                t_hours = min_dist / ASSUMED_TRANSPORT_KMH
         else:
             # No trajectory available — fall back to distance from Delhi
             delhi_lat, delhi_lon = 28.6139, 77.2090
@@ -97,20 +128,31 @@ def rank_fire_clusters(
             t_hours = dist / 10.0
             intersection = 0.0
 
-        conf = float(cluster.get("trajectory_confidence", 0.81))
-        score = impact_score(float(cluster["total_frp"]), int(pop), t_hours, conf)
+        # fire_cluster has no trajectory_confidence column, so the previous
+        # `.get(..., 0.81)` default always fired and that literal was written to
+        # the database as though it had been measured. Confidence is only
+        # meaningful when a trajectory actually places the cluster, and even
+        # then this is a coarse proxy, so it is recorded as unknown otherwise.
+        conf_value = cluster.get("trajectory_confidence")
+        conf = float(conf_value) if conf_value is not None else None
+        scoring_conf = conf if conf is not None else DEFAULT_SCORING_CONFIDENCE
+        score = impact_score(
+            float(cluster["total_frp"]), int(grid_population), t_hours, scoring_conf
+        )
 
         scores.append(score)
         transport_hrs.append(t_hours)
         intersections.append(intersection)
+        confidences.append(conf)
 
     df["impact_score"] = scores
     df["trajectory_intersection"] = intersections
     df["transport_hours"] = transport_hrs
-    df["trajectory_confidence"] = [
-        float(c.get("trajectory_confidence", 0.81)) for _, c in df.iterrows()
-    ]
-    df["downwind_population"] = int(pop)
+    # Null rather than invented. The writer and the alert packet both handle a
+    # null confidence as "not known"; a fabricated 0.81 would read as measured.
+    df["trajectory_confidence"] = confidences
+    # Null until a per-cluster wind cone exists. See grid_population above.
+    df["downwind_population"] = None
 
     df = df.sort_values("impact_score", ascending=False).reset_index(drop=True)
     df["impact_rank"] = df.index + 1

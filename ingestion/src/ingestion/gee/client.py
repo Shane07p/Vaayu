@@ -11,6 +11,7 @@ Python service rather than part of the Spring Boot application.
 from __future__ import annotations
 
 import json
+from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
 
@@ -87,3 +88,24 @@ def coverage_fraction(count: Any, expected: Any) -> float:
     if total <= 0:
         return 0.0
     return max(0.0, min(1.0, observed / total))
+
+
+def snapshot_timestamp() -> str:
+    """The hour a snapshot belongs to, as an ISO-8601 UTC string.
+
+    Truncated to the hour on purpose. Each Earth Engine job runs independently
+    and previously stamped ``datetime.now(UTC).isoformat()`` at its own runtime,
+    so AOD, meteorology and S5P landed on timestamps differing by microseconds.
+    The model joins those three tables on exact ``ts`` equality, so under live
+    credentials no row ever carried satellite and meteorological features
+    together: the nowcast trained on meteorology alone while still reporting a
+    plausible RMSE.
+
+    The bug was invisible in fixture mode because the fixture generator happened
+    to truncate to the hour, so it would have appeared for the first time on the
+    day real credentials were installed.
+
+    An hour is also the natural granularity: station readings are hourly, ERA5
+    is hourly, and MODIS is daily.
+    """
+    return datetime.now(UTC).replace(minute=0, second=0, microsecond=0).isoformat()

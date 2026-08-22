@@ -21,13 +21,13 @@ from __future__ import annotations
 
 import argparse
 import json
-from datetime import UTC, datetime
 
 from ingestion.gee.client import (
     EarthEngineUnavailableError,
     coverage_fraction,
     credentials_present,
     initialise,
+    snapshot_timestamp,
 )
 from ingestion.settings import settings
 from ingestion.source import Source, SourceUnavailableError
@@ -85,13 +85,13 @@ class MaiacAodSource(Source):
 
             initialise()
 
-            # The snapshot timestamp is computed here, once, in Python. Calling
-            # ee.Date.now().format().getInfo() per feature would cost one network
-            # round trip per grid cell and re-evaluate the clock each time,
-            # scattering a single snapshot across hundreds of distinct ts values
-            # under UNIQUE (grid_cell_id, ts).
-            window_end = datetime.now(UTC)
-            timestamp = window_end.isoformat()
+            # Computed once in Python rather than per feature: calling
+            # ee.Date.now().format().getInfo() inside the row loop would cost one
+            # network round trip per grid cell and re-evaluate the clock each
+            # time, scattering one snapshot across hundreds of ts values.
+            # Hour-aligned so all three snapshot tables share a ts and can be
+            # joined. See snapshot_timestamp for why this matters.
+            timestamp = snapshot_timestamp()
 
             end = ee.Date(timestamp)
             start = end.advance(-self._days_back, "day")

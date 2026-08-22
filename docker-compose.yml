@@ -31,7 +31,7 @@
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-vaayu}
       CONSOLE_SHARED_SECRET: ${CONSOLE_SHARED_SECRET:-dev-only-not-a-real-secret}
       GEMINI_API_KEY: ${GEMINI_API_KEY:-}
-      GEMINI_MODEL: ${GEMINI_MODEL:-gemini-2.0-flash}
+      GEMINI_MODEL: ${GEMINI_MODEL:-gemini-3.6-flash}
       WEB_ALLOWED_ORIGIN: ${WEB_ALLOWED_ORIGIN:-http://localhost:3000}
     ports:
       - "8080:8080"
