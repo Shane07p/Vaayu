@@ -63,31 +63,36 @@ export function DataMap({ grid, stations, worklist }: DataMapProps) {
     if (!container.current) return;
     const map = new maplibregl.Map({
       container: container.current,
-      // OpenStreetMap tiles via CARTO (free, no API key, reliable CDN).
-      // Using a proper remote style URL so the basemap shows streets, city
-      // names, and geographic context — essential for the demo.
+      // CartoDB Positron — free, no API key, CDN-optimised, clean light style.
+      // OSM's own tile.openstreetmap.org throttles non-browser clients which
+      // breaks the Docker build. CartoDB has no such restriction.
       style: {
         version: 8,
         sources: {
-          osm: {
+          carto: {
             type: "raster",
-            tiles: ["https://tile.openstreetmap.org/{z}/{x}/{y}.png"],
+            tiles: [
+              "https://a.basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png",
+              "https://b.basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png",
+              "https://c.basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png",
+            ],
             tileSize: 256,
-            attribution: "© OpenStreetMap contributors",
+            attribution: "© OpenStreetMap contributors © CARTO",
           },
         },
         layers: [
           {
-            id: "osm-tiles",
+            id: "carto-tiles",
             type: "raster",
-            source: "osm",
+            source: "carto",
             minzoom: 0,
-            maxzoom: 19,
+            maxzoom: 20,
           },
         ],
       } as maplibregl.StyleSpecification,
-      center: [77.209, 28.614],
-      zoom: 9,
+      // Start wide enough to show both Delhi grid and Punjab fire clusters.
+      center: [76.5, 29.5],
+      zoom: 7,
     });
 
     mapRef.current = map;
@@ -288,19 +293,18 @@ export function DataMap({ grid, stations, worklist }: DataMapProps) {
         popup.remove();
       });
 
-      // Frame the data rather than trusting a hardcoded centre. A fixed centre
-      // silently shows an empty map whenever the grid moves, which is exactly
-      // what happened when the pilot grid was rebuilt over a new bounding box.
+      // Frame ALL data: Delhi grid, NCR stations, and Punjab fire clusters.
       const points = [
         ...grid.map((g) => [g.lon, g.lat] as [number, number]),
         ...stations.map((s) => [s.lon, s.lat] as [number, number]),
+        ...worklist.map((w) => [w.lon, w.lat] as [number, number]),
       ];
       if (points.length) {
         const bounds = points.reduce(
           (acc, [lon, lat]) => acc.extend([lon, lat]),
           new maplibregl.LngLatBounds(points[0], points[0]),
         );
-        map.fitBounds(bounds, { padding: 48, maxZoom: 12, duration: 0 });
+        map.fitBounds(bounds, { padding: 60, maxZoom: 10, duration: 0 });
       }
     });
 
