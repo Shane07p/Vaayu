@@ -57,18 +57,45 @@ export function DataMap({ grid, stations, worklist }: DataMapProps) {
   const [showGrid, setShowGrid] = useState(true);
   const [showStations, setShowStations] = useState(true);
   const [showFires, setShowFires] = useState(true);
+  const [mapError, setMapError] = useState<string | null>(null);
 
   useEffect(() => {
     if (!container.current) return;
     const map = new maplibregl.Map({
       container: container.current,
-      style: "https://demotiles.maplibre.org/style.json",
+      // Inline style, not a remote URL. The offline demo must render without
+      // network access, and a basemap CDN that fails takes the data layers with
+      // it: every addSource/addLayer call lives inside the load handler, which
+      // never fires if the style request does not resolve.
+      style: {
+        version: 8,
+        sources: {},
+        layers: [
+          {
+            id: "background",
+            type: "background",
+            paint: { "background-color": "#eef2f6" },
+          },
+        ],
+        // No glyphs key at all. Setting it to undefined fails style validation
+        // ("glyphs: string expected, undefined found"), which invalidates the
+        // whole style so load never fires and no layer is ever added.
+      } as maplibregl.StyleSpecification,
       center: [77.209, 28.614],
       zoom: 9,
     });
 
     mapRef.current = map;
+    // Debug handle. A blank map gives no clue which of style, sources, layers,
+    // or viewport is at fault; this makes each inspectable from the console.
+    (window as unknown as { __vaayuMap?: maplibregl.Map }).__vaayuMap = map;
     map.addControl(new maplibregl.NavigationControl(), "top-right");
+
+    // Silence is the enemy here: without this a style or source failure leaves
+    // an empty canvas and no indication anything went wrong.
+    map.on("error", (event) => {
+      setMapError(event.error?.message ?? "Map failed to render");
+    });
 
     const popup = new maplibregl.Popup({
       closeButton: false,
@@ -255,6 +282,21 @@ export function DataMap({ grid, stations, worklist }: DataMapProps) {
         map.getCanvas().style.cursor = "";
         popup.remove();
       });
+
+      // Frame the data rather than trusting a hardcoded centre. A fixed centre
+      // silently shows an empty map whenever the grid moves, which is exactly
+      // what happened when the pilot grid was rebuilt over a new bounding box.
+      const points = [
+        ...grid.map((g) => [g.lon, g.lat] as [number, number]),
+        ...stations.map((s) => [s.lon, s.lat] as [number, number]),
+      ];
+      if (points.length) {
+        const bounds = points.reduce(
+          (acc, [lon, lat]) => acc.extend([lon, lat]),
+          new maplibregl.LngLatBounds(points[0], points[0]),
+        );
+        map.fitBounds(bounds, { padding: 48, maxZoom: 12, duration: 0 });
+      }
     });
 
     return () => {
@@ -310,6 +352,12 @@ export function DataMap({ grid, stations, worklist }: DataMapProps) {
           Fire Clusters
         </label>
       </div>
+      {mapError ? (
+        <p className="rounded border border-amber-300 bg-amber-50 p-3 text-sm text-amber-900">
+          Map layer unavailable: {mapError}. Values are not being hidden; the
+          basemap failed to render.
+        </p>
+      ) : null}
       <div
         ref={container}
         className="h-[560px] overflow-hidden rounded-lg border shadow-sm"
