@@ -2,6 +2,7 @@
 
 import { useState, useRef } from "react";
 import { submitCitizenReport } from "@/lib/api";
+import { useCitizenI18n } from "@/lib/i18n";
 
 type SubmitState = "idle" | "locating" | "analyzing" | "success" | "error";
 
@@ -13,6 +14,7 @@ interface AnalysisResult {
 }
 
 export function CitizenReportForm() {
+  const { t } = useCitizenI18n();
   const [state, setState] = useState<SubmitState>("idle");
   const [message, setMessage] = useState<string>();
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
@@ -107,7 +109,7 @@ export function CitizenReportForm() {
             </div>
             <div>
               <p className="text-sm font-mono font-bold text-slate-200">
-                Add an atmospheric photograph
+                {t.addPhoto}
               </p>
               <p className="text-xs font-mono text-slate-400 mt-1">
                 JPG or PNG · Maximum 10MB
@@ -122,7 +124,7 @@ export function CitizenReportForm() {
 
       {/* 2. Privacy & Coarse Location Banner */}
       <div className="p-4 rounded-2xl bg-white/[0.03] border border-white/10 text-xs font-mono text-slate-300 leading-relaxed">
-        <span className="text-teal-400 font-bold uppercase mr-1.5">Privacy Notice:</span>
+        <span className="text-teal-400 font-bold uppercase mr-1.5">{t.privacy}:</span>
         Only coarse geographic coordinates (neighborhood-scale) are transmitted. No accounts, names, or device identifiers are collected.
       </div>
 
@@ -134,10 +136,10 @@ export function CitizenReportForm() {
         className="w-full py-4 rounded-2xl bg-teal-600 hover:bg-teal-500 text-white font-mono font-bold text-sm tracking-wider transition-all disabled:opacity-50 disabled:cursor-not-allowed shadow-[0_0_20px_rgba(20,184,166,0.3)]"
       >
         {state === "locating"
-          ? "Acquiring coarse location…"
+          ? t.locating
           : state === "analyzing"
-            ? "Analyzing observation…"
-            : "Submit Observation for Analysis"}
+            ? t.analyzing
+            : t.submit}
       </button>
 
       {/* 4. Analyzing Observation Progress State */}

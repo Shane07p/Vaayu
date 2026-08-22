@@ -6,6 +6,9 @@ import type { Map } from 'maplibre-gl';
 import { useAQIStore } from '@/store/aqiStore';
 
 import { loadGeoReferenceData } from '@/lib/coordinates';
+import { REGIONS } from '@/lib/regions';
+import { fetchGrid } from '@/lib/api';
+import { useCitizenI18n } from '@/lib/i18n';
 
 /** The subset of a Nominatim search result this component reads. */
 interface NominatimResult {
@@ -26,13 +29,16 @@ interface Props {
 }
 
 const MapControls: React.FC<Props> = ({ map }) => {
-  const { loadLocationData, locateMe, loading } = useAQIStore();
+  const { loadLocationData, locateMe, loading, loadGrid, setLoading, setLocationName, setLocationCoords } = useAQIStore();
+  const { t } = useCitizenI18n();
+  const [regionId, setRegionId] = useState("delhi-ncr");
   const [query, setQuery] = useState("");
   const [suggestions, setSuggestions] = useState<SuggestionItem[]>([]);
   const [searching, setSearching] = useState(false);
   const [showDropdown, setShowDropdown] = useState(false);
   const [locating, setLocating] = useState(false);
   const [isFullscreen, setIsFullscreen] = useState(false);
+  const [zoom, setZoom] = useState(9.2);
   const wrapperRef = useRef<HTMLDivElement>(null);
 
   // Close dropdown when clicking outside
@@ -45,6 +51,16 @@ const MapControls: React.FC<Props> = ({ map }) => {
     document.addEventListener("mousedown", handleClickOutside);
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
+
+  useEffect(() => {
+    if (!map) return;
+    const updateZoom = () => setZoom(map.getZoom());
+    updateZoom();
+    map.on("zoomend", updateZoom);
+    return () => {
+      map.off("zoomend", updateZoom);
+    };
+  }, [map]);
 
   // Debounced search for locations using OpenStreetMap Nominatim + local fallbacks
   useEffect(() => {
@@ -139,6 +155,14 @@ const MapControls: React.FC<Props> = ({ map }) => {
     }
   };
 
+  const selectRegion = async (id: string) => {
+    const region = REGIONS.find((item) => item.id === id);
+    if (!region) return;
+    setRegionId(id); setLoading(true); setLocationName(region.name); setLocationCoords({ lat: region.center[1], lng: region.center[0] });
+    map?.flyTo({ center: region.center, zoom: 6.3, essential: true });
+    try { loadGrid(await fetchGrid(region.bbox)); } catch (error) { console.error("Could not load region grid", error); } finally { setLoading(false); }
+  };
+
   const handleToggleFullscreen = () => {
     if (!document.fullscreenElement) {
       document.documentElement.requestFullscreen().catch(() => {});
@@ -149,11 +173,23 @@ const MapControls: React.FC<Props> = ({ map }) => {
     }
   };
 
+  const markerLevel = zoom < 3 ? "Continents" : zoom < 5 ? "Countries" : zoom < 7 ? "States" : "Cities";
+
   return (
     <div
       ref={wrapperRef}
       className="absolute top-4 right-4 z-30 flex flex-col sm:flex-row items-end sm:items-center gap-2 max-w-[calc(100vw-2rem)]"
     >
+      <label className="flex items-center gap-2 rounded-xl border border-white/15 bg-[#0a0f14]/90 px-3 py-2 text-xs font-mono text-slate-200 shadow-2xl backdrop-blur-xl">
+        <span className="text-slate-400">{t.regions}</span>
+        <select value={regionId} onChange={(event) => void selectRegion(event.target.value)} className="bg-transparent font-semibold text-teal-200 outline-none">
+          {REGIONS.map((region) => <option key={region.id} value={region.id} className="bg-slate-950">{region.name}</option>)}
+        </select>
+      </label>
+      <div className="rounded-lg border border-white/10 bg-[#080d12]/90 px-2.5 py-1.5 text-[10px] font-mono uppercase tracking-wider text-slate-300 shadow-xl backdrop-blur-xl">
+        Showing <span className="font-bold text-teal-300">{markerLevel}</span>
+      </div>
+
       {/* Search Input Container */}
       <div className="relative w-72 sm:w-80">
         <div className="flex items-center bg-[#0a0f14]/90 hover:bg-[#0d141b] focus-within:bg-[#0d141b] border border-white/15 focus-within:border-teal-500/60 rounded-xl px-3 py-2 shadow-2xl backdrop-blur-xl transition-all">
@@ -176,7 +212,7 @@ const MapControls: React.FC<Props> = ({ map }) => {
             onFocus={() => {
               if (suggestions.length > 0) setShowDropdown(true);
             }}
-            placeholder="Search city or location…"
+            placeholder={t.search}
             className="bg-transparent text-xs font-mono text-slate-100 placeholder-slate-400 focus:outline-none w-full"
           />
           {searching && (
@@ -274,4 +310,3 @@ const MapControls: React.FC<Props> = ({ map }) => {
 };
 
 export default MapControls;
-
