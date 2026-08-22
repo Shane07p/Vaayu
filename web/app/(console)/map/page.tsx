@@ -1,35 +1,70 @@
 import { MapShell } from "@/components/map-shell";
+import { StatusStrip } from "@/components/status-strip";
 import { fetchGrid, fetchStations, fetchWorklist } from "@/lib/api";
 import type { GridPrediction, Station, WorklistItem } from "@/lib/schemas";
 
 // Delhi-NCR pilot extent: min lon, min lat, max lon, max lat.
-// Matches NCR_BBOX in ml/src/vaayu_ml/build_grid.py.
 const NCR_BBOX = "76.80,28.20,77.60,28.90";
 
 export default async function MapPage() {
   let grid: GridPrediction[] = [];
   let stations: Station[] = [];
   let worklist: WorklistItem[] = [];
+  let loadError = false;
   try {
     [grid, stations, worklist] = await Promise.all([
-      // Covers the whole Delhi-NCR pilot grid. A tighter box silently returned
-      // only the old demo cells once the real grid was built over a different
-      // extent, so the map rendered stale seed rows and looked empty.
       fetchGrid(NCR_BBOX),
       fetchStations(),
       fetchWorklist(),
     ]);
   } catch {
-    // The page explicitly states unavailable data rather than inventing a map.
+    loadError = true;
   }
 
+  const source = grid[0]?.source ?? "UNKNOWN";
+
   return (
-    <main className="mx-auto max-w-7xl space-y-5 p-6">
-      <h1 className="text-2xl font-semibold">1 km PM2.5 surface</h1>
-      <p className="text-sm text-slate-600">
-        Teal points have higher satellite coverage; amber points indicate lower coverage and should be read with more uncertainty. Black points are monitors; red points are ranked fire clusters.
-      </p>
-      {grid.length ? <MapShell grid={grid} stations={stations} worklist={worklist} /> : <p className="rounded border border-amber-300 bg-amber-50 p-4 text-sm">No current map estimate is available. The service will not fill the map with stale observations.</p>}
-    </main>
+    <div className="space-y-5">
+      {/* Header */}
+      <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-3">
+        <div>
+          <div className="flex items-center gap-3 mb-1">
+            <h1 className="text-xl font-bold tracking-tight text-slate-100">
+              Situation Map
+            </h1>
+            <span className="px-2 py-0.5 rounded text-[10px] font-mono bg-teal-950/50 text-teal-300 border border-teal-800/60">
+              1 km PM2.5 Surface
+            </span>
+          </div>
+          <p className="text-sm text-slate-400 font-sans">
+            Delhi-NCR hyper-local nowcast with monitoring stations and ranked fire clusters.
+            Amber halos indicate low satellite coverage — read with more uncertainty.
+          </p>
+        </div>
+      </div>
+
+      {/* Status Strip */}
+      <StatusStrip source={source} />
+
+      {/* Map or Error */}
+      {grid.length ? (
+        <MapShell grid={grid} stations={stations} worklist={worklist} />
+      ) : (
+        <div className="rounded-xl border border-amber-800/60 bg-amber-950/30 p-6 space-y-2">
+          <div className="flex items-center gap-2 text-amber-300 font-mono text-sm font-semibold">
+            <span>⚠</span>
+            <span>SOURCE UNAVAILABLE</span>
+          </div>
+          <p className="text-sm text-slate-300">
+            {loadError
+              ? "The map estimation service did not return a valid response. VAAYU will not fill the map with stale observations."
+              : "No current map estimate is available. The service will not substitute synthetic data."}
+          </p>
+          <p className="text-xs text-slate-500 font-mono">
+            Retry when the upstream data pipeline completes its next operational cycle.
+          </p>
+        </div>
+      )}
+    </div>
   );
 }
