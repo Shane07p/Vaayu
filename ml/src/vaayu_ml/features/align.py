@@ -1,6 +1,8 @@
 import numpy as np
 import pandas as pd
 
+from vaayu_ml.features.wind import wind_direction_from, wind_speed
+
 
 def haversine_distance(lat1, lon1, lat2, lon2):
     """Calculate the great circle distance in kilometers between two points."""
@@ -87,8 +89,12 @@ def build_aligned_dataset(
 
     # Wind vector to wind speed and direction
     if "wind_u" in df.columns and "wind_v" in df.columns:
-        df["wind_speed"] = np.sqrt(df["wind_u"] ** 2 + df["wind_v"] ** 2)
-        df["wind_direction"] = (np.degrees(np.arctan2(df["wind_u"], df["wind_v"])) + 360) % 360
+        # Both computed by vaayu_ml.features.wind, which is the single
+        # definition of the convention. This module and run_nowcast previously
+        # had their own versions that disagreed by 180 degrees while writing the
+        # same model feature.
+        df["wind_speed"] = wind_speed(df["wind_u"], df["wind_v"])
+        df["wind_direction"] = wind_direction_from(df["wind_u"], df["wind_v"])
 
     df = df.drop(columns=["date"])
 
