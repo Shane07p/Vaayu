@@ -9,6 +9,7 @@ import MapControls from '@/components/citizen/MapControls';
 import { useAQIStore } from '@/store/aqiStore';
 import { useCitizenI18n } from '@/lib/i18n';
 import { SourceBadge } from '@/components/source-badge';
+import { StationAdvisory } from '@/components/citizen/station-advisory';
 import Image from 'next/image';
 
 /** Get the correct AQI severity image path based on AQI value */
@@ -330,6 +331,10 @@ const FullScreenMap: React.FC = () => {
             </span>
             <SourceBadge source={selectedStation.operator} />
           </div>
+
+          {/* Explains the measurement above, in the reader's language, from
+              those same figures and no others. */}
+          <StationAdvisory lat={selectedStation.lat} lon={selectedStation.lon} />
         </div>
       )}
 

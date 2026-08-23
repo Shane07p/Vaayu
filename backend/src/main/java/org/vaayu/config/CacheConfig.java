@@ -14,6 +14,7 @@ public class CacheConfig {
     CaffeineCacheManager cacheManager() {
         CaffeineCacheManager manager = new CaffeineCacheManager();
         manager.registerCustomCache("stations", cache(Duration.ofMinutes(15)));
+        manager.registerCustomCache("forecastStations", cache(Duration.ofMinutes(15)));
         manager.registerCustomCache("grid", cache(Duration.ofMinutes(30)));
         manager.registerCustomCache("forecast", cache(Duration.ofMinutes(5)));
         manager.registerCustomCache("worklist", cache(Duration.ofMinutes(5)));

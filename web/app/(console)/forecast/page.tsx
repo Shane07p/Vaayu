@@ -1,14 +1,15 @@
 import { ForecastComparison } from "@/components/forecast-comparison";
 import { SourceBadge } from "@/components/source-badge";
 import { ProvenanceStrip } from "@/components/provenance-strip";
-import { fetchForecast, fetchStations } from "@/lib/api";
+import { fetchForecast, fetchForecastStations } from "@/lib/api";
 import type { Forecast, Station } from "@/lib/schemas";
 
 export default async function ForecastPage() {
   let station: Station | undefined;
   let forecasts: Forecast[] = [];
   try {
-    station = (await fetchStations())[0];
+    // Only a station that has a forecast can answer for one.
+    station = (await fetchForecastStations())[0];
     forecasts = station ? await fetchForecast(station.id) : [];
   } catch {
     station = undefined;

@@ -128,6 +128,12 @@ public class PublicController {
         return queries.stationReadings();
     }
 
+    @GetMapping("/stations/forecastable")
+    @Operation(summary = "Stations that have a forecast, so a caller can ask one that can answer")
+    public List<StationResponse> forecastStations() {
+        return queries.forecastStations();
+    }
+
     @GetMapping("/stations")
     @Operation(summary = "List monitoring stations")
     public List<StationResponse> stations() {

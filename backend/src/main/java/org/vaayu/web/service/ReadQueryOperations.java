@@ -19,6 +19,8 @@ public interface ReadQueryOperations {
 
     List<StationReadingResponse> stationReadings();
 
+    List<StationResponse> forecastStations();
+
     ProvenanceResponse provenance();
 
     Optional<NearestStationResponse> nearest(double lat, double lon);

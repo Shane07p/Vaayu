@@ -188,6 +188,24 @@ export const stationReadingSchema = z.object({
 
 export type StationReading = z.infer<typeof stationReadingSchema>;
 
+/**
+ * A generated narrative and the facts it came from.
+ *
+ * The facts are always present. When the prose is withheld the client renders
+ * the structured view instead, so a reader loses the sentence and keeps the
+ * substance.
+ */
+export const narrativeSchema = z.object({
+  narrative: z.string().nullable(),
+  language: z.string(),
+  /** OK, SOURCE_UNAVAILABLE, or UNGROUNDED. Never collapsed. */
+  status: z.enum(["OK", "SOURCE_UNAVAILABLE", "UNGROUNDED"]),
+  unsourcedNumbers: z.array(z.string()),
+  facts: z.record(z.string(), z.string()),
+});
+
+export type NarrativeResult = z.infer<typeof narrativeSchema>;
+
 export type Station = z.infer<typeof stationSchema>;
 export type GridPrediction = z.infer<typeof gridPredictionSchema>;
 export type Forecast = z.infer<typeof forecastSchema>;
