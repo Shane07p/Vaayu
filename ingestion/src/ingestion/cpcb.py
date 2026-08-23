@@ -47,14 +47,15 @@ class CpcbSource(Source):
         return records
 
 
+def run_cpcb(source: CpcbSource, dry_run: bool = False) -> int:
+    """Execute CPCB ingestion through the shared provenance-aware runner."""
+    return run_source(source, write_station_readings, dry_run=dry_run)
+
+
 def main() -> None:
     parser = argparse.ArgumentParser(description="Ingest CPCB station readings")
     parser.add_argument("--dry-run", action="store_true", help="fetch and validate without writing")
     args = parser.parse_args()
     source = CpcbSource(settings.data_gov_in_api_key)
-    # run_source records the outcome whether the write succeeds, the upstream
-    # is down, or our own code crashes. Calling the writer directly, as this
-    # did, left a failed run with no ingestion_run row at all -- so "the
-    # upstream is down" and "nobody ran it" became indistinguishable.
-    count = run_source(source, write_station_readings, dry_run=args.dry_run)
+    count = run_cpcb(source, args.dry_run)
     print(f"CPCB {source.mode}: {count} records")

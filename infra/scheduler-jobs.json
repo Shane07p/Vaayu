@@ -1,0 +1,78 @@
+{
+  "version": 1,
+  "owner": "Madhav wires these definitions into Cloud Scheduler and Cloud Run Jobs; Raj owns commands and cadence.",
+  "runner": {
+    "name": "vaayu-ingestion",
+    "image": "REGION-docker.pkg.dev/PROJECT_ID/vaayu/vaayu-ingestion:TAG",
+    "build_context": "ingestion",
+    "working_directory": "/app"
+  },
+  "jobs": [
+    {
+      "name": "vaayu-openaq-latest",
+      "schedule": "5 * * * *",
+      "timezone": "UTC",
+      "command": ["uv", "run", "--no-sync", "vaayu-openaq", "--latest"],
+      "environment": ["DATABASE_URL", "OPENAQ_REQUESTS_PER_MINUTE", "OPENAQ_MAX_429_RETRIES"],
+      "secrets": ["DATABASE_URL", "OPENAQ_API_KEY"],
+      "timeout_seconds": 900,
+      "retry": {"max_attempts": 1, "scope": "job transport failure only"},
+      "depends_on": []
+    },
+    {
+      "name": "vaayu-firms",
+      "schedule": "10 * * * *",
+      "timezone": "UTC",
+      "command": ["uv", "run", "--no-sync", "vaayu-firms", "--days", "1"],
+      "environment": ["DATABASE_URL"],
+      "secrets": ["DATABASE_URL", "FIRMS_MAP_KEY"],
+      "timeout_seconds": 600,
+      "retry": {"max_attempts": 1, "scope": "job transport failure only"},
+      "depends_on": []
+    },
+    {
+      "name": "vaayu-openmeteo",
+      "schedule": "15 * * * *",
+      "timezone": "UTC",
+      "command": ["uv", "run", "--no-sync", "vaayu-openmeteo"],
+      "environment": ["DATABASE_URL"],
+      "secrets": ["DATABASE_URL"],
+      "timeout_seconds": 300,
+      "retry": {"max_attempts": 1, "scope": "job transport failure only"},
+      "depends_on": []
+    },
+    {
+      "name": "vaayu-gee-maiac",
+      "schedule": "0 3 * * *",
+      "timezone": "UTC",
+      "command": ["uv", "run", "--no-sync", "python", "-m", "ingestion.gee.maiac_aod", "--days-back", "1"],
+      "environment": ["DATABASE_URL", "GEE_SERVICE_ACCOUNT_KEY=/var/secrets/gee/service-account.json"],
+      "secrets": ["DATABASE_URL", "GEE service-account JSON mounted at /var/secrets/gee/service-account.json"],
+      "timeout_seconds": 1800,
+      "retry": {"max_attempts": 2, "scope": "job-level Earth Engine outage only"},
+      "depends_on": []
+    },
+    {
+      "name": "vaayu-gee-s5p",
+      "schedule": "30 3 * * *",
+      "timezone": "UTC",
+      "command": ["uv", "run", "--no-sync", "python", "-m", "ingestion.gee.s5p", "--days-back", "1"],
+      "environment": ["DATABASE_URL", "GEE_SERVICE_ACCOUNT_KEY=/var/secrets/gee/service-account.json"],
+      "secrets": ["DATABASE_URL", "GEE service-account JSON mounted at /var/secrets/gee/service-account.json"],
+      "timeout_seconds": 1800,
+      "retry": {"max_attempts": 2, "scope": "job-level Earth Engine outage only"},
+      "depends_on": ["vaayu-gee-maiac"]
+    },
+    {
+      "name": "vaayu-gee-era5",
+      "schedule": "0 4 * * *",
+      "timezone": "UTC",
+      "command": ["uv", "run", "--no-sync", "python", "-m", "ingestion.gee.era5", "--kind", "REANALYSIS", "--hours-back", "24"],
+      "environment": ["DATABASE_URL", "GEE_SERVICE_ACCOUNT_KEY=/var/secrets/gee/service-account.json"],
+      "secrets": ["DATABASE_URL", "GEE service-account JSON mounted at /var/secrets/gee/service-account.json"],
+      "timeout_seconds": 1800,
+      "retry": {"max_attempts": 2, "scope": "job-level Earth Engine outage only"},
+      "depends_on": ["vaayu-gee-s5p"]
+    }
+  ]
+}

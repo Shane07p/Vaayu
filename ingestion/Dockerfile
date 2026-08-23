@@ -1,30 +1,26 @@
-# Ingestion runner.
-#
-# Exists so the connectors run on the compose network against postgres:5432
-# rather than the published host port. A locally installed PostgreSQL also
-# binds 5432 on a developer machine; when both listen, a host connection
-# reaches whichever won the bind and fails authentication against the wrong
-# server. Running in the network removes the ambiguity, and matches how
-# Cloud Scheduler will invoke these jobs.
+# Ingestion runner. Connector jobs run on the compose network against
+# postgres:5432 rather than a published host port.
+FROM ghcr.io/astral-sh/uv:0.12.5 AS uv
+
 FROM python:3.11-slim
 
-# uv resolves from the committed lockfile, so an image build and a developer
-# machine install the same versions.
-COPY --from=ghcr.io/astral-sh/uv:latest /uv /usr/local/bin/uv
+# The pinned uv image and committed lockfile keep image and developer installs
+# on the same dependency set.
+COPY --from=uv /uv /uvx /usr/local/bin/
 
 WORKDIR /app
 
-# Dependency layer first: source edits must not invalidate the resolved
-# environment, which pulls geopandas and rasterio and is slow to rebuild.
+# Dependency layer first: source edits do not invalidate the slow geospatial
+# dependency install.
 COPY pyproject.toml uv.lock ./
-RUN uv sync --frozen --no-install-project
+RUN uv sync --frozen --no-dev --no-install-project
 
 COPY src ./src
 COPY fixtures ./fixtures
-RUN uv sync --frozen
+RUN uv sync --frozen --no-dev
 
 ENV PATH="/app/.venv/bin:$PATH"
 
-# No CMD that ingests on its own. Each connector is invoked explicitly, so
-# starting the stack never writes to the database as a side effect.
+# Jobs are invoked explicitly, so starting the stack cannot write to the
+# database as a side effect.
 CMD ["python", "-c", "print('ingestion image ready; invoke a connector, e.g. docker compose run --rm ingestion vaayu-openmeteo')"]

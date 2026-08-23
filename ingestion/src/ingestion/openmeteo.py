@@ -109,7 +109,9 @@ class OpenMeteoSource(Source):
                 raise ValueError("Open-Meteo forecast has an invalid PM2.5 value")
             aqi = record.get("us_aqi")
             if aqi is not None and (
-                not isinstance(aqi, (int, float)) or isinstance(aqi, bool) or aqi < 0
+                not isinstance(aqi, (int, float))
+                or isinstance(aqi, bool)
+                or aqi < 0
                 or not math.isfinite(aqi)
             ):
                 raise ValueError("Open-Meteo forecast has an invalid AQI value")

@@ -265,8 +265,6 @@ class TestInlineCredentialIsNotTreatedAsAbsent:
         """A missing file is fixture mode, as before. Only inline JSON is an error."""
         from ingestion.gee import client
 
-        monkeypatch.setattr(
-            client.settings, "gee_service_account_key", "./secrets/not-there.json"
-        )
+        monkeypatch.setattr(client.settings, "gee_service_account_key", "./secrets/not-there.json")
 
         assert client.credentials_present() is False

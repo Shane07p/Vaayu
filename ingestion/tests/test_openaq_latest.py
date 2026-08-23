@@ -14,7 +14,6 @@ import pytest
 
 from ingestion.openaq_latest import (
     FRESHNESS,
-    MAX_ATTEMPTS,
     OpenAqLatestSource,
     _city_from_name,
 )
@@ -141,10 +140,12 @@ class TestOnlyProvableMeasurementsAreKept:
     def test_both_sensors_present_keeps_only_the_pm25_one(self):
         api = FakeApi(
             locations=[_location(1, "Station", timedelta(minutes=5))],
-            latest={1: [
-                _measurement(3320.0, timedelta(minutes=5), sensor_id=CO_SENSOR),
-                _measurement(88.0, timedelta(minutes=5), sensor_id=PM25_SENSOR),
-            ]},
+            latest={
+                1: [
+                    _measurement(3320.0, timedelta(minutes=5), sensor_id=CO_SENSOR),
+                    _measurement(88.0, timedelta(minutes=5), sensor_id=PM25_SENSOR),
+                ]
+            },
         )
 
         records = _source(api).fetch()
@@ -153,9 +154,16 @@ class TestOnlyProvableMeasurementsAreKept:
 
     def test_a_station_with_no_pm25_sensor_is_never_read(self):
         api = FakeApi(
-            locations=[_location(1, "CO Only", timedelta(minutes=5), sensors=[
-                {"id": CO_SENSOR, "parameter": {"id": 102, "name": "co", "units": "ppb"}},
-            ])],
+            locations=[
+                _location(
+                    1,
+                    "CO Only",
+                    timedelta(minutes=5),
+                    sensors=[
+                        {"id": CO_SENSOR, "parameter": {"id": 102, "name": "co", "units": "ppb"}},
+                    ],
+                )
+            ],
             latest={1: [_measurement(900.0, timedelta(minutes=5), sensor_id=CO_SENSOR)]},
         )
         source = _source(api)
@@ -166,8 +174,15 @@ class TestOnlyProvableMeasurementsAreKept:
     def test_a_non_numeric_value_is_dropped_rather_than_coerced(self):
         api = FakeApi(
             locations=[_location(1, "Station", timedelta(minutes=5))],
-            latest={1: [{"value": None, "sensorsId": PM25_SENSOR,
-                         "datetime": {"utc": _iso(datetime.now(UTC))}}]},
+            latest={
+                1: [
+                    {
+                        "value": None,
+                        "sensorsId": PM25_SENSOR,
+                        "datetime": {"utc": _iso(datetime.now(UTC))},
+                    }
+                ]
+            },
         )
 
         assert _source(api).fetch() == []
@@ -278,14 +293,8 @@ class TestBounds:
             OpenAqLatestSource("k", max_stations=0)
 
 
-class TestTransportFailuresAreRetried:
-    """A national run lost stations to DNS, not to OpenAQ.
-
-    Requests go through one pooled client so several hundred station reads cost
-    a handful of DNS lookups. The retry covers what is left genuinely transient.
-    """
-
-    def _source_with_stubbed_client(self, monkeypatch, responses: list) -> OpenAqLatestSource:
+class TestRateLimiting:
+    def _source_with_stubbed_client(self, responses: list, **kwargs) -> OpenAqLatestSource:
         calls = {"n": 0}
 
         class StubClient:
@@ -300,52 +309,48 @@ class TestTransportFailuresAreRetried:
             def close(self):
                 pass
 
-        monkeypatch.setattr("ingestion.openaq_latest.time.sleep", lambda _: None)
-        source = OpenAqLatestSource("test-key")
+        source = OpenAqLatestSource("test-key", **kwargs)
         source._client = StubClient()  # type: ignore[assignment]
         source._calls = calls  # type: ignore[attr-defined]
         return source
 
-    def test_a_dns_failure_is_retried_and_can_succeed(self, monkeypatch):
-        ok = httpx.Response(200, json={"results": []}, request=httpx.Request("GET", "http://x"))
+    def test_429_waits_then_retries_once(self):
+        clock = type(
+            "Clock",
+            (),
+            {
+                "now": 0.0,
+                "sleeps": [],
+                "monotonic": lambda self: self.now,
+                "sleep": lambda self, seconds: (
+                    self.sleeps.append(seconds),
+                    setattr(self, "now", self.now + seconds),
+                ),
+            },
+        )()
+        request = httpx.Request("GET", "http://x")
         source = self._source_with_stubbed_client(
-            monkeypatch, [httpx.ConnectError("Name or service not known"), ok]
+            [
+                httpx.Response(429, headers={"Retry-After": "2"}, request=request),
+                httpx.Response(200, json={"results": []}, request=request),
+            ],
+            clock=clock.monotonic,
+            sleeper=clock.sleep,
         )
 
         assert source._get("/locations") == {"results": []}
         assert source._calls["n"] == 2
+        assert clock.sleeps == [2.0]
 
-    def test_a_server_error_is_retried(self, monkeypatch):
+    def test_normal_client_error_is_not_retried(self):
         request = httpx.Request("GET", "http://x")
-        ok = httpx.Response(200, json={"results": [1]}, request=request)
-        source = self._source_with_stubbed_client(
-            monkeypatch, [httpx.Response(500, request=request), ok]
-        )
-
-        assert source._get("/locations") == {"results": [1]}
-
-    def test_a_client_error_is_not_retried(self, monkeypatch):
-        """404 means the request is wrong; repeating it will not fix that."""
-        request = httpx.Request("GET", "http://x")
-        source = self._source_with_stubbed_client(
-            monkeypatch, [httpx.Response(404, request=request)]
-        )
+        source = self._source_with_stubbed_client([httpx.Response(404, request=request)])
 
         with pytest.raises(httpx.HTTPStatusError):
             source._get("/locations/1/latest")
         assert source._calls["n"] == 1
 
-    def test_it_gives_up_after_the_attempt_limit(self, monkeypatch):
-        source = self._source_with_stubbed_client(
-            monkeypatch, [httpx.ConnectError("Name or service not known")]
-        )
-
-        with pytest.raises(httpx.ConnectError):
-            source._get("/locations")
-        assert source._calls["n"] == MAX_ATTEMPTS
-
-    def test_one_client_serves_the_whole_run(self, monkeypatch):
-        """Opening a connection per station is what exhausted DNS."""
+    def test_one_client_serves_the_whole_run(self):
         source = OpenAqLatestSource("test-key")
         first = source._http()
 
@@ -370,8 +375,9 @@ class TestCityComesFromTheStationName:
 
     def test_a_supplied_locality_wins_over_the_name(self, monkeypatch):
         api = FakeApi(
-            locations=[_location(1, "R K Puram, Delhi - DPCC", timedelta(minutes=5),
-                                 locality="New Delhi")],
+            locations=[
+                _location(1, "R K Puram, Delhi - DPCC", timedelta(minutes=5), locality="New Delhi")
+            ],
             latest={1: [_measurement(60.0, timedelta(minutes=5))]},
         )
 
@@ -379,8 +385,9 @@ class TestCityComesFromTheStationName:
 
     def test_the_name_is_used_when_locality_is_absent(self):
         api = FakeApi(
-            locations=[_location(1, "Sanjay Palace, Agra - UPPCB", timedelta(minutes=5),
-                                 locality=None)],
+            locations=[
+                _location(1, "Sanjay Palace, Agra - UPPCB", timedelta(minutes=5), locality=None)
+            ],
             latest={1: [_measurement(60.0, timedelta(minutes=5))]},
         )
 

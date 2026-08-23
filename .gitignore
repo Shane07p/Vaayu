@@ -34,6 +34,7 @@ secrets/
 .DS_Store
 .idea/
 .vscode/
+.tools/
 
 # Local planning artefacts, not part of the deliverable
 docs/superpowers/
