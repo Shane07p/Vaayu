@@ -1,5 +1,6 @@
 package org.vaayu.web.service;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
@@ -13,7 +14,7 @@ import org.springframework.web.client.RestClient;
 
 /** Small, auditable Gemini REST client for the citizen-report evidence path. */
 @Component
-public class GeminiClient implements GeminiClassifier {
+public class GeminiClient implements GeminiClassifier, GeminiTextGenerator {
     private static final String PROMPT = """
             You classify a citizen-supplied sky or haze photograph as soft air-quality evidence.
             Return JSON only with band, confidence, and reasoning. band must be exactly one of
@@ -68,6 +69,44 @@ public class GeminiClient implements GeminiClassifier {
                 .retrieve()
                 .body(String.class);
         return parse(response);
+    }
+
+    /**
+     * Plain text generation, for narratives.
+     *
+     * <p>No responseMimeType is set: unlike photo classification, which asks for
+     * JSON, this asks for prose. The grounding check runs on what comes back.
+     */
+    @Override
+    public String generateText(String systemPrompt, String userPrompt) {
+        if (properties.apiKey() == null || properties.apiKey().isBlank()) {
+            throw new IllegalStateException("Gemini is not configured");
+        }
+        Map<String, Object> body = Map.of(
+                "systemInstruction", Map.of("parts", List.of(Map.of("text", systemPrompt))),
+                "contents",
+                List.of(Map.of("role", "user", "parts", List.of(Map.of("text", userPrompt)))));
+        String response = client.post()
+                .uri("https://generativelanguage.googleapis.com/v1beta/models/{model}:generateContent?key={key}",
+                        properties.model(), properties.apiKey())
+                .body(body)
+                .retrieve()
+                .body(String.class);
+        return firstTextPart(response);
+    }
+
+    private String firstTextPart(String response) {
+        try {
+            JsonNode root = objectMapper.readTree(response);
+            JsonNode text =
+                    root.path("candidates").path(0).path("content").path("parts").path(0).path("text");
+            if (text.isMissingNode() || text.asText().isBlank()) {
+                throw new IllegalStateException("Gemini returned no text");
+            }
+            return text.asText();
+        } catch (JsonProcessingException exc) {
+            throw new IllegalStateException("Gemini returned unreadable JSON", exc);
+        }
     }
 
     @SuppressWarnings("unused")
