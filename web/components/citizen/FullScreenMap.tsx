@@ -7,6 +7,7 @@ import 'maplibre-gl/dist/maplibre-gl.css';
 import AQIMarkers, { getAqiTextColor, getAqiCategory } from '@/components/citizen/AQIMarkers';
 import MapControls from '@/components/citizen/MapControls';
 import { useAQIStore } from '@/store/aqiStore';
+import { useCitizenI18n } from '@/lib/i18n';
 import { SourceBadge } from '@/components/source-badge';
 import Image from 'next/image';
 
@@ -61,6 +62,7 @@ const FullScreenMap: React.FC = () => {
   const mapContainer = useRef<HTMLDivElement>(null);
   const [map, setMap] = useState<maplibregl.Map | null>(null);
   const { selectedCellData, locationName, markerInfo, dataSource, lastUpdated, loading, clearSelection, nearestStation, locationError, hasQueried, selectedStation } = useAQIStore();
+  const { t } = useCitizenI18n();
   const styleFailed = useRef(false);
   const [basemapDegraded, setBasemapDegraded] = useState(false);
 
@@ -304,7 +306,7 @@ const FullScreenMap: React.FC = () => {
               <span className="font-bold text-slate-100 text-sm">{selectedStation.pm25} µg/m³</span>
             </div>
             <div className="bg-white/[0.04] p-2.5 rounded-xl border border-white/5">
-              <span className="text-slate-400 block text-[9px] uppercase tracking-wider">Measured</span>
+              <span className="text-slate-400 block text-[9px] uppercase tracking-wider">{t.measuredLabel}</span>
               <span className="text-slate-300">
                 {new Date(selectedStation.measuredAt).toLocaleString("en-IN", {
                   day: "2-digit", month: "short", hour: "2-digit", minute: "2-digit",
@@ -315,7 +317,7 @@ const FullScreenMap: React.FC = () => {
 
           {selectedStation.stale && (
             <p className="mt-2 rounded border border-amber-800/60 bg-amber-950/30 px-2 py-1 text-[10px] font-mono text-amber-300">
-              This station has not reported recently. Shown with its real age.
+              {t.notReported}
             </p>
           )}
 
@@ -324,7 +326,7 @@ const FullScreenMap: React.FC = () => {
               reading with a model's uncertainty band would misattribute both. */}
           <div className="mt-3 flex items-center justify-between">
             <span className="text-[9px] font-mono text-slate-500 uppercase tracking-wider">
-              Measured at station
+              {t.measuredAtStation}
             </span>
             <SourceBadge source={selectedStation.operator} />
           </div>
@@ -349,9 +351,9 @@ const FullScreenMap: React.FC = () => {
           {/* The distance leads. It is the honest subject of this card: the
               nearest measurement, not a measurement of this spot. */}
           <p className="text-[11px] text-slate-400 mb-3">
-            Nearest measurement is{" "}
+            {t.nearestIs}{" "}
             <span className="text-slate-200 font-semibold">{nearestStation.distanceKm} km</span>{" "}
-            away
+            {t.away}
           </p>
 
           <div className="flex items-baseline gap-2 mb-3">
@@ -377,7 +379,7 @@ const FullScreenMap: React.FC = () => {
               </span>
             </div>
             <div className="bg-white/[0.04] p-2.5 rounded-xl border border-white/5">
-              <span className="text-slate-400 block text-[9px] uppercase tracking-wider">Measured</span>
+              <span className="text-slate-400 block text-[9px] uppercase tracking-wider">{t.measuredLabel}</span>
               <span className="text-slate-300">
                 {new Date(nearestStation.measuredAt).toLocaleString("en-IN", {
                   day: "2-digit", month: "short", hour: "2-digit", minute: "2-digit",
@@ -388,7 +390,7 @@ const FullScreenMap: React.FC = () => {
 
           {nearestStation.stale && (
             <p className="mb-2 rounded border border-amber-800/60 bg-amber-950/30 px-2 py-1 text-[10px] font-mono text-amber-300">
-              This station has not reported recently. Shown with its real age
+              {t.notReported}
               rather than as a current reading.
             </p>
           )}
@@ -415,11 +417,10 @@ const FullScreenMap: React.FC = () => {
             </button>
           </div>
           <p className="mt-2 text-[11px] leading-relaxed text-slate-400">
-            No measurement here. VAAYU&apos;s 1 km surface currently covers Delhi-NCR,
-            and this location has no monitoring station feeding it.
+            {t.noMeasurement}
           </p>
           <p className="mt-2 text-[10px] font-mono uppercase tracking-wider text-slate-600">
-            No data
+            {t.noData}
           </p>
         </div>
       )}

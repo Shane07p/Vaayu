@@ -83,6 +83,7 @@ interface AQIState {
   setLocationCoords: (coords: { lat: number; lng: number } | null) => void;
   loadLocationData: (lat: number, lon: number, name: string, map?: Map | null, marker?: MarkerInfo) => Promise<void>;
   selectStation: (station: StationReading, map?: Map | null) => void;
+  selectOpeningStation: (lat: number, lon: number) => Promise<void>;
   locateMe: (map?: Map | null) => Promise<void>;
   clearSelection: () => void;
 }
@@ -104,12 +105,43 @@ export const useAQIStore = create<AQIState>()(
     selectedStation: null,
     locationError: null,
     hasQueried: false,
+    // The grid is loaded, not selected from.
+    //
+    // This used to pick data[length / 2] -- the middle cell of whatever
+    // happened to be fetched -- and present it as the reader's location. On
+    // opening the page that produced a card reading "NEW DELHI, 326, 153 ug/m3,
+    // CACHED": an arbitrary cell of a seeded surface, labelled with a city, for
+    // somewhere nobody had asked about. Real Delhi stations were reading 9 to 84
+    // at the same moment.
+    //
+    // Nothing is selected until the reader picks a place or the opening
+    // measurement resolves. See selectOpeningStation.
     loadGrid: (data) => {
-      set({
-        gridData: data,
-        selectedCellData: data.length > 0 ? (get().selectedCellData ?? data[Math.floor(data.length / 2)]) : null,
-        selectedCellId: data.length > 0 ? (get().selectedCellId ?? data[Math.floor(data.length / 2)].gridCellId) : null,
-      });
+      set({ gridData: data });
+    },
+
+    /**
+     * The measurement to show when the page opens.
+     *
+     * Uses the nearest reporting station to the map's initial centre, so the
+     * first thing on screen is something an instrument recorded rather than a
+     * modelled cell. Silent on failure: an empty map is honest, and the reader
+     * can search or use their location.
+     */
+    selectOpeningStation: async (lat, lon) => {
+      if (get().hasQueried) return;
+      try {
+        const nearest = await fetchNearest(lat, lon);
+        if (!nearest || get().hasQueried) return;
+        set({
+          nearestStation: nearest,
+          locationName: nearest.city ?? nearest.name,
+          dataSource: 'STATION',
+          hasQueried: true,
+        });
+      } catch {
+        // Nothing shown, nothing claimed.
+      }
     },
     selectCell: (id) => {
       const cell = get().gridData.find((c) => c.gridCellId === id) || null;

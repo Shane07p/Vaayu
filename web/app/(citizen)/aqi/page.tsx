@@ -8,7 +8,7 @@ import { Suspense, useEffect } from 'react';
 import { useSearchParams } from 'next/navigation';
 
 function AqiView() {
-  const { loadGrid, setLoading, loadLocationData } = useAQIStore();
+  const { loadGrid, setLoading, loadLocationData, selectOpeningStation } = useAQIStore();
   const params = useSearchParams();
   const lat = params.get('lat');
   const lon = params.get('lon');
@@ -32,6 +32,9 @@ function AqiView() {
       setLoading(true);
       try {
         loadGrid(await fetchGrid('76.80,28.20,77.60,28.90'));
+        // Open on a real measurement near the map's initial centre rather than
+        // on a cell of the seeded surface. DELHI_CENTRE matches FullScreenMap.
+        await selectOpeningStation(28.6139, 77.209);
       } catch (error) {
         // The map renders without cells and says so; a thrown error here would
         // blank the page over a failure the map already reports.
@@ -41,7 +44,7 @@ function AqiView() {
       }
     };
     loadData();
-  }, [lat, lon, name, loadGrid, setLoading, loadLocationData]);
+  }, [lat, lon, name, loadGrid, setLoading, loadLocationData, selectOpeningStation]);
 
   return <FullScreenMap />;
 }
