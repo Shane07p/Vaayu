@@ -8,9 +8,16 @@ Two things must not be skipped:
 1. Decode the ``AOD_QA`` bitmask. Unmasked MAIAC includes low-confidence
    retrievals that look like data and are not.
 2. Report coverage fraction per cell. AOD has systematic gaps under cloud,
-   snow, and high pollution, and the gaps are not random. Published Indian work
-   found gap-blind analysis overestimated attributable mortality by roughly
-   94,000 deaths over 2017-2022.
+   snow, and high pollution, and the gaps are not random: retrieval fails most
+   often precisely when pollution is worst, so treating an average over the
+   pixels that happened to return a value as an average over the cell biases
+   the result downward exactly where it matters. Health-impact work that
+   ignores this is known to be biased for the same reason.
+
+   An earlier version of this note carried a specific mortality figure
+   attributed to published Indian work. It was removed because the citation
+   could not be located, and an unsourced number is the thing this codebase
+   refuses everywhere else.
 
 AOD is a column-integrated optical measure, not a surface concentration.
 Converting it with a linear constant is the single most common technical error

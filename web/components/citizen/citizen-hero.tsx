@@ -10,16 +10,6 @@ interface CitizenHeroProps {
   initialEstimate?: GridPrediction;
 }
 
-function getAqiFromPm25(pm25: number): number {
-  // Approximate standard Indian AQI mapping from 24h PM2.5
-  if (pm25 <= 30) return Math.round((pm25 / 30) * 50);
-  if (pm25 <= 60) return Math.round(50 + ((pm25 - 30) / 30) * 50);
-  if (pm25 <= 90) return Math.round(100 + ((pm25 - 60) / 30) * 100);
-  if (pm25 <= 120) return Math.round(200 + ((pm25 - 90) / 30) * 100);
-  if (pm25 <= 250) return Math.round(300 + ((pm25 - 120) / 130) * 100);
-  return Math.min(500, Math.round(400 + ((pm25 - 250) / 150) * 100));
-}
-
 function getSeverityMeta(aqi: number) {
   if (aqi <= 50) {
     return {
@@ -66,15 +56,36 @@ export function CitizenHero({ initialEstimate }: CitizenHeroProps) {
   const [locationName, setLocationName] = useState("Delhi-NCR · Central Pilot");
   const [lastUpdated, setLastUpdated] = useState("22 AUG 2026 · 14:51 IST");
 
-  const pm25 = initialEstimate ? Math.round(initialEstimate.pm25Q50) : 182;
-  const pm25Q10 = initialEstimate ? Math.round(initialEstimate.pm25Q10) : 142;
-  const pm25Q90 = initialEstimate ? Math.round(initialEstimate.pm25Q90) : 231;
-  const coverage = initialEstimate ? Math.round(initialEstimate.coverageFraction * 100) : 67;
-  const source = initialEstimate?.source ?? "CACHED";
-  const modelVersion = initialEstimate?.modelVersion ?? "VAAYU-XGB-v1";
-  const cellCode = initialEstimate?.code ?? "NCR-0042";
+  // Every one of these had a hardcoded fallback -- 182 ug/m3, a 142-231 range,
+  // 67% coverage, cell "NCR-0042", model "VAAYU-XGB-v1" -- shown whenever no
+  // estimate was passed. They read as a measurement of somewhere. Absence is
+  // now absence.
+  // Nothing to report without an estimate. This used to substitute 182 ug/m3, a
+  // 142-231 range, 67% coverage, cell "NCR-0042" and model "VAAYU-XGB-v1",
+  // which read as a measurement of somewhere.
+  if (!initialEstimate) {
+    return (
+      <div className="rounded-3xl border border-white/10 bg-white/[0.03] p-6 text-slate-300">
+        <div className="text-[10px] font-mono uppercase tracking-widest text-slate-500 mb-1">
+          Air quality
+        </div>
+        <p className="text-sm text-slate-400">
+          No estimate for this location.
+        </p>
+      </div>
+    );
+  }
 
-  const aqi = getAqiFromPm25(pm25);
+  const pm25 = Math.round(initialEstimate.pm25Q50);
+  const pm25Q10 = Math.round(initialEstimate.pm25Q10);
+  const pm25Q90 = Math.round(initialEstimate.pm25Q90);
+  const coverage = Math.round(initialEstimate.coverageFraction * 100);
+  const source = initialEstimate.source;
+  const modelVersion = initialEstimate.modelVersion;
+  const cellCode = initialEstimate.code;
+
+  // The CPCB value the API computed, not a second implementation here.
+  const aqi = initialEstimate.aqi;
   const severity = getSeverityMeta(aqi);
 
   const handleLocate = () => {

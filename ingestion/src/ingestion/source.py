@@ -40,6 +40,14 @@ class Source(ABC):
     def __init__(self, api_key: str | None) -> None:
         # Treat blank strings as absent: an empty .env entry means fixture mode.
         self._api_key = api_key or None
+
+        # Units this source read, and how many of them failed.
+        #
+        # A source making one upstream call leaves these at zero and is recorded
+        # as SUCCESS or SOURCE_UNAVAILABLE as before. A source reading many units
+        # in one run -- OPENAQ_LATEST reads several hundred stations -- sets them
+        # so the runner can record PARTIAL rather than choosing between hiding
+        # the gap and discarding the readings that arrived.
         self.total_units = 0
         self.failed_units = 0
         self.failure_details: list[str] = []

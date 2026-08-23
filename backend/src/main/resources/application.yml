@@ -24,6 +24,23 @@ spring:
     enabled: true
     locations: classpath:db/migration
     baseline-on-migrate: false
+    # Required by this repo's numbering, not a relaxation of discipline.
+    #
+    # Late additions live in a V900+ block (V900 seed data, V901 tag seed cells,
+    # V902 alert interval constraint). Once V900 is applied, every migration in
+    # the main sequence is numerically lower than what the database already has,
+    # so V13 arriving from another branch fails validation:
+    #
+    #   Detected resolved migration not applied to database: 13.
+    #
+    # That is not a mistake in V13. It is what the two-block scheme guarantees
+    # for any branch that adds to the main sequence, and it will recur on every
+    # such branch until the blocks are consolidated.
+    #
+    # baseline-on-migrate stays false: this permits applying a migration late,
+    # which is a real thing that happened, and still refuses to invent a
+    # baseline for a schema whose history is unknown.
+    out-of-order: true
 
   cache:
     type: caffeine
