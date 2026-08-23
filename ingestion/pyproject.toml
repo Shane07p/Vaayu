@@ -40,6 +40,9 @@ vaayu-openaq-latest = "ingestion.openaq_latest:main"
 vaayu-gee-aod = "ingestion.gee.maiac_aod:main"
 vaayu-gee-s5p = "ingestion.gee.s5p:main"
 vaayu-gee-era5 = "ingestion.gee.era5:main"
+# Runs infra/scheduler-jobs.json locally, so a developer stack keeps itself
+# current instead of decaying between manual runs.
+vaayu-scheduler = "ingestion.scheduler:main"
 
 [build-system]
 requires = ["hatchling"]
