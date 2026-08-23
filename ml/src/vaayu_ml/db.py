@@ -293,6 +293,15 @@ _INSERT_FORECAST = text("""
     VALUES (:station_id, :grid_cell_id, :issued_at, :horizon_hours, :valid_at,
             :pm25, :aqi, :ci_low, :ci_high, :baseline_persistence, :baseline_cams,
             :model_version, :source)
+    ON CONFLICT (station_id, grid_cell_id, issued_at, horizon_hours, model_version) DO UPDATE SET
+        valid_at = EXCLUDED.valid_at,
+        pm25 = EXCLUDED.pm25,
+        aqi = EXCLUDED.aqi,
+        ci_low = EXCLUDED.ci_low,
+        ci_high = EXCLUDED.ci_high,
+        baseline_persistence = EXCLUDED.baseline_persistence,
+        baseline_cams = EXCLUDED.baseline_cams,
+        source = EXCLUDED.source
 """)
 
 

@@ -10,7 +10,7 @@ baseline.
 from __future__ import annotations
 
 import argparse
-from datetime import UTC, datetime, timedelta
+from datetime import datetime, timedelta
 
 import numpy as np
 import pandas as pd
@@ -222,7 +222,10 @@ def run(hours: int = 720, dry_run: bool = False) -> None:
     for horizon in ForecastModel.HORIZONS:
         model.train(training.copy(), horizon=horizon)
 
-    issued_at = datetime.now(UTC)
+    # The newest observed PM2.5 timestamp is the logical issue time. Keeping
+    # it stable while the input data is unchanged lets the database upsert a
+    # repeated scheduled run instead of accumulating duplicate forecasts.
+    issued_at = pd.to_datetime(frame["ts"], utc=True).max().to_pydatetime()
     output = forecast_output(model, frame, issued_at)
     validate_output(output)
 

@@ -143,6 +143,23 @@ def test_run_rejects_missing_persistence_baseline(monkeypatch: pytest.MonkeyPatc
     _FakeForecastModel.baseline_persistence = None
 
 
+def test_repeated_runs_keep_the_same_logical_issue_time(monkeypatch: pytest.MonkeyPatch) -> None:
+    _patch_data(monkeypatch)
+    monkeypatch.setattr(run_forecast, "ForecastModel", _FakeForecastModel)
+    writes: list[pd.DataFrame] = []
+    monkeypatch.setattr(
+        run_forecast,
+        "write_forecasts",
+        lambda frame, model_version, source: writes.append(frame.copy()) or len(frame),
+    )
+    monkeypatch.setattr(run_forecast, "record_model_run", lambda *args, **kwargs: None)
+
+    run_forecast.run(hours=100)
+    run_forecast.run(hours=100)
+
+    assert writes[0]["issued_at"].iloc[0] == writes[1]["issued_at"].iloc[0]
+
+
 def test_run_handles_empty_feature_frame(monkeypatch: pytest.MonkeyPatch) -> None:
     monkeypatch.setattr(run_forecast, "load_feature_frame", lambda hours: pd.DataFrame())
 
