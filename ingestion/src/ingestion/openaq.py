@@ -54,9 +54,10 @@ class OpenAqSource(Source):
         bbox: str = NCR_BBOX,
         days: int = DEFAULT_BACKFILL_DAYS,
         end: datetime | None = None,
+        latest: bool = False,
     ) -> None:
         super().__init__(api_key)
-        if not MIN_BACKFILL_DAYS <= days <= DEFAULT_BACKFILL_DAYS:
+        if not latest and not MIN_BACKFILL_DAYS <= days <= DEFAULT_BACKFILL_DAYS:
             raise ValueError(
                 "OpenAQ backfill days must be between "
                 f"{MIN_BACKFILL_DAYS} and {DEFAULT_BACKFILL_DAYS}"
@@ -65,7 +66,7 @@ class OpenAqSource(Source):
             raise ValueError("OpenAQ backfill end must include a timezone")
         self._bbox = bbox
         self._end = (end or datetime.now(UTC)).astimezone(UTC).replace(microsecond=0)
-        self._start = self._end - timedelta(days=days)
+        self._start = self._end - (timedelta(hours=1) if latest else timedelta(days=days))
 
     @property
     def start(self) -> datetime:
@@ -239,9 +240,14 @@ def main() -> None:
         "--days", type=int, default=DEFAULT_BACKFILL_DAYS, help="UTC backfill window (60-90)"
     )
     parser.add_argument("--end", type=_parse_end, help="UTC ISO-8601 end timestamp")
+    parser.add_argument(
+        "--latest", action="store_true", help="ingest the latest one-hour window for scheduling"
+    )
     parser.add_argument("--dry-run", action="store_true", help="fetch and validate without writing")
     args = parser.parse_args()
-    source = OpenAqSource(settings.openaq_api_key, args.bbox, args.days, args.end)
+    source = OpenAqSource(
+        settings.openaq_api_key, args.bbox, args.days, args.end, latest=args.latest
+    )
     count = run_backfill(source, args.dry_run)
     status = "PARTIAL" if source.is_partial else "SUCCESS"
     print(

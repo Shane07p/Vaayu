@@ -229,3 +229,11 @@ def test_backfill_window_is_utc_aware_and_constrained():
         OpenAqSource("test-key", days=59)
     with pytest.raises(ValueError):
         _utc_timestamp("2026-08-19T00:00:00")
+
+
+def test_latest_window_is_one_hour_without_relaxing_backfill_limits():
+    source = OpenAqSource(
+        "test-key", end=datetime(2026, 8, 19, 12, tzinfo=UTC), latest=True
+    )
+
+    assert source.start == datetime(2026, 8, 19, 11, tzinfo=UTC)
