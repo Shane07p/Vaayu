@@ -32,3 +32,12 @@ the jobs to deployed services.
 vaayu-cpcb is deliberately absent from the scheduled job set until the
 credentialed data.gov.in health check is successful. Its available manual
 command remains uv run vaayu-cpcb.
+
+## OpenAQ request limit
+
+OpenAQ's documented free-tier quota is 60 requests per minute and 2,000 per
+hour per API key. `OPENAQ_REQUESTS_PER_MINUTE` defaults to 60; use a higher
+value only for an approved custom quota. The connector spaces every request,
+including pagination and the hourly `--latest` path, and makes at most one
+additional request after an HTTP 429 with a valid `Retry-After` or OpenAQ
+`X-RateLimit-Reset` header.
