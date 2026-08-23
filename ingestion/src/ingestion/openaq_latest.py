@@ -48,6 +48,7 @@ from typing import Any
 
 import httpx
 
+from ingestion.openaq import RequestRateLimiter, _retry_after_seconds
 from ingestion.settings import settings
 from ingestion.source import Source
 
@@ -78,23 +79,8 @@ STATION_CITY = re.compile(r"^.+,\s*([^,]+?)\s+-\s+[^,]+$")
 PAGE_SIZE = 100
 REQUEST_TIMEOUT = 45.0
 
-# A national run makes several hundred requests in a row. A first attempt lost
-# 120 of 300 stations to `Name or service not known` -- DNS refusing rather than
-# OpenAQ refusing, which is what a burst of sequential connections from one
-# container provokes.
-#
-# Retrying alone made it worse, not better: 149 failures instead of 120, because
-# retries triple the connection volume on exactly the failures that too many
-# connections caused. The fix is to stop opening a connection per request. A
-# pooled client keeps the connection alive across stations, so several hundred
-# reads cost a handful of DNS lookups instead of several hundred.
-#
-# The retry stays for the genuinely transient case, now that it is no longer
-# competing with the thing it was meant to fix.
-MAX_ATTEMPTS = 3
-BACKOFF_SECONDS = 1.5
-
-# Bounded so the pool cannot itself become the burst it exists to prevent.
+# A pooled client avoids needless connections; RequestRateLimiter spaces every
+# request at the documented key quota so neither discovery nor station reads burst.
 CONNECTION_LIMITS = httpx.Limits(max_connections=8, max_keepalive_connections=8)
 
 # A station whose most recent measurement is older than this is not reporting.
@@ -148,6 +134,10 @@ class OpenAqLatestSource(Source):
         api_key: str | None,
         bbox: str = INDIA_BBOX,
         max_stations: int = DEFAULT_MAX_STATIONS,
+        requests_per_minute: int | None = None,
+        max_429_retries: int | None = None,
+        clock=time.monotonic,
+        sleeper=time.sleep,
     ) -> None:
         super().__init__(api_key)
         if max_stations < 1:
@@ -155,6 +145,19 @@ class OpenAqLatestSource(Source):
         self._bbox = bbox
         self._max_stations = max_stations
         self._client: httpx.Client | None = None
+        request_rate = (
+            settings.openaq_requests_per_minute
+            if requests_per_minute is None
+            else requests_per_minute
+        )
+        self._rate_limiter = RequestRateLimiter(request_rate, clock=clock, sleeper=sleeper)
+        self._sleeper = sleeper
+        self._max_429_retries = (
+            settings.openaq_max_429_retries if max_429_retries is None else max_429_retries
+        )
+        if self._max_429_retries < 0:
+            raise ValueError("OpenAQ 429 retries cannot be negative")
+        self.rate_limit_hits = 0
 
         # total_units, failed_units and failure_details come from Source and are
         # what the runner reads to decide PARTIAL. See ingestion.runner.
@@ -162,35 +165,28 @@ class OpenAqLatestSource(Source):
     # ---- HTTP ----------------------------------------------------------
 
     def _get(self, path: str, params: dict[str, Any] | None = None) -> dict:
-        """One request, retried on transport failure.
-
-        Retries transport errors and 5xx only. A 4xx is the server saying the
-        request itself is wrong, and repeating it would just be rude.
-        """
-        last: Exception | None = None
-
-        for attempt in range(MAX_ATTEMPTS):
-            if attempt:
-                time.sleep(BACKOFF_SECONDS * (2 ** (attempt - 1)))
-            try:
-                response = self._http().get(
-                    path,
-                    params=params or {},
-                )
-                if response.status_code >= 500:
-                    response.raise_for_status()
+        """Make one rate-controlled request, retrying only explicit 429 delays."""
+        for attempt in range(self._max_429_retries + 1):
+            self._rate_limiter.wait()
+            response = self._http().get(path, params=params or {})
+            if response.status_code != 429:
                 response.raise_for_status()
-                return response.json()
-            except httpx.HTTPStatusError as exc:
-                if exc.response.status_code < 500:
-                    raise
-                last = exc
-            except httpx.HTTPError as exc:
-                # Includes the DNS failures that cost 120 stations.
-                last = exc
+                payload = response.json()
+                if not isinstance(payload, dict):
+                    raise ValueError("OpenAQ response must be an object")
+                return payload
 
-        assert last is not None
-        raise last
+            self.rate_limit_hits += 1
+            now = datetime.now(UTC)
+            retry_after = _retry_after_seconds(response.headers.get("Retry-After"), now)
+            if retry_after is None:
+                retry_after = _retry_after_seconds(response.headers.get("X-RateLimit-Reset"), now)
+            if retry_after is None or attempt == self._max_429_retries:
+                response.raise_for_status()
+            logger.warning("OpenAQ rate limited %s; Retry-After: %.2f seconds", path, retry_after)
+            logger.info("Retrying OpenAQ %s", path)
+            self._sleeper(retry_after)
+        raise AssertionError("bounded OpenAQ 429 retry loop exhausted")
 
     def _http(self) -> httpx.Client:
         """The pooled client, created on first use.
