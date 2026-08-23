@@ -27,7 +27,22 @@ public class GeminiClient implements GeminiClassifier, GeminiTextGenerator {
     private static final Duration CONNECT_TIMEOUT = Duration.ofSeconds(5);
     private static final Duration READ_TIMEOUT = Duration.ofSeconds(10);
 
+    /**
+     * Narratives get longer than a classification does.
+     *
+     * <p>Classifying a photograph returns one band and one confidence, and ten
+     * seconds is generous for it. Generating four sentences of grounded prose
+     * measured at about twenty seconds against the configured model, so the
+     * shared ten second read timeout aborted every narrative -- and, because the
+     * narrator converts any transport failure into SOURCE_UNAVAILABLE, it
+     * reported the model as unreachable when the model was answering perfectly
+     * well. Forty-five seconds leaves room for a longer prompt or a slower day
+     * without letting a genuinely hung request pin a thread.
+     */
+    private static final Duration TEXT_READ_TIMEOUT = Duration.ofSeconds(45);
+
     private final RestClient client;
+    private final RestClient textClient;
     private final ObjectMapper objectMapper;
 
     public GeminiClient(GeminiProperties properties, ObjectMapper objectMapper) {
@@ -45,6 +60,13 @@ public class GeminiClient implements GeminiClassifier, GeminiTextGenerator {
         JdkClientHttpRequestFactory factory = new JdkClientHttpRequestFactory(httpClient);
         factory.setReadTimeout(READ_TIMEOUT);
         this.client = RestClient.builder().requestFactory(factory).build();
+
+        // A second factory rather than a longer shared timeout: raising the
+        // classification timeout to suit narratives would make a hung photo
+        // request hold a thread four times as long for no benefit.
+        JdkClientHttpRequestFactory textFactory = new JdkClientHttpRequestFactory(httpClient);
+        textFactory.setReadTimeout(TEXT_READ_TIMEOUT);
+        this.textClient = RestClient.builder().requestFactory(textFactory).build();
     }
 
     /**
@@ -86,7 +108,7 @@ public class GeminiClient implements GeminiClassifier, GeminiTextGenerator {
                 "systemInstruction", Map.of("parts", List.of(Map.of("text", systemPrompt))),
                 "contents",
                 List.of(Map.of("role", "user", "parts", List.of(Map.of("text", userPrompt)))));
-        String response = client.post()
+        String response = textClient.post()
                 .uri("https://generativelanguage.googleapis.com/v1beta/models/{model}:generateContent?key={key}",
                         properties.model(), properties.apiKey())
                 .body(body)
