@@ -1,50 +1,26 @@
 // web/store/aqiStore.ts
 import { create } from 'zustand';
 import { devtools } from 'zustand/middleware';
-import { GridPrediction, Forecast } from '@/lib/schemas';
-import { fetchGrid, fetchStations, fetchForecast } from '@/lib/api';
+import { GridPrediction, Forecast, NearestStation, StationReading } from '@/lib/schemas';
+import { fetchGrid, fetchStations, fetchForecast, fetchNearest } from '@/lib/api';
 import type { Map } from 'maplibre-gl';
 
 export type AQITab = 'aqi' | 'weather';
 
-function getAqiFromPm25(pm25: number): number {
-  if (pm25 <= 30) return Math.round((pm25 / 30) * 50);
-  if (pm25 <= 60) return Math.round(50 + ((pm25 - 30) / 30) * 50);
-  if (pm25 <= 90) return Math.round(100 + ((pm25 - 60) / 30) * 100);
-  if (pm25 <= 120) return Math.round(200 + ((pm25 - 90) / 30) * 100);
-  if (pm25 <= 250) return Math.round(300 + ((pm25 - 120) / 130) * 100);
-  return Math.min(500, Math.round(400 + ((pm25 - 250) / 150) * 100));
-}
+/*
+ * generateGridForArea used to live here.
+ *
+ * When the API returned no cells for a location it synthesised a 10x10 grid in
+ * the browser and displayed it. The values were not merely invented, they were
+ * the same everywhere: the concentration was derived from
+ * `distFromCenter`, and `lon - centerLon` cancels the centre out, so every cell
+ * depended only on its loop index. Africa, Asia, Europe and Oceania all reported
+ * 156 ug/m3 and AQI 328, because that is what index 50 evaluates to.
+ *
+ * The honest answer for a place we do not measure is that we do not measure it.
+ * The grid covers Delhi-NCR; everywhere else now says so.
+ */
 
-function generateGridForArea(centerLon: number, centerLat: number, basePrefix = "CELL"): GridPrediction[] {
-  const cells: GridPrediction[] = [];
-  let id = 1;
-  const now = new Date().toISOString();
-  for (let gx = 0; gx < 10; gx++) {
-    for (let gy = 0; gy < 10; gy++) {
-      const lon = centerLon - 0.2 + gx * 0.04 + 0.02;
-      const lat = centerLat - 0.16 + gy * 0.032 + 0.016;
-      const distFromCenter = Math.sqrt(Math.pow(lon - centerLon, 2) + Math.pow(lat - centerLat, 2));
-      const basePm = Math.max(55, Math.min(320, 210 - distFromCenter * 420 + ((id * 7) % 35)));
-      const cov = 0.55 + (id % 5) * 0.09;
-      cells.push({
-        gridCellId: id,
-        code: `${basePrefix}-${String(id).padStart(4, "0")}`,
-        lon: Number(lon.toFixed(4)),
-        lat: Number(lat.toFixed(4)),
-        ts: now,
-        pm25Q10: Number((basePm * 0.8).toFixed(1)),
-        pm25Q50: Number(basePm.toFixed(1)),
-        pm25Q90: Number((basePm * 1.22).toFixed(1)),
-        coverageFraction: Number(cov.toFixed(2)),
-        modelVersion: "VAAYU-XGB-v1",
-        source: "CACHED",
-      });
-      id++;
-    }
-  }
-  return cells;
-}
 
 /** Data from the clicked marker (known before API call) */
 export interface MarkerInfo {
@@ -67,7 +43,35 @@ interface AQIState {
   /** Marker-level AQI info (the value shown on the map label) */
   markerInfo: MarkerInfo | null;
   /** Whether the displayed data came from a live API or fallback */
-  dataSource: 'API' | 'MARKER' | 'GENERATED';
+  /**
+   * API: a 1 km grid cell. STATION: nearest real measurement, with its distance.
+   * MARKER: supplied by a caller. NONE: nothing measured anywhere near here.
+   */
+  dataSource: 'API' | 'MARKER' | 'STATION' | 'NONE';
+  /** Nearest measurement when the grid has no cell for this location. */
+  nearestStation: NearestStation | null;
+  /**
+   * A station the reader clicked on the map.
+   *
+   * Held apart from selectedCellData because they answer different questions.
+   * Clicking a station marker used to call loadLocationData, which fetches the
+   * 1 km grid around the point and selects the middle cell of it -- so the card
+   * showed a modelled grid estimate with a quantile range and coverage figure,
+   * not the station's measurement, and every station near NCR resolved to
+   * roughly the same cell. The card appeared not to change because it largely
+   * did not.
+   */
+  selectedStation: StationReading | null;
+  /** Why locating failed, when it did. Shown rather than logged. */
+  locationError: string | null;
+  /**
+   * Whether the user has actually asked about a place.
+   *
+   * The store opens with a default locationName and dataSource NONE, which is
+   * indistinguishable from "asked, and nothing was found" -- so the map showed
+   * "No measurement here" on first paint, before any interaction.
+   */
+  hasQueried: boolean;
   // actions
   loadGrid: (data: GridPrediction[]) => void;
   selectCell: (id: number) => void;
@@ -78,6 +82,7 @@ interface AQIState {
   setLocationName: (name: string) => void;
   setLocationCoords: (coords: { lat: number; lng: number } | null) => void;
   loadLocationData: (lat: number, lon: number, name: string, map?: Map | null, marker?: MarkerInfo) => Promise<void>;
+  selectStation: (station: StationReading, map?: Map | null) => void;
   locateMe: (map?: Map | null) => Promise<void>;
   clearSelection: () => void;
 }
@@ -94,7 +99,11 @@ export const useAQIStore = create<AQIState>()(
     locationName: 'Delhi-NCR · Central Pilot',
     lastUpdated: new Date().toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit' }) + ' IST',
     markerInfo: null,
-    dataSource: 'GENERATED',
+    dataSource: 'NONE',
+    nearestStation: null,
+    selectedStation: null,
+    locationError: null,
+    hasQueried: false,
     loadGrid: (data) => {
       set({
         gridData: data,
@@ -112,14 +121,37 @@ export const useAQIStore = create<AQIState>()(
     setLoading: (loading) => set({ loading }),
     setLocationName: (name) => set({ locationName: name }),
     setLocationCoords: (coords) => set({ locationCoords: coords }),
-    clearSelection: () => set({ selectedCellId: null, selectedCellData: null, markerInfo: null }),
+    clearSelection: () => set({ selectedCellId: null, selectedCellData: null, markerInfo: null, nearestStation: null, selectedStation: null, hasQueried: false }),
+
+    // The marker already carries the reading, so this needs no request. The
+    // grid and any nearest-station result are cleared: they describe somewhere
+    // else, and leaving them would let the card mix two answers.
+    selectStation: (station, map) => {
+      set({
+        selectedStation: station,
+        selectedCellData: null,
+        selectedCellId: null,
+        nearestStation: null,
+        markerInfo: null,
+        locationName: station.city ?? station.name,
+        locationError: null,
+        hasQueried: true,
+        dataSource: 'API',
+        loading: false,
+      });
+      map?.flyTo({ center: [station.lon, station.lat], zoom: Math.max(map.getZoom(), 9), essential: true });
+    },
     loadLocationData: async (lat, lon, name, map, marker) => {
       set({
         loading: true,
         locationName: name,
         locationCoords: { lat, lng: lon },
         markerInfo: marker || null,
-        dataSource: marker ? 'MARKER' : 'GENERATED',
+        nearestStation: null,
+        selectedStation: null,
+        locationError: null,
+        hasQueried: true,
+        dataSource: marker ? 'MARKER' : 'NONE',
       });
       const now = new Date();
       set({
@@ -154,47 +186,66 @@ export const useAQIStore = create<AQIState>()(
             dataSource: 'API',
           });
         } else {
-          // No API data — use the marker's known AQI as-is
-          // Still generate a grid for background rendering
-          const prefix = name.split(",")[0].trim().toUpperCase().slice(0, 3);
-          const fallbackGrid = generateGridForArea(lon, lat, prefix);
-          const midCell = fallbackGrid[Math.floor(fallbackGrid.length / 2)];
+          // No grid cell here -- the 1 km surface covers Delhi-NCR only. Fall
+          // back to the nearest real station rather than to a synthesised one.
+          // The distance comes back with it and is shown, so a measurement from
+          // 23 km away is never presented as a reading for this spot.
+          const nearest = await fetchNearest(lat, lon);
           set({
-            gridData: fallbackGrid,
-            selectedCellData: midCell,
-            selectedCellId: midCell.gridCellId,
-            dataSource: marker ? 'MARKER' : 'GENERATED',
+            gridData: [],
+            selectedCellData: null,
+            selectedCellId: null,
+            nearestStation: nearest,
+            dataSource: nearest ? 'STATION' : 'NONE',
           });
         }
       } catch (err) {
+        // An unreachable API is not a reading. Previously this substituted a
+        // synthetic grid, so a network failure looked identical to data.
         console.error("Error loading grid for location:", err);
-        const prefix = name.split(",")[0].trim().toUpperCase().slice(0, 3);
-        const fallbackGrid = generateGridForArea(lon, lat, prefix);
-        const midCell = fallbackGrid[Math.floor(fallbackGrid.length / 2)];
         set({
-          gridData: fallbackGrid,
-          selectedCellData: midCell,
-          selectedCellId: midCell.gridCellId,
-          dataSource: marker ? 'MARKER' : 'GENERATED',
+          gridData: [],
+          selectedCellData: null,
+          selectedCellId: null,
+          nearestStation: null,
+          dataSource: 'NONE',
         });
       } finally {
         set({ loading: false });
       }
     },
     locateMe: async (map) => {
-      if (typeof window === 'undefined' || !navigator.geolocation) return;
-      set({ loading: true });
+      if (typeof window === 'undefined' || !navigator.geolocation) {
+        set({ locationError: "This browser cannot report a location." });
+        return;
+      }
+      set({ loading: true, locationError: null });
       return new Promise<void>((resolve) => {
         navigator.geolocation.getCurrentPosition(
           async (pos) => {
-            const { latitude, longitude } = pos.coords;
-            const name = `${latitude.toFixed(3)}°N, ${longitude.toFixed(3)}°E · Nearest 1 km Cell`;
+            // Rounded to three decimals, about 110 m, before the position is
+            // used for anything. This query is not stored, but the precise fix
+            // has no reason to leave the browser either. Reports are coarsened
+            // harder still -- see submitCitizenReport.
+            const latitude = Math.round(pos.coords.latitude * 1000) / 1000;
+            const longitude = Math.round(pos.coords.longitude * 1000) / 1000;
+            // Says where, and claims nothing about what is there. This read
+            // "Nearest 1 km Cell", but the 1 km surface covers Delhi-NCR only;
+            // everywhere else the answer is a station and its distance.
+            const name = `${latitude.toFixed(3)}°N, ${longitude.toFixed(3)}°E`;
             await get().loadLocationData(latitude, longitude, name, map);
             resolve();
           },
           (err) => {
-            console.warn("Geolocation denied or failed:", err);
-            set({ loading: false });
+            // Surfaced rather than logged: a button that silently does nothing
+            // reads as broken, and the user is the only one who can grant this.
+            const reason =
+              err.code === err.PERMISSION_DENIED
+                ? "Location permission denied. Search for a place instead."
+                : err.code === err.TIMEOUT
+                  ? "Locating timed out. Try again, or search for a place."
+                  : "Could not determine your location.";
+            set({ loading: false, locationError: reason });
             resolve();
           },
           { timeout: 8000 }

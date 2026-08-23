@@ -5,6 +5,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import java.util.List;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -15,7 +16,11 @@ import org.springframework.web.bind.annotation.RestController;
 import org.vaayu.web.dto.CitizenReportRequest;
 import org.vaayu.web.dto.CitizenReportResponse;
 import org.vaayu.web.dto.ForecastResponse;
+import org.vaayu.web.dto.CityRankingResponse;
 import org.vaayu.web.dto.GridPredictionResponse;
+import org.vaayu.web.dto.NearestStationResponse;
+import org.vaayu.web.dto.ProvenanceResponse;
+import org.vaayu.web.dto.StationReadingResponse;
 import org.vaayu.web.dto.StationResponse;
 import org.vaayu.web.service.CitizenReportService;
 import org.vaayu.web.service.ReadQueryOperations;
@@ -31,6 +36,44 @@ public class PublicController {
     public PublicController(ReadQueryOperations queries, CitizenReportService reports) {
         this.queries = queries;
         this.reports = reports;
+    }
+
+    @GetMapping("/provenance")
+    @Operation(summary = "Report where the data on screen came from, derived from ingestion_run and model_run")
+    public ProvenanceResponse provenance() {
+        return queries.provenance();
+    }
+
+    @GetMapping("/cities/rankings")
+    @Operation(summary = "Cities ranked by their worst current station reading")
+    public CityRankingResponse cityRankings(@RequestParam(defaultValue = "10") int limit) {
+        if (limit < 1 || limit > 100) {
+            throw new IllegalArgumentException("limit must be between 1 and 100");
+        }
+        return queries.cityRankings(limit);
+    }
+
+    @GetMapping("/nearest")
+    @Operation(summary = "Nearest station to a point, its last reading, and how far away it is")
+    public ResponseEntity<NearestStationResponse> nearest(
+            @RequestParam double lat, @RequestParam double lon) {
+        if (!Double.isFinite(lat) || lat < -90 || lat > 90) {
+            throw new IllegalArgumentException("lat must be between -90 and 90");
+        }
+        if (!Double.isFinite(lon) || lon < -180 || lon > 180) {
+            throw new IllegalArgumentException("lon must be between -180 and 180");
+        }
+        // 404 when no station has ever reported. An empty body would be
+        // indistinguishable from a station reading of nothing.
+        return queries.nearest(lat, lon)
+                .map(ResponseEntity::ok)
+                .orElseGet(() -> ResponseEntity.notFound().build());
+    }
+
+    @GetMapping("/stations/readings")
+    @Operation(summary = "Every station with a reading, and that reading")
+    public List<StationReadingResponse> stationReadings() {
+        return queries.stationReadings();
     }
 
     @GetMapping("/stations")

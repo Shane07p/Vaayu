@@ -1,4 +1,4 @@
-﻿services:
+services:
   postgres:
     image: postgis/postgis:16-3.4
     environment:
@@ -58,6 +58,37 @@
       CONSOLE_SECRET: ${CONSOLE_SHARED_SECRET:-dev-only-not-a-real-secret}
     ports:
       - "3000:3000"
+
+  # Connector runner. Not started by `docker compose up` -- it belongs to the
+  # `jobs` profile so bringing up the stack never writes to the database as a
+  # side effect. Invoke one explicitly:
+  #
+  #   docker compose run --rm ingestion vaayu-openmeteo
+  #   docker compose run --rm ingestion vaayu-firms
+  #   docker compose run --rm ingestion vaayu-openaq --days 60
+  #
+  # DATABASE_URL points at the service name, not the published host port,
+  # because a locally installed PostgreSQL may own 5432 on the host.
+  ingestion:
+    build: ./ingestion
+    profiles: ["jobs"]
+    depends_on:
+      postgres:
+        condition: service_healthy
+    environment:
+      DATABASE_URL: postgresql+psycopg://${POSTGRES_USER:-vaayu}:${POSTGRES_PASSWORD:-vaayu}@postgres:5432/${POSTGRES_DB:-vaayu}
+      # Absent or blank puts that connector in fixture mode rather than
+      # failing. See ingestion.source.Source.
+      DATA_GOV_IN_API_KEY: ${DATA_GOV_IN_API_KEY:-}
+      OPENAQ_API_KEY: ${OPENAQ_API_KEY:-}
+      FIRMS_MAP_KEY: ${FIRMS_MAP_KEY:-}
+      GEE_SERVICE_ACCOUNT_KEY: ${GEE_SERVICE_ACCOUNT_KEY:-}
+    volumes:
+      # GEE_SERVICE_ACCOUNT_KEY is a path, not the key itself, so the file has to
+      # exist inside the container. Without this the connectors saw no key and
+      # ran in fixture mode however real the credential on the host was.
+      # Read-only: nothing here should ever write to a credential.
+      - ./secrets:/app/secrets:ro
 
 volumes:
   pgdata:

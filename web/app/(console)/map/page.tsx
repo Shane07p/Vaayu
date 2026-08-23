@@ -1,20 +1,20 @@
 import { MapShell } from "@/components/map-shell";
-import { StatusStrip } from "@/components/status-strip";
-import { fetchGrid, fetchStations, fetchWorklist } from "@/lib/api";
-import type { GridPrediction, Station, WorklistItem } from "@/lib/schemas";
+import { ProvenanceStrip } from "@/components/provenance-strip";
+import { fetchGrid, fetchStationReadings, fetchWorklist } from "@/lib/api";
+import type { GridPrediction, StationReading, WorklistItem } from "@/lib/schemas";
 
 // Delhi-NCR pilot extent: min lon, min lat, max lon, max lat.
 const NCR_BBOX = "76.80,28.20,77.60,28.90";
 
 export default async function MapPage() {
   let grid: GridPrediction[] = [];
-  let stations: Station[] = [];
+  let stations: StationReading[] = [];
   let worklist: WorklistItem[] = [];
   let loadError = false;
   try {
     [grid, stations, worklist] = await Promise.all([
       fetchGrid(NCR_BBOX),
-      fetchStations(),
+      fetchStationReadings(),
       fetchWorklist(),
     ]);
   } catch {
@@ -44,7 +44,7 @@ export default async function MapPage() {
       </div>
 
       {/* Status Strip */}
-      <StatusStrip source={source} />
+      <ProvenanceStrip />
 
       {/* Map or Error */}
       {grid.length ? (

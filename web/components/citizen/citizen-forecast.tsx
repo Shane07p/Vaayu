@@ -42,16 +42,22 @@ export function CitizenForecast({ currentAqi, forecasts }: CitizenForecastProps)
     {
       horizon: "Now",
       aqi: currentAqi,
-      ciLow: Math.max(0, currentAqi - 25),
-      ciHigh: currentAqi + 25,
-      ciRange: [Math.max(0, currentAqi - 25), currentAqi + 25],
+      // No band. This drew currentAqi plus or minus 25, a width nothing
+      // measured -- an invented uncertainty on an observation that has none.
+      // A missing band reads as "no interval here", which is the truth; a
+      // drawn one reads as a model output.
+      ciLow: null,
+      ciHigh: null,
+      ciRange: null,
     },
     ...forecasts.map((f) => ({
       horizon: `${f.horizonHours}h`,
       aqi: f.aqi,
-      ciLow: Math.round(f.ciLow * 1.5),
-      ciHigh: Math.round(f.ciHigh * 1.5),
-      ciRange: [Math.round(f.ciLow * 1.5), Math.round(f.ciHigh * 1.5)],
+      // The model's own interval, converted server-side by the CPCB scale.
+      // This was f.ciLow * 1.5, which invented the width.
+      ciLow: f.aqiLow,
+      ciHigh: f.aqiHigh,
+      ciRange: [f.aqiLow, f.aqiHigh],
     })),
   ];
 
