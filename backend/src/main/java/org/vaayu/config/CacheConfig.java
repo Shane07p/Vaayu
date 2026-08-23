@@ -17,6 +17,11 @@ public class CacheConfig {
         manager.registerCustomCache("grid", cache(Duration.ofMinutes(30)));
         manager.registerCustomCache("forecast", cache(Duration.ofMinutes(5)));
         manager.registerCustomCache("worklist", cache(Duration.ofMinutes(5)));
+        // An alert's facts do not change once it is issued, so its narrative is
+        // stable and cacheable. A change to the facts produces a different key
+        // and therefore a regeneration, so this cannot serve a stale briefing
+        // for facts that have moved.
+        manager.registerCustomCache("narratives", cache(Duration.ofHours(6)));
         return manager;
     }
 
