@@ -22,7 +22,12 @@ def test_scheduler_handoff_defines_the_current_ingestion_job_set():
         "vaayu-gee-s5p",
         "vaayu-gee-era5",
     }
-    assert jobs["vaayu-openaq-latest"]["command"][-1] == "--latest"
+    # The dedicated connector, not `vaayu-openaq --latest`. Both fetch current
+    # PM2.5, but the backfill's latest mode defaults to the NCR bbox: scheduling
+    # it cut national coverage from roughly 290 stations to about 40, under a
+    # different source name. See docs/INGESTION_OPERATIONS.md.
+    assert jobs["vaayu-openaq-latest"]["command"][3] == "vaayu-openaq-latest"
+    assert jobs["vaayu-openaq-latest"]["command"][-2:] == ["--max-stations", "300"]
     assert jobs["vaayu-firms"]["command"][-2:] == ["--days", "1"]
     assert jobs["vaayu-gee-era5"]["command"][-4:] == ["--kind", "REANALYSIS", "--hours-back", "24"]
 
