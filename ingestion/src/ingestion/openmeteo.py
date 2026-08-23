@@ -6,7 +6,6 @@ import argparse
 import math
 import os
 from datetime import UTC, datetime
-from typing import Any
 
 import httpx
 

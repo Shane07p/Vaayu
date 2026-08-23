@@ -147,7 +147,7 @@ def test_multiple_sensor_and_parsing_failures_are_isolated(monkeypatch: pytest.M
         if url.endswith("/44/measurements"):
             return page([measurement()])
         if url.endswith("/45/measurements"):
-            return page([measurement() | {"period": {"datetimeFrom": {"utc": "not-a-time"}})])
+            return page([measurement() | {"period": {"datetimeFrom": {"utc": "not-a-time"}}}])
         raise httpx.TimeoutException("timed out")
 
     install_client(monkeypatch, handler)
