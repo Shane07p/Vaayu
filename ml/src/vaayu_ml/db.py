@@ -227,6 +227,19 @@ def latest_met_by_cell() -> pd.DataFrame:
         return pd.DataFrame(connection.execute(query).mappings().all())
 
 
+def load_cams_forecasts() -> pd.DataFrame:
+    """Latest available Open-Meteo CAMS baselines for model-supported horizons."""
+    query = text("""
+        SELECT DISTINCT ON (horizon_hours)
+               latitude, longitude, issued_at, valid_at, horizon_hours, pm25, aqi, source
+        FROM cams_forecast
+        WHERE horizon_hours IN (6, 24, 72)
+        ORDER BY horizon_hours, issued_at DESC
+    """)
+    with engine.begin() as connection:
+        return pd.DataFrame(connection.execute(query).mappings().all())
+
+
 # --------------------------------------------------------------------------
 # Writers
 # --------------------------------------------------------------------------

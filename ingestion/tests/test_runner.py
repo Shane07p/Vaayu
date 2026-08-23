@@ -138,5 +138,5 @@ class TestOfflineFlagParsing:
         assert source.fixture_file == "openmeteo_sample.json"
         records = source.fetch()
         assert records
-        assert {"time", "pm2_5", "us_aqi"} <= set(records[0])
+        assert {"issued_at", "valid_at", "horizon_hours", "pm25", "aqi"} <= set(records[0])
         assert "pollutant_avg" not in records[0]
