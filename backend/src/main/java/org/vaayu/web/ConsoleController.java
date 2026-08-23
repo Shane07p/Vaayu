@@ -12,7 +12,12 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.vaayu.genai.GroundedNarrator;
+import org.vaayu.genai.Narrative;
+import org.vaayu.genai.NarrativeFacts;
+import org.vaayu.genai.NarrativeLanguage;
 import org.vaayu.web.dto.AlertResponse;
+import org.vaayu.web.dto.NarrativeResponse;
 import org.vaayu.web.dto.WorklistActionRequest;
 import org.vaayu.web.dto.WorklistActionResponse;
 import org.vaayu.web.dto.WorklistItemResponse;
@@ -29,10 +34,57 @@ public class ConsoleController {
 
     private static final String DEFAULT_ACTOR = "console";
 
-    private final ReadQueryOperations queries;
+    /**
+     * The framing for an officer. An alert that does not name a statute, an
+     * officer and an action is not an alert; it is a chart.
+     */
+    private static final String OFFICER_ROLE =
+            """
+            You are briefing a district magistrate in India on an air quality alert.             Name the statutory basis, the jurisdiction, and the actions that must be             taken. Write plainly, as an official notice, not as advice.""";
 
-    public ConsoleController(ReadQueryOperations queries) {
+    private final ReadQueryOperations queries;
+    private final GroundedNarrator narrator;
+
+    public ConsoleController(ReadQueryOperations queries, GroundedNarrator narrator) {
         this.queries = queries;
+        this.narrator = narrator;
+    }
+
+    @GetMapping("/alerts/{alertId}/narrative")
+    @Operation(
+            summary =
+                    "Officer briefing for an alert, generated and checked against the alert's own facts")
+    public NarrativeResponse narrative(
+            @PathVariable String alertId, @RequestParam(defaultValue = "en") String lang) {
+        // Parsed before the alert is loaded: an unsupported language is the
+        // caller's mistake and should not depend on whether the alert exists.
+        NarrativeLanguage language = NarrativeLanguage.fromCode(lang);
+        AlertResponse alert = queries.alert(alertId)
+                .orElseThrow(() -> new NoSuchElementException("alert was not found"));
+
+        NarrativeFacts facts = NarrativeFacts.builder()
+                .number("Predicted AQI", alert.predictedAqi())
+                .number("Interval low", alert.ciLow())
+                .number("Interval high", alert.ciHigh())
+                .number("Horizon hours", alert.horizonHours())
+                // 48 hours is naturally written as 2 days. Supplied so the
+                // narrative may say so without inventing arithmetic.
+                .derived(alert.horizonHours() / 24)
+                .fact("GRAP stage", alert.recommendedGrapStage())
+                .fact("Statutory basis", alert.statutoryBasis())
+                .fact("Jurisdiction", String.join(", ", alert.jurisdiction()))
+                .fact("Mandated actions", String.join("; ", alert.mandatedActions()))
+                .number("Exposed population", alert.exposedPopulation())
+                .fact("Model version", alert.modelVersion())
+                .build();
+
+        Narrative narrative = narrator.narrate(OFFICER_ROLE, facts, language);
+        return new NarrativeResponse(
+                narrative.text(),
+                narrative.language().code(),
+                narrative.status().name(),
+                narrative.unsourcedNumbers(),
+                facts.asMap());
     }
 
     @GetMapping("/worklist")

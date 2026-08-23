@@ -21,6 +21,7 @@ import org.vaayu.config.ConsoleSharedSecretFilter;
 import org.vaayu.config.SecurityConfig;
 import org.vaayu.web.dto.AlertResponse;
 import org.vaayu.web.dto.WorklistActionResponse;
+import org.vaayu.genai.GroundedNarrator;
 import org.vaayu.web.service.ReadQueryOperations;
 
 @WebMvcTest(ConsoleController.class)
@@ -32,6 +33,12 @@ class ConsoleControllerTest {
 
     @MockBean
     private ReadQueryOperations queries;
+
+    // The controller now takes a narrator for the briefing endpoint. This test
+    // exercises the console's auth boundary, not generation, so a bare mock is
+    // enough -- but the context will not load without it.
+    @MockBean
+    private GroundedNarrator narrator;
 
     @Test
     void rejects_console_requests_without_the_shared_secret() throws Exception {
