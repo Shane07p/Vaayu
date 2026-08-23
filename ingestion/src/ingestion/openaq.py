@@ -1,10 +1,4 @@
-"""Historical OpenAQ v3 PM2.5 ingestion for the Delhi-NCR bounding box.
-
-OpenAQ v1 and v2 were retired and return HTTP 410. Version 3 exposes raw
-measurements beneath each sensor, so locations are discovered by bbox before
-their ``/v3/sensors/{id}/measurements`` pages are fetched. Values are retained
-as reported in micrograms per cubic metre; this client never converts them.
-"""
+"""Historical OpenAQ v3 PM2.5 ingestion for the Delhi-NCR bounding box."""
 
 from __future__ import annotations
 
@@ -21,14 +15,14 @@ from ingestion.settings import settings
 from ingestion.source import Source
 
 BASE_URL = "https://api.openaq.org/v3"
-
-# Shared with ml.build_grid and the console map: min lon, min lat, max lon, max lat.
 NCR_BBOX = "76.8,28.2,77.6,28.9"
 DEFAULT_BACKFILL_DAYS = 90
 MIN_BACKFILL_DAYS = 60
 PAGE_SIZE = 1_000
 MAX_PAGES = 10_000
 PM25_UNITS = frozenset({"µg/m³", "µg/m3", "ug/m3"})
+HTTP_TIMEOUT = httpx.Timeout(connect=10.0, read=30.0, write=10.0, pool=10.0)
+HTTP_LIMITS = httpx.Limits(max_connections=10, max_keepalive_connections=5)
 
 logger = logging.getLogger(__name__)
 
@@ -81,15 +75,16 @@ class OpenAqSource(Source):
     def end(self) -> datetime:
         return self._end
 
-    def _request_pages(self, path: str, params: dict[str, object]) -> list[dict[str, Any]]:
+    def _request_pages(
+        self, client: httpx.Client, path: str, params: dict[str, object]
+    ) -> list[dict[str, Any]]:
         """Fetch every OpenAQ page while rejecting malformed pagination metadata."""
         records: list[dict[str, Any]] = []
         for requested_page in range(1, MAX_PAGES + 1):
-            response = httpx.get(
+            response = client.get(
                 f"{BASE_URL}{path}",
                 params={**params, "page": requested_page, "limit": PAGE_SIZE},
                 headers={"X-API-Key": self._api_key or ""},
-                timeout=30.0,
             )
             response.raise_for_status()
             payload = response.json()
@@ -116,10 +111,14 @@ class OpenAqSource(Source):
                 return records
         raise ValueError(f"OpenAQ pagination exceeded {MAX_PAGES} pages for {path}")
 
-    def _locations(self) -> list[dict[str, Any]]:
-        return self._request_pages("/locations", {"bbox": self._bbox, "order_by": "id"})
+    def _locations(self, client: httpx.Client) -> list[dict[str, Any]]:
+        return self._request_pages(
+            client, "/locations", {"bbox": self._bbox, "order_by": "id"}
+        )
 
-    def _measurement_records(self, location: dict[str, Any]) -> list[dict]:
+    def _measurement_records(
+        self, client: httpx.Client, location: dict[str, Any]
+    ) -> list[dict]:
         name = location.get("name")
         coordinates = location.get("coordinates")
         sensors = location.get("sensors")
@@ -146,19 +145,28 @@ class OpenAqSource(Source):
             if not isinstance(sensor_id, int):
                 logger.warning("Skipping OpenAQ PM2.5 sensor without an id at %s", name)
                 continue
-            measurements = self._request_pages(
-                f"/sensors/{sensor_id}/measurements",
-                {
-                    "datetime_from": self._start.isoformat().replace("+00:00", "Z"),
-                    "datetime_to": self._end.isoformat().replace("+00:00", "Z"),
-                },
-            )
-            for measurement in measurements:
-                record = self._normalize_measurement(
-                    measurement, name, location.get("locality"), state, latitude, longitude
+
+            self.total_units += 1
+            try:
+                measurements = self._request_pages(
+                    client,
+                    f"/sensors/{sensor_id}/measurements",
+                    {
+                        "datetime_from": self._start.isoformat().replace("+00:00", "Z"),
+                        "datetime_to": self._end.isoformat().replace("+00:00", "Z"),
+                    },
                 )
-                if record is not None:
-                    normalized.append(record)
+                for measurement in measurements:
+                    record = self._normalize_measurement(
+                        measurement, name, location.get("locality"), state, latitude, longitude
+                    )
+                    if record is not None:
+                        normalized.append(record)
+            except (httpx.HTTPError, ValueError) as exc:
+                self.failed_units += 1
+                detail = f"sensor {sensor_id}: {exc}"
+                self.failure_details.append(detail)
+                logger.warning("OpenAQ sensor %s failed: %s", sensor_id, exc)
         return normalized
 
     @staticmethod
@@ -203,9 +211,15 @@ class OpenAqSource(Source):
         }
 
     def _fetch_live(self) -> list[dict]:
+        self.total_units = 0
+        self.failed_units = 0
+        self.failure_details = []
         records: list[dict] = []
-        for location in self._locations():
-            records.extend(self._measurement_records(location))
+        with httpx.Client(timeout=HTTP_TIMEOUT, limits=HTTP_LIMITS) as client:
+            for location in self._locations(client):
+                records.extend(self._measurement_records(client, location))
+        if self.total_units and self.total_units == self.failed_units:
+            raise RuntimeError("all OpenAQ PM2.5 sensors failed")
         return records
 
 
@@ -229,7 +243,9 @@ def main() -> None:
     args = parser.parse_args()
     source = OpenAqSource(settings.openaq_api_key, args.bbox, args.days, args.end)
     count = run_backfill(source, args.dry_run)
+    status = "PARTIAL" if source.is_partial else "SUCCESS"
     print(
-        f"OpenAQ {source.mode}: {count} PM2.5 records from "
+        f"OpenAQ {source.mode}: {count} PM2.5 records; sensors attempted="
+        f"{source.total_units}, failed={source.failed_units}, status={status}; from "
         f"{source.start.isoformat()} to {source.end.isoformat()}"
     )

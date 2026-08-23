@@ -378,8 +378,8 @@ def record_run(
     error: str | None = None,
 ) -> None:
     """Record completion without erasing the distinction between source and job failures."""
-    if status not in {"SUCCESS", "SOURCE_UNAVAILABLE", "FAILED"}:
-        raise ValueError("status must be SUCCESS, SOURCE_UNAVAILABLE, or FAILED")
+    if status not in {"SUCCESS", "PARTIAL", "SOURCE_UNAVAILABLE", "FAILED"}:
+        raise ValueError("status must be SUCCESS, PARTIAL, SOURCE_UNAVAILABLE, or FAILED")
     with engine.begin() as connection:
         connection.execute(
             text(

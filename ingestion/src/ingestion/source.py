@@ -40,6 +40,9 @@ class Source(ABC):
     def __init__(self, api_key: str | None) -> None:
         # Treat blank strings as absent: an empty .env entry means fixture mode.
         self._api_key = api_key or None
+        self.total_units = 0
+        self.failed_units = 0
+        self.failure_details: list[str] = []
 
     @property
     def mode(self) -> str:
@@ -62,6 +65,11 @@ class Source(ABC):
         path = FIXTURE_DIR / self.fixture_file
         with path.open(encoding="utf-8") as handle:
             return json.load(handle)
+
+    @property
+    def is_partial(self) -> bool:
+        """Whether some independently fetched units failed in an otherwise usable run."""
+        return self.total_units > 0 and self.failed_units > 0
 
     @abstractmethod
     def _fetch_live(self) -> list[dict]:
