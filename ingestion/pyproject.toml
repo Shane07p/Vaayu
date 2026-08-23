@@ -33,6 +33,13 @@ vaayu-cpcb = "ingestion.cpcb:main"
 vaayu-openaq = "ingestion.openaq:main"
 vaayu-firms = "ingestion.firms:main"
 vaayu-openmeteo = "ingestion.openmeteo:main"
+# Current readings, as opposed to vaayu-openaq's 60-90 day training backfill.
+vaayu-openaq-latest = "ingestion.openaq_latest:main"
+# The Earth Engine connectors each had a main() but no console entry, so they
+# could not be invoked the way every other connector is.
+vaayu-gee-aod = "ingestion.gee.maiac_aod:main"
+vaayu-gee-s5p = "ingestion.gee.s5p:main"
+vaayu-gee-era5 = "ingestion.gee.era5:main"
 
 [build-system]
 requires = ["hatchling"]

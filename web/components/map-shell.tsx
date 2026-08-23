@@ -1,7 +1,7 @@
 "use client";
 
 import dynamic from "next/dynamic";
-import type { GridPrediction, Station, WorklistItem } from "@/lib/schemas";
+import type { GridPrediction, StationReading, WorklistItem } from "@/lib/schemas";
 import { MapSkeleton } from "./loading-skeleton";
 
 const DataMap = dynamic(
@@ -14,7 +14,7 @@ const DataMap = dynamic(
 
 type MapShellProps = {
   grid: GridPrediction[];
-  stations: Station[];
+  stations: StationReading[];
   worklist: WorklistItem[];
 };
 

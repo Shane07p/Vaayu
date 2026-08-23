@@ -228,3 +228,45 @@ class TestMeteorology:
         records = json.loads((FIXTURES / "met_sample.json").read_text())
         assert all(r["boundary_layer_height"] is not None for r in records)
         assert all(r["boundary_layer_height"] >= 0 for r in records)
+
+
+class TestInlineCredentialIsNotTreatedAsAbsent:
+    """Cloud secret injection hands the JSON itself to an env var.
+
+    `credentials_present` checks the value is a file. A raw JSON blob is not,
+    so it used to read as "no credential configured" and drop the Earth Engine
+    sources into fixture mode -- serving committed samples as satellite
+    observations, silently, in the deployed environment.
+    """
+
+    def test_credential_json_in_the_variable_raises(self, monkeypatch):
+        from ingestion.gee import client
+
+        monkeypatch.setattr(
+            client.settings,
+            "gee_service_account_key",
+            '{"type": "service_account", "project_id": "vaayu"}',
+        )
+
+        with pytest.raises(client.EarthEngineUnavailableError, match="filesystem path"):
+            client.credentials_present()
+
+    def test_leading_whitespace_does_not_defeat_the_check(self, monkeypatch):
+        from ingestion.gee import client
+
+        monkeypatch.setattr(
+            client.settings, "gee_service_account_key", '  \n{"type": "service_account"}'
+        )
+
+        with pytest.raises(client.EarthEngineUnavailableError):
+            client.credentials_present()
+
+    def test_a_path_that_does_not_exist_is_still_simply_absent(self, monkeypatch):
+        """A missing file is fixture mode, as before. Only inline JSON is an error."""
+        from ingestion.gee import client
+
+        monkeypatch.setattr(
+            client.settings, "gee_service_account_key", "./secrets/not-there.json"
+        )
+
+        assert client.credentials_present() is False

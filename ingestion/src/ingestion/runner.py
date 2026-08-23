@@ -50,6 +50,9 @@ def run_source(
         record_run(source.name, source.mode, "FAILED", 0, str(exc))
         raise
 
+    # A run that lost some units is neither a success nor an outage. Calling it
+    # SUCCESS hides the gap; calling it SOURCE_UNAVAILABLE discards the rows that
+    # did arrive. See V14__partial_ingestion_runs.sql.
     status = "PARTIAL" if source.is_partial else "SUCCESS"
     error = "; ".join(source.failure_details) if source.is_partial else None
     record_run(source.name, source.mode, status, written, error)

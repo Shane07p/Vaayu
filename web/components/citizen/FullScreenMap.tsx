@@ -60,7 +60,7 @@ const FALLBACK_STYLE: maplibregl.StyleSpecification = {
 const FullScreenMap: React.FC = () => {
   const mapContainer = useRef<HTMLDivElement>(null);
   const [map, setMap] = useState<maplibregl.Map | null>(null);
-  const { selectedCellData, locationName, markerInfo, dataSource, lastUpdated, loading, clearSelection } = useAQIStore();
+  const { selectedCellData, locationName, markerInfo, dataSource, lastUpdated, loading, clearSelection, nearestStation, locationError, hasQueried, selectedStation } = useAQIStore();
   const styleFailed = useRef(false);
   const [basemapDegraded, setBasemapDegraded] = useState(false);
 
@@ -113,7 +113,9 @@ const FullScreenMap: React.FC = () => {
   const displayAqi = markerInfo
     ? markerInfo.aqi
     : selectedCellData
-      ? Math.round((selectedCellData.pm25Q50 / 250) * 500)
+      // Server-computed CPCB AQI. This was pm25 / 250 * 500, an invented
+      // linear scaling that reported a whole band low at 120 ug/m3.
+      ? selectedCellData.aqi
       : null;
 
   const displayPm25 = markerInfo
@@ -131,7 +133,23 @@ const FullScreenMap: React.FC = () => {
   const aqiColor = displayAqi !== null ? getAqiTextColor(displayAqi) : '#34d399';
   const aqiImage = displayAqi !== null ? getAqiImage(displayAqi) : '/aqi-images/Green.png';
 
-  const showCard = markerInfo !== null || selectedCellData !== null;
+  // A clicked station takes precedence over everything else on screen. It is a
+  // measurement; the grid cell is a modelled estimate, and while the model is
+  // still seeded the two disagree sharply -- seed cells average 168 ug/m3 where
+  // Delhi's DPCC stations currently read 29 to 65.
+  const showStationCard = selectedStation !== null;
+  const showCard = !showStationCard && (markerInfo !== null || selectedCellData !== null);
+
+  // A location was chosen, the fetch finished, and nothing was measured there.
+  // Without this the click simply did nothing, which reads as a broken map
+  // rather than as an absence of data. The grid covers Delhi-NCR only.
+  const showNoData =
+    !showStationCard && hasQueried && !showCard && !loading && dataSource === 'NONE';
+
+  // Outside the 1 km surface there is no cell, but there is usually a real
+  // station somewhere. Shown with its distance so a reading from 23 km away is
+  // never mistaken for a reading here.
+  const showNearest = !showStationCard && hasQueried && !showCard && !loading && nearestStation !== null;
 
   return (
     <div className="fixed inset-0 w-screen h-screen z-0 overflow-hidden bg-[#070a0e]">
@@ -237,11 +255,180 @@ const FullScreenMap: React.FC = () => {
             {/* Data source badge */}
             <div className="mt-3 flex items-center justify-between">
               <span className="text-[9px] font-mono text-slate-500 uppercase tracking-wider">
-                {dataSource === 'API' ? 'Live Data' : dataSource === 'MARKER' ? 'Reference Data' : 'Estimated'}
+                {dataSource === 'API' ? 'Measured' : 'Reference Data'}
               </span>
               {selectedCellData && <SourceBadge source={dataSource === 'API' ? selectedCellData.source : 'CACHED'} />}
             </div>
           </div>
+        </div>
+      )}
+
+      {showStationCard && selectedStation && (
+        <div className="absolute bottom-6 left-4 sm:left-6 z-20 max-w-sm w-[calc(100vw-2rem)] sm:w-80 bg-[#080d12]/95 border border-white/10 rounded-2xl shadow-2xl backdrop-blur-xl p-4 text-slate-100 animate-fade-in">
+          <div className="flex items-start justify-between gap-2 mb-1">
+            <div className="text-xs font-mono font-bold tracking-wider uppercase text-slate-200 truncate">
+              {selectedStation.city ?? selectedStation.name}
+            </div>
+            <button
+              onClick={clearSelection}
+              className="bg-black/50 hover:bg-black/70 text-slate-300 hover:text-white rounded-full w-6 h-6 flex items-center justify-center text-xs transition-colors flex-shrink-0"
+              title="Close"
+            >
+              ✕
+            </button>
+          </div>
+
+          {/* Named, so the reader can see whose measurement this is. */}
+          <div className="text-[10px] font-mono text-slate-500 mb-3 truncate">
+            {selectedStation.name}
+          </div>
+
+          <div className="flex items-baseline gap-2 mb-3">
+            <span
+              className="text-4xl font-mono font-black tracking-tight"
+              style={{ color: getAqiTextColor(selectedStation.aqi) }}
+            >
+              {selectedStation.aqi}
+            </span>
+            <span
+              className="text-sm font-semibold"
+              style={{ color: getAqiTextColor(selectedStation.aqi) }}
+            >
+              {getAqiCategory(selectedStation.aqi)}
+            </span>
+          </div>
+
+          <div className="grid grid-cols-2 gap-2 text-[11px] font-mono">
+            <div className="bg-white/[0.04] p-2.5 rounded-xl border border-white/5">
+              <span className="text-slate-400 block text-[9px] uppercase tracking-wider">PM2.5</span>
+              <span className="font-bold text-slate-100 text-sm">{selectedStation.pm25} µg/m³</span>
+            </div>
+            <div className="bg-white/[0.04] p-2.5 rounded-xl border border-white/5">
+              <span className="text-slate-400 block text-[9px] uppercase tracking-wider">Measured</span>
+              <span className="text-slate-300">
+                {new Date(selectedStation.measuredAt).toLocaleString("en-IN", {
+                  day: "2-digit", month: "short", hour: "2-digit", minute: "2-digit",
+                })}
+              </span>
+            </div>
+          </div>
+
+          {selectedStation.stale && (
+            <p className="mt-2 rounded border border-amber-800/60 bg-amber-950/30 px-2 py-1 text-[10px] font-mono text-amber-300">
+              This station has not reported recently. Shown with its real age.
+            </p>
+          )}
+
+          {/* No quantile range or coverage figure here: those belong to the
+              modelled surface, not to a measurement. Presenting an instrument
+              reading with a model's uncertainty band would misattribute both. */}
+          <div className="mt-3 flex items-center justify-between">
+            <span className="text-[9px] font-mono text-slate-500 uppercase tracking-wider">
+              Measured at station
+            </span>
+            <SourceBadge source={selectedStation.operator} />
+          </div>
+        </div>
+      )}
+
+      {showNearest && nearestStation && (
+        <div className="absolute bottom-6 left-4 sm:left-6 z-20 max-w-sm w-[calc(100vw-2rem)] sm:w-80 bg-[#080d12]/95 border border-white/10 rounded-2xl shadow-2xl backdrop-blur-xl p-4 text-slate-100 animate-fade-in">
+          <div className="flex items-start justify-between gap-2 mb-2">
+            <div className="text-xs font-mono font-bold tracking-wider uppercase text-slate-200 truncate">
+              {locationName}
+            </div>
+            <button
+              onClick={clearSelection}
+              className="bg-black/50 hover:bg-black/70 text-slate-300 hover:text-white rounded-full w-6 h-6 flex items-center justify-center text-xs transition-colors flex-shrink-0"
+              title="Close"
+            >
+              ✕
+            </button>
+          </div>
+
+          {/* The distance leads. It is the honest subject of this card: the
+              nearest measurement, not a measurement of this spot. */}
+          <p className="text-[11px] text-slate-400 mb-3">
+            Nearest measurement is{" "}
+            <span className="text-slate-200 font-semibold">{nearestStation.distanceKm} km</span>{" "}
+            away
+          </p>
+
+          <div className="flex items-baseline gap-2 mb-3">
+            <span
+              className="text-4xl font-mono font-black tracking-tight"
+              style={{ color: getAqiTextColor(nearestStation.aqi) }}
+            >
+              {nearestStation.aqi}
+            </span>
+            <span
+              className="text-sm font-semibold"
+              style={{ color: getAqiTextColor(nearestStation.aqi) }}
+            >
+              {getAqiCategory(nearestStation.aqi)}
+            </span>
+          </div>
+
+          <div className="grid grid-cols-2 gap-2 text-[11px] font-mono mb-3">
+            <div className="bg-white/[0.04] p-2.5 rounded-xl border border-white/5">
+              <span className="text-slate-400 block text-[9px] uppercase tracking-wider">PM2.5</span>
+              <span className="font-bold text-slate-100 text-sm">
+                {nearestStation.pm25} µg/m³
+              </span>
+            </div>
+            <div className="bg-white/[0.04] p-2.5 rounded-xl border border-white/5">
+              <span className="text-slate-400 block text-[9px] uppercase tracking-wider">Measured</span>
+              <span className="text-slate-300">
+                {new Date(nearestStation.measuredAt).toLocaleString("en-IN", {
+                  day: "2-digit", month: "short", hour: "2-digit", minute: "2-digit",
+                })}
+              </span>
+            </div>
+          </div>
+
+          {nearestStation.stale && (
+            <p className="mb-2 rounded border border-amber-800/60 bg-amber-950/30 px-2 py-1 text-[10px] font-mono text-amber-300">
+              This station has not reported recently. Shown with its real age
+              rather than as a current reading.
+            </p>
+          )}
+
+          {/* Attributed, so the figure is the operator's rather than "VAAYU's". */}
+          <div className="text-[10px] font-mono text-slate-500 border-t border-white/5 pt-2">
+            {nearestStation.name}
+          </div>
+        </div>
+      )}
+
+      {showNoData && (
+        <div className="absolute bottom-6 left-4 sm:left-6 z-20 max-w-sm w-[calc(100vw-2rem)] sm:w-80 bg-[#080d12]/95 border border-white/10 rounded-2xl shadow-2xl backdrop-blur-xl p-4 text-slate-100">
+          <div className="flex items-start justify-between gap-2">
+            <div className="text-xs font-mono font-bold tracking-wider uppercase text-slate-200">
+              {locationName}
+            </div>
+            <button
+              onClick={clearSelection}
+              className="bg-black/50 hover:bg-black/70 text-slate-300 hover:text-white rounded-full w-6 h-6 flex items-center justify-center text-xs transition-colors flex-shrink-0"
+              title="Close"
+            >
+              ✕
+            </button>
+          </div>
+          <p className="mt-2 text-[11px] leading-relaxed text-slate-400">
+            No measurement here. VAAYU&apos;s 1 km surface currently covers Delhi-NCR,
+            and this location has no monitoring station feeding it.
+          </p>
+          <p className="mt-2 text-[10px] font-mono uppercase tracking-wider text-slate-600">
+            No data
+          </p>
+        </div>
+      )}
+
+      {/* A denied or failed location request. Shown, because only the user can
+          resolve it and a button that does nothing reads as broken. */}
+      {locationError && (
+        <div className="absolute top-20 left-1/2 -translate-x-1/2 z-30 max-w-sm w-[calc(100vw-2rem)] rounded-2xl border border-amber-800/60 bg-amber-950/90 px-4 py-2.5 text-[11px] font-mono text-amber-200 backdrop-blur-xl">
+          {locationError}
         </div>
       )}
 

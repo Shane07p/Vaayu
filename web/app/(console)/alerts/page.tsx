@@ -1,6 +1,6 @@
 import { SourceBadge } from "@/components/source-badge";
 import { SeverityBadge } from "@/components/severity-badge";
-import { StatusStrip } from "@/components/status-strip";
+import { ProvenanceStrip } from "@/components/provenance-strip";
 import { fetchAlerts } from "@/lib/api";
 import type { Alert } from "@/lib/schemas";
 
@@ -45,7 +45,7 @@ export default async function AlertsPage() {
         </p>
       </div>
 
-      <StatusStrip />
+      <ProvenanceStrip />
 
       {/* Alerts List */}
       {alerts.length > 0 ? (

@@ -67,6 +67,17 @@ body {
 }
 
 /* MapLibre Dark Integrated Popup */
+
+/*
+ * The floating overlays (layer control, intelligence panel, cluster card) sit
+ * at z-20. A popup opened underneath one of them was painted behind it and
+ * could not be read, which is how the grid-cell readout was being lost behind
+ * the layer control in the top-left corner.
+ */
+.maplibregl-popup {
+  z-index: 30;
+}
+
 .maplibregl-popup-content {
   background: rgba(14, 19, 27, 0.95) !important;
   color: #f8fafc !important;

@@ -1,6 +1,6 @@
 import { ForecastComparison } from "@/components/forecast-comparison";
 import { SourceBadge } from "@/components/source-badge";
-import { StatusStrip } from "@/components/status-strip";
+import { ProvenanceStrip } from "@/components/provenance-strip";
 import { fetchForecast, fetchStations } from "@/lib/api";
 import type { Forecast, Station } from "@/lib/schemas";
 
@@ -33,7 +33,7 @@ export default async function ForecastPage() {
       </div>
 
       {/* Status Strip */}
-      <StatusStrip source={forecasts[0]?.source ?? "CACHED"} />
+      <ProvenanceStrip />
 
       {station && forecasts.length ? (
         <div className="space-y-6">

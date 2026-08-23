@@ -47,6 +47,12 @@ export default function CitizenLayout({
               My Air
             </Link>
             <Link
+              href="/rankings"
+              className="px-3 py-1.5 rounded-xl text-xs font-mono font-medium text-slate-400 hover:text-slate-200 hover:bg-white/[0.08] transition-colors"
+            >
+              Rankings
+            </Link>
+            <Link
               href="/report"
               className="px-3 py-1.5 rounded-xl text-xs font-mono font-medium text-slate-400 hover:text-slate-200 hover:bg-white/[0.08] transition-colors"
             >

@@ -4,12 +4,12 @@ import { useEffect, useRef, useState, useCallback } from "react";
 import type { MapMouseEvent } from "maplibre-gl";
 import * as maplibregl from "maplibre-gl";
 import "maplibre-gl/dist/maplibre-gl.css";
-import type { GridPrediction, Station, WorklistItem } from "@/lib/schemas";
+import type { GridPrediction, StationReading, WorklistItem } from "@/lib/schemas";
 import { SourceBadge } from "./source-badge";
 
 type DataMapProps = {
   grid: GridPrediction[];
-  stations: Station[];
+  stations: StationReading[];
   worklist: WorklistItem[];
 };
 
@@ -22,6 +22,31 @@ type PointFeature = {
 type PointFeatureCollection = {
   type: "FeatureCollection";
   features: PointFeature[];
+};
+
+/**
+ * Flat style used when the basemap cannot load.
+ *
+ * The console map previously hard-coded this flat style as its only style, a
+ * debugging measure that was never reverted. It renders the prediction cells
+ * over an empty void, so an officer sees a coloured block with no districts,
+ * roads, or boundaries to place it against, and cannot tell which ward the
+ * exceedance sits in.
+ *
+ * It stays as a fallback rather than a default: a style that fails to resolve
+ * never fires `load`, and every data layer is added in that handler, so without
+ * this the map would lose the data as well as the geography.
+ */
+const FALLBACK_STYLE: maplibregl.StyleSpecification = {
+  version: 8,
+  sources: {},
+  layers: [
+    {
+      id: "background",
+      type: "background",
+      paint: { "background-color": "#070a0e" },
+    },
+  ],
 };
 
 function getSeverityColor(pm25: number): string {
@@ -62,23 +87,36 @@ export function DataMap({ grid, stations, worklist }: DataMapProps) {
   const [showStations, setShowStations] = useState(true);
   const [showFires, setShowFires] = useState(true);
   const [mapError, setMapError] = useState<string | null>(null);
+  const [layersOpen, setLayersOpen] = useState(true);
+  const styleFailed = useRef(false);
 
   // Selected fire cluster state
   const [selectedCluster, setSelectedCluster] = useState<WorklistItem | null>(null);
 
-  // Derive aggregate stats from the grid
-  const avgPm25 = grid.length
-    ? Math.round(grid.reduce((sum, g) => sum + g.pm25Q50, 0) / grid.length)
-    : 168;
-  const maxPm25 = grid.length ? Math.round(Math.max(...grid.map((g) => g.pm25Q50))) : 248;
-  const avgCoverage = grid.length
-    ? Math.round(
-        (grid.reduce((sum, g) => sum + g.coverageFraction, 0) / grid.length) * 100
-      )
-    : 67;
+  // Derive aggregate stats from the grid.
+  //
+  // These previously fell back to 168, 248 and 67 when the grid was empty:
+  // plausible-looking numbers standing in for absent data. The panel is guarded
+  // by grid.length below so they were unreachable, but a fabricated default one
+  // edit away from being displayed is not a default worth keeping.
+  const median = (values: number[]): number => {
+    const sorted = [...values].sort((a, b) => a - b);
+    const mid = Math.floor(sorted.length / 2);
+    return sorted.length % 2 === 0 ? (sorted[mid - 1] + sorted[mid]) / 2 : sorted[mid];
+  };
 
-  const estimatedAqi = Math.round(avgPm25 * 1.55);
-  const band = getAqiBand(avgPm25);
+  // The label reads "PM2.5 Median" and this computed a mean. Now it is a median.
+  const medianPm25 = grid.length ? Math.round(median(grid.map((g) => g.pm25Q50))) : null;
+  const maxPm25 = grid.length ? Math.round(Math.max(...grid.map((g) => g.pm25Q50))) : null;
+  const avgCoverage = grid.length
+    ? Math.round((grid.reduce((sum, g) => sum + g.coverageFraction, 0) / grid.length) * 100)
+    : null;
+
+  // Median of the AQI values the API computed with the CPCB scale. This was
+  // Math.round(avgPm25 * 1.55), an invented linear conversion; the real scale is
+  // piecewise, so no single multiplier reproduces it.
+  const medianAqi = grid.length ? Math.round(median(grid.map((g) => g.aqi))) : null;
+  const band = medianPm25 === null ? null : getAqiBand(medianPm25);
   const firstSource = grid[0]?.source ?? "CACHED";
 
   const closeCluster = useCallback(() => setSelectedCluster(null), []);
@@ -87,17 +125,7 @@ export function DataMap({ grid, stations, worklist }: DataMapProps) {
     if (!container.current) return;
     const map = new maplibregl.Map({
       container: container.current,
-      style: {
-        version: 8,
-        sources: {},
-        layers: [
-          {
-            id: "background",
-            type: "background",
-            paint: { "background-color": "#070a0e" },
-          },
-        ],
-      } as maplibregl.StyleSpecification,
+      style: "/map-style.json",
       center: [77.209, 28.614],
       zoom: 9.2,
     });
@@ -111,7 +139,17 @@ export function DataMap({ grid, stations, worklist }: DataMapProps) {
     );
 
     map.on("error", (event) => {
-      setMapError(event.error?.message ?? "Map failed to render");
+      const message = event.error?.message ?? "Map failed to render";
+      setMapError(message);
+
+      // Drop to the flat style so the prediction cells still render. Guarded by
+      // a ref because setStyle re-emits errors, and swapping styles inside the
+      // handler that the swap triggers would loop.
+      if (!styleFailed.current && /style|glyphs|sprite|tile/i.test(message)) {
+        styleFailed.current = true;
+        setMapError("Basemap unavailable — geography is not shown. Prediction data is unaffected.");
+        map.setStyle(FALLBACK_STYLE);
+      }
     });
 
     const popup = new maplibregl.Popup({
@@ -191,7 +229,14 @@ export function DataMap({ grid, stations, worklist }: DataMapProps) {
             properties: {
               name: station.name,
               city: station.city ?? "",
-              source: station.source,
+              source: station.operator,
+              pm25: station.pm25,
+              aqi: station.aqi,
+              measuredAt: station.measuredAt,
+              stale: station.stale,
+              // Severity colour resolved here rather than in a paint expression,
+              // so the map uses the same bands as everything else.
+              colour: getSeverityColor(station.pm25),
             },
           }))
         ),
@@ -201,11 +246,15 @@ export function DataMap({ grid, stations, worklist }: DataMapProps) {
         type: "circle",
         source: "stations",
         paint: {
-          "circle-color": "#ffffff",
-          "circle-radius": 5,
-          "circle-stroke-color": "#38bdf8",
-          "circle-stroke-width": 2,
-          "circle-opacity": 0.95,
+          // Coloured by what the station measured. A uniform white dot said only
+          // that a station exists, which is the least interesting thing about it.
+          "circle-color": ["get", "colour"],
+          "circle-radius": 6,
+          "circle-stroke-color": "#0b1220",
+          "circle-stroke-width": 1.5,
+          // A station that has stopped reporting is dimmed, not hidden and not
+          // drawn as though current.
+          "circle-opacity": ["case", ["get", "stale"], 0.35, 0.95],
         },
       });
 
@@ -324,7 +373,13 @@ export function DataMap({ grid, stations, worklist }: DataMapProps) {
             `<div style="padding:14px;font-size:12px;font-family:ui-monospace,monospace;color:#f1f5f9">
               <div style="font-size:10px;color:#38bdf8;letter-spacing:0.1em;text-transform:uppercase;margin-bottom:4px">MONITORING STATION</div>
               <div style="font-size:14px;font-weight:700;margin-bottom:4px;color:#ffffff">${p.name}</div>
-              <div style="font-size:11px;color:#94a3b8">${p.city} · ${p.source}${cachedBadge(String(p.source))}</div>
+              <div style="display:flex;align-items:baseline;gap:6px;margin-bottom:6px">
+                <span style="font-size:22px;font-weight:800;color:${getSeverityColor(Number(p.pm25))}">${p.pm25}</span>
+                <span style="font-size:11px;color:#94a3b8">µg/m³ PM2.5 · AQI ${p.aqi}</span>
+              </div>
+              <div style="font-size:11px;color:#94a3b8">Measured ${new Date(String(p.measuredAt)).toLocaleString("en-IN", { day: "2-digit", month: "short", hour: "2-digit", minute: "2-digit" })}</div>
+              ${p.stale ? '<div style="font-size:10px;color:#fbbf24;margin-top:4px">Not reported recently — shown with its real age</div>' : ""}
+              <div style="font-size:11px;color:#94a3b8;margin-top:4px">${p.city} · ${p.source}${cachedBadge(String(p.source))}</div>
             </div>`
           )
           .addTo(map);
@@ -426,11 +481,26 @@ export function DataMap({ grid, stations, worklist }: DataMapProps) {
         </div>
       ) : null}
 
-      {/* Floating Layer Control with Frosted Glass Switches */}
-      <div className="absolute top-4 left-4 z-20 p-4 rounded-2xl bg-[#070a0e]/85 border border-white/10 backdrop-blur-xl shadow-2xl space-y-3">
-        <div className="text-[10px] font-mono uppercase tracking-wider text-slate-400 font-semibold">
+      {/* Floating Layer Control with Frosted Glass Switches.
+          Collapsible because it occupies the top-left corner permanently, and
+          the map beneath it is the content -- a cell there could be clicked
+          but its readout was hidden. */}
+      <div className="absolute top-4 left-4 z-20 rounded-2xl bg-[#070a0e]/85 border border-white/10 backdrop-blur-xl shadow-2xl">
+        <button
+          type="button"
+          onClick={() => setLayersOpen((open) => !open)}
+          aria-expanded={layersOpen}
+          className="flex w-full items-center gap-2 px-4 py-3 text-[10px] font-mono uppercase tracking-wider text-slate-400 font-semibold hover:text-slate-200 transition-colors"
+        >
+          <span
+            className={`transition-transform duration-200 ${layersOpen ? "" : "-rotate-90"}`}
+            aria-hidden="true"
+          >
+            ▾
+          </span>
           Map Layers
-        </div>
+        </button>
+        <div className={`space-y-3 px-4 pb-4 ${layersOpen ? "" : "hidden"}`}>
         {[
           { label: "1 km Nowcast Surface", checked: showGrid, toggle: () => setShowGrid(!showGrid), color: "bg-emerald-400" },
           { label: "Monitoring Stations", checked: showStations, toggle: () => setShowStations(!showStations), color: "bg-sky-400" },
@@ -461,6 +531,7 @@ export function DataMap({ grid, stations, worklist }: DataMapProps) {
             </span>
           </label>
         ))}
+        </div>
       </div>
 
       {/* Floating Air Quality Intelligence Panel */}
@@ -479,23 +550,23 @@ export function DataMap({ grid, stations, worklist }: DataMapProps) {
               <div className="flex items-baseline gap-1.5">
                 <span
                   className="text-2xl font-bold font-mono"
-                  style={{ color: getSeverityColor(avgPm25) }}
+                  style={{ color: getSeverityColor(medianPm25 ?? 0) }}
                 >
-                  {avgPm25}
+                  {medianPm25}
                 </span>
                 <span className="text-xs text-slate-400">µg/m³</span>
               </div>
             </div>
             <div className="grid grid-cols-2 gap-2">
               <div className="p-2.5 rounded-xl bg-white/[0.04] border border-white/5">
-                <div className="text-[9px] font-mono text-slate-400">EST. AQI</div>
-                <div className="text-sm font-bold font-mono text-slate-200">{estimatedAqi}</div>
+                <div className="text-[9px] font-mono text-slate-400">MEDIAN AQI</div>
+                <div className="text-sm font-bold font-mono text-slate-200">{medianAqi}</div>
               </div>
               <div className="p-2.5 rounded-xl bg-white/[0.04] border border-white/5">
                 <div className="text-[9px] font-mono text-slate-400">BAND</div>
                 <div
                   className="text-sm font-bold font-mono"
-                  style={{ color: getSeverityColor(avgPm25) }}
+                  style={{ color: getSeverityColor(medianPm25 ?? 0) }}
                 >
                   {band}
                 </div>
