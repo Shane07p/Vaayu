@@ -70,10 +70,15 @@ export default function Home() {
                 that terminates in statutory action.
               </span>
             </h1>
+            <div className="grid gap-1 text-base font-medium text-slate-200 sm:grid-cols-3 sm:text-sm">
+              <span>Know <strong>WHERE</strong> pollution will go.</span>
+              <span>Know <strong>WHEN</strong> it will arrive.</span>
+              <span>Know <strong>WHO</strong> should act.</span>
+            </div>
             <p className="text-base md:text-lg text-slate-300 leading-relaxed max-w-2xl mx-auto font-sans">
-              VAAYU estimates hyper-local PM2.5 at 1 km resolution, forecasts pollution
-              spikes up to 72 hours ahead, attributes likely fire sources, and converts
-              forecasts into legally mapped action for authorities.
+              VAAYU combines ground stations, satellite observations, weather, and citizen
+              observations to estimate air quality at 1 km resolution, forecast pollution 6–72
+              hours ahead, attribute likely sources, and translate risk into statutory action.
             </p>
           </div>
 
@@ -102,6 +107,13 @@ export default function Home() {
             </span>
           </div>
         </div>
+      </section>
+
+      <section className="border-t border-white/10 bg-[#0a1016] px-6 py-8">
+        <div className="mx-auto grid max-w-5xl gap-4 text-center sm:grid-cols-4">
+          {[["1 km", "intelligence"], ["72h", "forecast"], ["Source", "attribution"], ["Statutory", "action"]].map(([value, label]) => <div key={label} className="rounded-2xl border border-white/10 bg-white/[0.03] p-4"><div className="font-mono text-xl font-bold text-white">{value}</div><div className="mt-1 text-[10px] font-mono uppercase tracking-wider text-slate-400">{label}</div></div>)}
+        </div>
+        <p className="mt-4 text-center text-[11px] font-mono text-teal-200">Delhi-NCR · Punjab · Haryana · Gujarat · Multi-region demonstration</p>
       </section>
 
       {/* 2. Pipeline Section with Atmospheric Backdrop */}
@@ -171,6 +183,14 @@ export default function Home() {
               </div>
             ))}
           </div>
+        </div>
+      </section>
+
+      <section className="border-t border-white/10 bg-[#080d12] px-6 py-14">
+        <div className="mx-auto max-w-5xl rounded-3xl border border-white/10 bg-white/[0.03] p-6 backdrop-blur-md">
+          <p className="text-[10px] font-mono uppercase tracking-[0.25em] text-teal-300">AI-powered intelligence</p>
+          <h2 className="mt-2 text-2xl font-bold text-white">Google AI supports the evidence pipeline.</h2>
+          <p className="mt-3 max-w-3xl text-sm leading-relaxed text-slate-300">Vertex AI supports model training and inference workflows. Gemini is constrained to citizen-photo AQI-band assessment and report triage—never a fabricated PM2.5 concentration.</p>
         </div>
       </section>
 
