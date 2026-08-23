@@ -129,14 +129,25 @@ def load_feature_frame(hours: int = 720) -> pd.DataFrame:
                m.surface_pressure,
                m.precipitation
         FROM gee_aod_snapshot a
-        FULL OUTER JOIN met_snapshot m
+        FULL OUTER JOIN (
+            -- Filtered in a subquery, not in the JOIN's ON clause. A FULL OUTER
+            -- JOIN preserves unmatched rows from both sides, so `AND m.kind =
+            -- 'REANALYSIS'` in the ON clause did not exclude FORECAST rows: it
+            -- only stopped them matching, and they still arrived as met-only
+            -- rows. Those carry future valid_at times, so they became training
+            -- examples dated in the future and were written back as
+            -- future-timestamped grid_prediction rows, which the API's
+            -- `ORDER BY ts DESC LIMIT 1` then served as the current nowcast.
+            SELECT * FROM met_snapshot WHERE kind = 'REANALYSIS'
+        ) m
                ON m.grid_cell_id = a.grid_cell_id
               AND m.ts = a.ts
-              AND m.kind = 'REANALYSIS'
         FULL OUTER JOIN gee_s5p_snapshot s
                ON s.grid_cell_id = COALESCE(a.grid_cell_id, m.grid_cell_id)
               AND s.ts = COALESCE(a.ts, m.ts)
         WHERE COALESCE(a.ts, m.ts, s.ts) >= now() - make_interval(hours => :hours)
+          -- Never train on a snapshot valid in the future.
+          AND COALESCE(a.ts, m.ts, s.ts) <= now()
     """)
     with engine.begin() as connection:
         return pd.DataFrame(connection.execute(query, {"hours": hours}).mappings().all())

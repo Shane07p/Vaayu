@@ -1,0 +1,1952 @@
+[
+  {
+    "id": "c_0",
+    "name": "Afghanistan",
+    "capital": "Kabul",
+    "lat": 33,
+    "lon": 65,
+    "aqi": 153,
+    "pm25": 69,
+    "category": "Unhealthy"
+  },
+  {
+    "id": "c_1",
+    "name": "Albania",
+    "capital": "Tirana",
+    "lat": 41,
+    "lon": 20,
+    "aqi": 11,
+    "pm25": 5,
+    "category": "Good"
+  },
+  {
+    "id": "c_2",
+    "name": "Algeria",
+    "capital": "Algiers",
+    "lat": 28,
+    "lon": 3,
+    "aqi": 88,
+    "pm25": 40,
+    "category": "Moderate"
+  },
+  {
+    "id": "c_3",
+    "name": "Andorra",
+    "capital": "Andorra la Vella",
+    "lat": 42.5,
+    "lon": 1.5,
+    "aqi": 28,
+    "pm25": 13,
+    "category": "Good"
+  },
+  {
+    "id": "c_4",
+    "name": "Angola",
+    "capital": "Luanda",
+    "lat": -12.5,
+    "lon": 18.5,
+    "aqi": 81,
+    "pm25": 36,
+    "category": "Moderate"
+  },
+  {
+    "id": "c_5",
+    "name": "Antigua and Barbuda",
+    "capital": "St. John's",
+    "lat": 17.05,
+    "lon": -61.8,
+    "aqi": 36,
+    "pm25": 16,
+    "category": "Good"
+  },
+  {
+    "id": "c_6",
+    "name": "Argentina",
+    "capital": "Buenos Aires",
+    "lat": -34,
+    "lon": -64,
+    "aqi": 78,
+    "pm25": 35,
+    "category": "Moderate"
+  },
+  {
+    "id": "c_7",
+    "name": "Armenia",
+    "capital": "Yerevan",
+    "lat": 40,
+    "lon": 45,
+    "aqi": 51,
+    "pm25": 23,
+    "category": "Moderate"
+  },
+  {
+    "id": "c_8",
+    "name": "Australia",
+    "capital": "Canberra",
+    "lat": -27,
+    "lon": 133,
+    "aqi": 22,
+    "pm25": 10,
+    "category": "Good"
+  },
+  {
+    "id": "c_9",
+    "name": "Austria",
+    "capital": "Vienna",
+    "lat": 47.33333333,
+    "lon": 13.33333333,
+    "aqi": 36,
+    "pm25": 16,
+    "category": "Good"
+  },
+  {
+    "id": "c_10",
+    "name": "Azerbaijan",
+    "capital": "Baku",
+    "lat": 40.5,
+    "lon": 47.5,
+    "aqi": 104,
+    "pm25": 47,
+    "category": "Poor"
+  },
+  {
+    "id": "c_11",
+    "name": "Bahamas",
+    "capital": "Nassau",
+    "lat": 24.25,
+    "lon": -76,
+    "aqi": 39,
+    "pm25": 18,
+    "category": "Good"
+  },
+  {
+    "id": "c_12",
+    "name": "Bahrain",
+    "capital": "Manama",
+    "lat": 26,
+    "lon": 50.55,
+    "aqi": 87,
+    "pm25": 39,
+    "category": "Moderate"
+  },
+  {
+    "id": "c_13",
+    "name": "Bangladesh",
+    "capital": "Dhaka",
+    "lat": 24,
+    "lon": 90,
+    "aqi": 174,
+    "pm25": 78,
+    "category": "Unhealthy"
+  },
+  {
+    "id": "c_14",
+    "name": "Barbados",
+    "capital": "Bridgetown",
+    "lat": 13.16666666,
+    "lon": -59.53333333,
+    "aqi": 40,
+    "pm25": 18,
+    "category": "Good"
+  },
+  {
+    "id": "c_15",
+    "name": "Belarus",
+    "capital": "Minsk",
+    "lat": 53,
+    "lon": 28,
+    "aqi": 53,
+    "pm25": 24,
+    "category": "Moderate"
+  },
+  {
+    "id": "c_16",
+    "name": "Belgium",
+    "capital": "Brussels",
+    "lat": 50.83333333,
+    "lon": 4,
+    "aqi": 43,
+    "pm25": 19,
+    "category": "Good"
+  },
+  {
+    "id": "c_17",
+    "name": "Belize",
+    "capital": "Belmopan",
+    "lat": 17.25,
+    "lon": -88.75,
+    "aqi": 58,
+    "pm25": 26,
+    "category": "Moderate"
+  },
+  {
+    "id": "c_18",
+    "name": "Benin",
+    "capital": "Porto-Novo",
+    "lat": 9.5,
+    "lon": 2.25,
+    "aqi": 138,
+    "pm25": 62,
+    "category": "Poor"
+  },
+  {
+    "id": "c_19",
+    "name": "Bhutan",
+    "capital": "Thimphu",
+    "lat": 27.5,
+    "lon": 90.5,
+    "aqi": 146,
+    "pm25": 66,
+    "category": "Poor"
+  },
+  {
+    "id": "c_20",
+    "name": "Bolivia",
+    "capital": "Sucre",
+    "lat": -17,
+    "lon": -65,
+    "aqi": 48,
+    "pm25": 22,
+    "category": "Good"
+  },
+  {
+    "id": "c_21",
+    "name": "Bosnia and Herzegovina",
+    "capital": "Sarajevo",
+    "lat": 44,
+    "lon": 18,
+    "aqi": 25,
+    "pm25": 11,
+    "category": "Good"
+  },
+  {
+    "id": "c_22",
+    "name": "Botswana",
+    "capital": "Gaborone",
+    "lat": -22,
+    "lon": 24,
+    "aqi": 125,
+    "pm25": 56,
+    "category": "Poor"
+  },
+  {
+    "id": "c_23",
+    "name": "Brazil",
+    "capital": "Brasilia",
+    "lat": -10,
+    "lon": -55,
+    "aqi": 42,
+    "pm25": 19,
+    "category": "Good"
+  },
+  {
+    "id": "c_24",
+    "name": "Brunei",
+    "capital": "Bandar Seri Begawan",
+    "lat": 4.5,
+    "lon": 114.66666666,
+    "aqi": 97,
+    "pm25": 44,
+    "category": "Moderate"
+  },
+  {
+    "id": "c_25",
+    "name": "Bulgaria",
+    "capital": "Sofia",
+    "lat": 43,
+    "lon": 25,
+    "aqi": 33,
+    "pm25": 15,
+    "category": "Good"
+  },
+  {
+    "id": "c_26",
+    "name": "Burkina Faso",
+    "capital": "Ouagadougou",
+    "lat": 13,
+    "lon": -2,
+    "aqi": 113,
+    "pm25": 51,
+    "category": "Poor"
+  },
+  {
+    "id": "c_27",
+    "name": "Burundi",
+    "capital": "Gitega",
+    "lat": -3.5,
+    "lon": 30,
+    "aqi": 108,
+    "pm25": 49,
+    "category": "Poor"
+  },
+  {
+    "id": "c_28",
+    "name": "Cabo Verde",
+    "capital": "Praia",
+    "lat": 16,
+    "lon": -24,
+    "aqi": 75,
+    "pm25": 34,
+    "category": "Moderate"
+  },
+  {
+    "id": "c_29",
+    "name": "Cambodia",
+    "capital": "Phnom Penh",
+    "lat": 13,
+    "lon": 105,
+    "aqi": 125,
+    "pm25": 56,
+    "category": "Poor"
+  },
+  {
+    "id": "c_30",
+    "name": "Cameroon",
+    "capital": "Yaounde",
+    "lat": 6,
+    "lon": 12,
+    "aqi": 111,
+    "pm25": 50,
+    "category": "Poor"
+  },
+  {
+    "id": "c_31",
+    "name": "Canada",
+    "capital": "Ottawa",
+    "lat": 60,
+    "lon": -95,
+    "aqi": 94,
+    "pm25": 42,
+    "category": "Moderate"
+  },
+  {
+    "id": "c_32",
+    "name": "Central African Republic",
+    "capital": "Bangui",
+    "lat": 7,
+    "lon": 21,
+    "aqi": 102,
+    "pm25": 46,
+    "category": "Poor"
+  },
+  {
+    "id": "c_33",
+    "name": "Chad",
+    "capital": "N'Djamena",
+    "lat": 15,
+    "lon": 19,
+    "aqi": 69,
+    "pm25": 31,
+    "category": "Moderate"
+  },
+  {
+    "id": "c_34",
+    "name": "Chile",
+    "capital": "Santiago",
+    "lat": -30,
+    "lon": -71,
+    "aqi": 92,
+    "pm25": 41,
+    "category": "Moderate"
+  },
+  {
+    "id": "c_35",
+    "name": "China",
+    "capital": "Beijing",
+    "lat": 35,
+    "lon": 105,
+    "aqi": 400,
+    "pm25": 70,
+    "category": "Unhealthy"
+  },
+  {
+    "id": "c_36",
+    "name": "Colombia",
+    "capital": "Bogota",
+    "lat": 4,
+    "lon": -72,
+    "aqi": 56,
+    "pm25": 25,
+    "category": "Moderate"
+  },
+  {
+    "id": "c_37",
+    "name": "Comoros",
+    "capital": "Moroni",
+    "lat": -12.16666666,
+    "lon": 44.25,
+    "aqi": 103,
+    "pm25": 46,
+    "category": "Poor"
+  },
+  {
+    "id": "c_38",
+    "name": "Congo",
+    "capital": "Brazzaville",
+    "lat": -1,
+    "lon": 15,
+    "aqi": 81,
+    "pm25": 36,
+    "category": "Moderate"
+  },
+  {
+    "id": "c_39",
+    "name": "Costa Rica",
+    "capital": "San Jose",
+    "lat": 10,
+    "lon": -84,
+    "aqi": 25,
+    "pm25": 11,
+    "category": "Good"
+  },
+  {
+    "id": "c_40",
+    "name": "Croatia",
+    "capital": "Zagreb",
+    "lat": 45.16666666,
+    "lon": 15.5,
+    "aqi": 31,
+    "pm25": 14,
+    "category": "Good"
+  },
+  {
+    "id": "c_41",
+    "name": "Cuba",
+    "capital": "Havana",
+    "lat": 21.5,
+    "lon": -80,
+    "aqi": 40,
+    "pm25": 18,
+    "category": "Good"
+  },
+  {
+    "id": "c_42",
+    "name": "Cyprus",
+    "capital": "Nicosia",
+    "lat": 35,
+    "lon": 33,
+    "aqi": 40,
+    "pm25": 18,
+    "category": "Good"
+  },
+  {
+    "id": "c_43",
+    "name": "Czech Republic",
+    "capital": "Prague",
+    "lat": 49.75,
+    "lon": 15.5,
+    "aqi": 49,
+    "pm25": 22,
+    "category": "Good"
+  },
+  {
+    "id": "c_44",
+    "name": "DR Congo",
+    "capital": "Kinshasa",
+    "lat": 0,
+    "lon": 25,
+    "aqi": 77,
+    "pm25": 35,
+    "category": "Moderate"
+  },
+  {
+    "id": "c_45",
+    "name": "Denmark",
+    "capital": "Copenhagen",
+    "lat": 56,
+    "lon": 10,
+    "aqi": 73,
+    "pm25": 33,
+    "category": "Moderate"
+  },
+  {
+    "id": "c_46",
+    "name": "Djibouti",
+    "capital": "Djibouti",
+    "lat": 11.5,
+    "lon": 43,
+    "aqi": 110,
+    "pm25": 50,
+    "category": "Poor"
+  },
+  {
+    "id": "c_47",
+    "name": "Dominica",
+    "capital": "Roseau",
+    "lat": 15.41666666,
+    "lon": -61.33333333,
+    "aqi": 65,
+    "pm25": 29,
+    "category": "Moderate"
+  },
+  {
+    "id": "c_48",
+    "name": "Dominican Republic",
+    "capital": "Santo Domingo",
+    "lat": 19,
+    "lon": -70.66666666,
+    "aqi": 78,
+    "pm25": 35,
+    "category": "Moderate"
+  },
+  {
+    "id": "c_49",
+    "name": "Ecuador",
+    "capital": "Quito",
+    "lat": -2,
+    "lon": -77.5,
+    "aqi": 27,
+    "pm25": 12,
+    "category": "Good"
+  },
+  {
+    "id": "c_50",
+    "name": "Egypt",
+    "capital": "Cairo",
+    "lat": 27,
+    "lon": 30,
+    "aqi": 117,
+    "pm25": 53,
+    "category": "Poor"
+  },
+  {
+    "id": "c_51",
+    "name": "El Salvador",
+    "capital": "San Salvador",
+    "lat": 13.83333333,
+    "lon": -88.91666666,
+    "aqi": 68,
+    "pm25": 31,
+    "category": "Moderate"
+  },
+  {
+    "id": "c_52",
+    "name": "Equatorial Guinea",
+    "capital": "Malabo",
+    "lat": 2,
+    "lon": 10,
+    "aqi": 84,
+    "pm25": 38,
+    "category": "Moderate"
+  },
+  {
+    "id": "c_53",
+    "name": "Eritrea",
+    "capital": "Asmara",
+    "lat": 15,
+    "lon": 39,
+    "aqi": 67,
+    "pm25": 30,
+    "category": "Moderate"
+  },
+  {
+    "id": "c_54",
+    "name": "Estonia",
+    "capital": "Tallinn",
+    "lat": 59,
+    "lon": 26,
+    "aqi": 78,
+    "pm25": 35,
+    "category": "Moderate"
+  },
+  {
+    "id": "c_55",
+    "name": "Eswatini",
+    "capital": "Mbabane",
+    "lat": -26.5,
+    "lon": 31.5,
+    "aqi": 115,
+    "pm25": 52,
+    "category": "Poor"
+  },
+  {
+    "id": "c_56",
+    "name": "Ethiopia",
+    "capital": "Addis Ababa",
+    "lat": 8,
+    "lon": 38,
+    "aqi": 67,
+    "pm25": 30,
+    "category": "Moderate"
+  },
+  {
+    "id": "c_57",
+    "name": "Fiji",
+    "capital": "Suva",
+    "lat": -18,
+    "lon": 175,
+    "aqi": 89,
+    "pm25": 40,
+    "category": "Moderate"
+  },
+  {
+    "id": "c_58",
+    "name": "Finland",
+    "capital": "Helsinki",
+    "lat": 64,
+    "lon": 26,
+    "aqi": 61,
+    "pm25": 27,
+    "category": "Moderate"
+  },
+  {
+    "id": "c_59",
+    "name": "France",
+    "capital": "Paris",
+    "lat": 46,
+    "lon": 2,
+    "aqi": 22,
+    "pm25": 10,
+    "category": "Good"
+  },
+  {
+    "id": "c_60",
+    "name": "Gabon",
+    "capital": "Libreville",
+    "lat": -1,
+    "lon": 11.75,
+    "aqi": 66,
+    "pm25": 30,
+    "category": "Moderate"
+  },
+  {
+    "id": "c_61",
+    "name": "Gambia",
+    "capital": "Banjul",
+    "lat": 13.46666666,
+    "lon": -16.56666666,
+    "aqi": 108,
+    "pm25": 49,
+    "category": "Poor"
+  },
+  {
+    "id": "c_62",
+    "name": "Georgia",
+    "capital": "Tbilisi",
+    "lat": 42,
+    "lon": 43.5,
+    "aqi": 104,
+    "pm25": 47,
+    "category": "Poor"
+  },
+  {
+    "id": "c_63",
+    "name": "Germany",
+    "capital": "Berlin",
+    "lat": 51,
+    "lon": 9,
+    "aqi": 81,
+    "pm25": 36,
+    "category": "Moderate"
+  },
+  {
+    "id": "c_64",
+    "name": "Ghana",
+    "capital": "Accra",
+    "lat": 8,
+    "lon": -2,
+    "aqi": 138,
+    "pm25": 62,
+    "category": "Poor"
+  },
+  {
+    "id": "c_65",
+    "name": "Greece",
+    "capital": "Athens",
+    "lat": 39,
+    "lon": 22,
+    "aqi": 18,
+    "pm25": 8,
+    "category": "Good"
+  },
+  {
+    "id": "c_66",
+    "name": "Grenada",
+    "capital": "St. George's",
+    "lat": 12.11666666,
+    "lon": -61.66666666,
+    "aqi": 78,
+    "pm25": 35,
+    "category": "Moderate"
+  },
+  {
+    "id": "c_67",
+    "name": "Guatemala",
+    "capital": "Guatemala City",
+    "lat": 15.5,
+    "lon": -90.25,
+    "aqi": 34,
+    "pm25": 15,
+    "category": "Good"
+  },
+  {
+    "id": "c_68",
+    "name": "Guinea",
+    "capital": "Conakry",
+    "lat": 11,
+    "lon": -10,
+    "aqi": 125,
+    "pm25": 56,
+    "category": "Poor"
+  },
+  {
+    "id": "c_69",
+    "name": "Guinea-Bissau",
+    "capital": "Bissau",
+    "lat": 12,
+    "lon": -15,
+    "aqi": 61,
+    "pm25": 27,
+    "category": "Moderate"
+  },
+  {
+    "id": "c_70",
+    "name": "Guyana",
+    "capital": "Georgetown",
+    "lat": 5,
+    "lon": -59,
+    "aqi": 70,
+    "pm25": 32,
+    "category": "Moderate"
+  },
+  {
+    "id": "c_71",
+    "name": "Haiti",
+    "capital": "Port-au-Prince",
+    "lat": 19,
+    "lon": -72.41666666,
+    "aqi": 41,
+    "pm25": 18,
+    "category": "Good"
+  },
+  {
+    "id": "c_72",
+    "name": "Honduras",
+    "capital": "Tegucigalpa",
+    "lat": 15,
+    "lon": -86.5,
+    "aqi": 32,
+    "pm25": 14,
+    "category": "Good"
+  },
+  {
+    "id": "c_73",
+    "name": "Hungary",
+    "capital": "Budapest",
+    "lat": 47,
+    "lon": 20,
+    "aqi": 69,
+    "pm25": 31,
+    "category": "Moderate"
+  },
+  {
+    "id": "c_74",
+    "name": "Iceland",
+    "capital": "Reykjavik",
+    "lat": 65,
+    "lon": -18,
+    "aqi": 77,
+    "pm25": 35,
+    "category": "Moderate"
+  },
+  {
+    "id": "c_75",
+    "name": "India",
+    "capital": "New Delhi",
+    "lat": 20,
+    "lon": 77,
+    "aqi": 166,
+    "pm25": 75,
+    "category": "Unhealthy"
+  },
+  {
+    "id": "c_76",
+    "name": "Indonesia",
+    "capital": "Jakarta",
+    "lat": -5,
+    "lon": 120,
+    "aqi": 125,
+    "pm25": 56,
+    "category": "Poor"
+  },
+  {
+    "id": "c_77",
+    "name": "Iran",
+    "capital": "Tehran",
+    "lat": 32,
+    "lon": 53,
+    "aqi": 197,
+    "pm25": 89,
+    "category": "Unhealthy"
+  },
+  {
+    "id": "c_78",
+    "name": "Iraq",
+    "capital": "Baghdad",
+    "lat": 33,
+    "lon": 44,
+    "aqi": 105,
+    "pm25": 47,
+    "category": "Poor"
+  },
+  {
+    "id": "c_79",
+    "name": "Ireland",
+    "capital": "Dublin",
+    "lat": 53,
+    "lon": -8,
+    "aqi": 60,
+    "pm25": 27,
+    "category": "Moderate"
+  },
+  {
+    "id": "c_80",
+    "name": "Israel",
+    "capital": "Jerusalem",
+    "lat": 31.5,
+    "lon": 34.75,
+    "aqi": 55,
+    "pm25": 25,
+    "category": "Moderate"
+  },
+  {
+    "id": "c_81",
+    "name": "Italy",
+    "capital": "Rome",
+    "lat": 42.83333333,
+    "lon": 12.83333333,
+    "aqi": 82,
+    "pm25": 37,
+    "category": "Moderate"
+  },
+  {
+    "id": "c_82",
+    "name": "Ivory Coast",
+    "capital": "Yamoussoukro",
+    "lat": 8,
+    "lon": -5,
+    "aqi": 79,
+    "pm25": 36,
+    "category": "Moderate"
+  },
+  {
+    "id": "c_83",
+    "name": "Jamaica",
+    "capital": "Kingston",
+    "lat": 18.25,
+    "lon": -77.5,
+    "aqi": 64,
+    "pm25": 29,
+    "category": "Moderate"
+  },
+  {
+    "id": "c_84",
+    "name": "Japan",
+    "capital": "Tokyo",
+    "lat": 36,
+    "lon": 138,
+    "aqi": 142,
+    "pm25": 64,
+    "category": "Poor"
+  },
+  {
+    "id": "c_85",
+    "name": "Jordan",
+    "capital": "Amman",
+    "lat": 31,
+    "lon": 36,
+    "aqi": 64,
+    "pm25": 29,
+    "category": "Moderate"
+  },
+  {
+    "id": "c_86",
+    "name": "Kazakhstan",
+    "capital": "Astana",
+    "lat": 48,
+    "lon": 68,
+    "aqi": 117,
+    "pm25": 53,
+    "category": "Poor"
+  },
+  {
+    "id": "c_87",
+    "name": "Kenya",
+    "capital": "Nairobi",
+    "lat": 1,
+    "lon": 38,
+    "aqi": 87,
+    "pm25": 39,
+    "category": "Moderate"
+  },
+  {
+    "id": "c_88",
+    "name": "Kiribati",
+    "capital": "Tarawa",
+    "lat": 1.41666666,
+    "lon": 173,
+    "aqi": 89,
+    "pm25": 40,
+    "category": "Moderate"
+  },
+  {
+    "id": "c_89",
+    "name": "Kuwait",
+    "capital": "Kuwait City",
+    "lat": 29.5,
+    "lon": 45.75,
+    "aqi": 78,
+    "pm25": 35,
+    "category": "Moderate"
+  },
+  {
+    "id": "c_90",
+    "name": "Kyrgyzstan",
+    "capital": "Bishkek",
+    "lat": 41,
+    "lon": 75,
+    "aqi": 81,
+    "pm25": 36,
+    "category": "Moderate"
+  },
+  {
+    "id": "c_91",
+    "name": "Laos",
+    "capital": "Vientiane",
+    "lat": 18,
+    "lon": 105,
+    "aqi": 107,
+    "pm25": 48,
+    "category": "Poor"
+  },
+  {
+    "id": "c_92",
+    "name": "Latvia",
+    "capital": "Riga",
+    "lat": 57,
+    "lon": 25,
+    "aqi": 50,
+    "pm25": 23,
+    "category": "Good"
+  },
+  {
+    "id": "c_93",
+    "name": "Lebanon",
+    "capital": "Beirut",
+    "lat": 33.83333333,
+    "lon": 35.83333333,
+    "aqi": 66,
+    "pm25": 30,
+    "category": "Moderate"
+  },
+  {
+    "id": "c_94",
+    "name": "Lesotho",
+    "capital": "Maseru",
+    "lat": -29.5,
+    "lon": 28.5,
+    "aqi": 71,
+    "pm25": 32,
+    "category": "Moderate"
+  },
+  {
+    "id": "c_95",
+    "name": "Liberia",
+    "capital": "Monrovia",
+    "lat": 6.5,
+    "lon": -9.5,
+    "aqi": 116,
+    "pm25": 52,
+    "category": "Poor"
+  },
+  {
+    "id": "c_96",
+    "name": "Libya",
+    "capital": "Tripoli",
+    "lat": 25,
+    "lon": 17,
+    "aqi": 77,
+    "pm25": 35,
+    "category": "Moderate"
+  },
+  {
+    "id": "c_97",
+    "name": "Liechtenstein",
+    "capital": "Vaduz",
+    "lat": 47.26666666,
+    "lon": 9.53333333,
+    "aqi": 56,
+    "pm25": 25,
+    "category": "Moderate"
+  },
+  {
+    "id": "c_98",
+    "name": "Lithuania",
+    "capital": "Vilnius",
+    "lat": 56,
+    "lon": 24,
+    "aqi": 39,
+    "pm25": 18,
+    "category": "Good"
+  },
+  {
+    "id": "c_99",
+    "name": "Luxembourg",
+    "capital": "Luxembourg City",
+    "lat": 49.75,
+    "lon": 6.16666666,
+    "aqi": 77,
+    "pm25": 35,
+    "category": "Moderate"
+  },
+  {
+    "id": "c_100",
+    "name": "Madagascar",
+    "capital": "Antananarivo",
+    "lat": -20,
+    "lon": 47,
+    "aqi": 93,
+    "pm25": 42,
+    "category": "Moderate"
+  },
+  {
+    "id": "c_101",
+    "name": "Malawi",
+    "capital": "Lilongwe",
+    "lat": -13.5,
+    "lon": 34,
+    "aqi": 134,
+    "pm25": 60,
+    "category": "Poor"
+  },
+  {
+    "id": "c_102",
+    "name": "Malaysia",
+    "capital": "Kuala Lumpur",
+    "lat": 2.5,
+    "lon": 112.5,
+    "aqi": 89,
+    "pm25": 40,
+    "category": "Moderate"
+  },
+  {
+    "id": "c_103",
+    "name": "Maldives",
+    "capital": "Male",
+    "lat": 3.25,
+    "lon": 73,
+    "aqi": 127,
+    "pm25": 57,
+    "category": "Poor"
+  },
+  {
+    "id": "c_104",
+    "name": "Mali",
+    "capital": "Bamako",
+    "lat": 17,
+    "lon": -4,
+    "aqi": 123,
+    "pm25": 55,
+    "category": "Poor"
+  },
+  {
+    "id": "c_105",
+    "name": "Malta",
+    "capital": "Valletta",
+    "lat": 35.83333333,
+    "lon": 14.58333333,
+    "aqi": 56,
+    "pm25": 25,
+    "category": "Moderate"
+  },
+  {
+    "id": "c_106",
+    "name": "Marshall Islands",
+    "capital": "Majuro",
+    "lat": 9,
+    "lon": 168,
+    "aqi": 21,
+    "pm25": 9,
+    "category": "Good"
+  },
+  {
+    "id": "c_107",
+    "name": "Mauritania",
+    "capital": "Nouakchott",
+    "lat": 20,
+    "lon": -12,
+    "aqi": 89,
+    "pm25": 40,
+    "category": "Moderate"
+  },
+  {
+    "id": "c_108",
+    "name": "Mauritius",
+    "capital": "Port Louis",
+    "lat": -20.28333333,
+    "lon": 57.55,
+    "aqi": 102,
+    "pm25": 46,
+    "category": "Poor"
+  },
+  {
+    "id": "c_109",
+    "name": "Mexico",
+    "capital": "Mexico City",
+    "lat": 23,
+    "lon": -102,
+    "aqi": 68,
+    "pm25": 31,
+    "category": "Moderate"
+  },
+  {
+    "id": "c_110",
+    "name": "Micronesia",
+    "capital": "Palikir",
+    "lat": 6.91666666,
+    "lon": 158.25,
+    "aqi": 26,
+    "pm25": 12,
+    "category": "Good"
+  },
+  {
+    "id": "c_111",
+    "name": "Moldova",
+    "capital": "Chisinau",
+    "lat": 47,
+    "lon": 29,
+    "aqi": 70,
+    "pm25": 32,
+    "category": "Moderate"
+  },
+  {
+    "id": "c_112",
+    "name": "Monaco",
+    "capital": "Monaco",
+    "lat": 43.73333333,
+    "lon": 7.4,
+    "aqi": 31,
+    "pm25": 14,
+    "category": "Good"
+  },
+  {
+    "id": "c_113",
+    "name": "Mongolia",
+    "capital": "Ulaanbaatar",
+    "lat": 46,
+    "lon": 105,
+    "aqi": 118,
+    "pm25": 53,
+    "category": "Poor"
+  },
+  {
+    "id": "c_114",
+    "name": "Montenegro",
+    "capital": "Podgorica",
+    "lat": 42.5,
+    "lon": 19.3,
+    "aqi": 63,
+    "pm25": 28,
+    "category": "Moderate"
+  },
+  {
+    "id": "c_115",
+    "name": "Morocco",
+    "capital": "Rabat",
+    "lat": 32,
+    "lon": -5,
+    "aqi": 95,
+    "pm25": 43,
+    "category": "Moderate"
+  },
+  {
+    "id": "c_116",
+    "name": "Mozambique",
+    "capital": "Maputo",
+    "lat": -18.25,
+    "lon": 35,
+    "aqi": 107,
+    "pm25": 48,
+    "category": "Poor"
+  },
+  {
+    "id": "c_117",
+    "name": "Myanmar",
+    "capital": "Naypyidaw",
+    "lat": 22,
+    "lon": 98,
+    "aqi": 105,
+    "pm25": 47,
+    "category": "Poor"
+  },
+  {
+    "id": "c_118",
+    "name": "Namibia",
+    "capital": "Windhoek",
+    "lat": -22,
+    "lon": 17,
+    "aqi": 101,
+    "pm25": 45,
+    "category": "Poor"
+  },
+  {
+    "id": "c_119",
+    "name": "Nauru",
+    "capital": "Yaren",
+    "lat": -0.53333333,
+    "lon": 166.91666666,
+    "aqi": 37,
+    "pm25": 17,
+    "category": "Good"
+  },
+  {
+    "id": "c_120",
+    "name": "Nepal",
+    "capital": "Kathmandu",
+    "lat": 28,
+    "lon": 84,
+    "aqi": 140,
+    "pm25": 63,
+    "category": "Poor"
+  },
+  {
+    "id": "c_121",
+    "name": "Netherlands",
+    "capital": "Amsterdam",
+    "lat": 52.5,
+    "lon": 5.75,
+    "aqi": 84,
+    "pm25": 38,
+    "category": "Moderate"
+  },
+  {
+    "id": "c_122",
+    "name": "New Zealand",
+    "capital": "Wellington",
+    "lat": -41,
+    "lon": 174,
+    "aqi": 71,
+    "pm25": 32,
+    "category": "Moderate"
+  },
+  {
+    "id": "c_123",
+    "name": "Nicaragua",
+    "capital": "Managua",
+    "lat": 13,
+    "lon": -85,
+    "aqi": 79,
+    "pm25": 36,
+    "category": "Moderate"
+  },
+  {
+    "id": "c_124",
+    "name": "Niger",
+    "capital": "Niamey",
+    "lat": 16,
+    "lon": 8,
+    "aqi": 67,
+    "pm25": 30,
+    "category": "Moderate"
+  },
+  {
+    "id": "c_125",
+    "name": "Nigeria",
+    "capital": "Abuja",
+    "lat": 10,
+    "lon": 8,
+    "aqi": 83,
+    "pm25": 37,
+    "category": "Moderate"
+  },
+  {
+    "id": "c_126",
+    "name": "North Korea",
+    "capital": "Pyongyang",
+    "lat": 40,
+    "lon": 127,
+    "aqi": 137,
+    "pm25": 62,
+    "category": "Poor"
+  },
+  {
+    "id": "c_127",
+    "name": "North Macedonia",
+    "capital": "Skopje",
+    "lat": 41.83333333,
+    "lon": 22,
+    "aqi": 43,
+    "pm25": 19,
+    "category": "Good"
+  },
+  {
+    "id": "c_128",
+    "name": "Norway",
+    "capital": "Oslo",
+    "lat": 62,
+    "lon": 10,
+    "aqi": 56,
+    "pm25": 25,
+    "category": "Moderate"
+  },
+  {
+    "id": "c_129",
+    "name": "Oman",
+    "capital": "Muscat",
+    "lat": 21,
+    "lon": 57,
+    "aqi": 67,
+    "pm25": 30,
+    "category": "Moderate"
+  },
+  {
+    "id": "c_130",
+    "name": "Pakistan",
+    "capital": "Islamabad",
+    "lat": 30,
+    "lon": 70,
+    "aqi": 145,
+    "pm25": 65,
+    "category": "Poor"
+  },
+  {
+    "id": "c_131",
+    "name": "Palau",
+    "capital": "Ngerulmud",
+    "lat": 7.5,
+    "lon": 134.5,
+    "aqi": 93,
+    "pm25": 42,
+    "category": "Moderate"
+  },
+  {
+    "id": "c_132",
+    "name": "Palestine",
+    "capital": "Ramallah",
+    "lat": 31.9,
+    "lon": 35.2,
+    "aqi": 53,
+    "pm25": 24,
+    "category": "Moderate"
+  },
+  {
+    "id": "c_133",
+    "name": "Panama",
+    "capital": "Panama City",
+    "lat": 9,
+    "lon": -80,
+    "aqi": 37,
+    "pm25": 17,
+    "category": "Good"
+  },
+  {
+    "id": "c_134",
+    "name": "Papua New Guinea",
+    "capital": "Port Moresby",
+    "lat": -6,
+    "lon": 147,
+    "aqi": 78,
+    "pm25": 35,
+    "category": "Moderate"
+  },
+  {
+    "id": "c_135",
+    "name": "Paraguay",
+    "capital": "Asuncion",
+    "lat": -23,
+    "lon": -58,
+    "aqi": 57,
+    "pm25": 26,
+    "category": "Moderate"
+  },
+  {
+    "id": "c_136",
+    "name": "Peru",
+    "capital": "Lima",
+    "lat": -10,
+    "lon": -76,
+    "aqi": 62,
+    "pm25": 28,
+    "category": "Moderate"
+  },
+  {
+    "id": "c_137",
+    "name": "Philippines",
+    "capital": "Manila",
+    "lat": 13,
+    "lon": 122,
+    "aqi": 83,
+    "pm25": 37,
+    "category": "Moderate"
+  },
+  {
+    "id": "c_138",
+    "name": "Poland",
+    "capital": "Warsaw",
+    "lat": 52,
+    "lon": 20,
+    "aqi": 83,
+    "pm25": 37,
+    "category": "Moderate"
+  },
+  {
+    "id": "c_139",
+    "name": "Portugal",
+    "capital": "Lisbon",
+    "lat": 39.5,
+    "lon": -8,
+    "aqi": 64,
+    "pm25": 29,
+    "category": "Moderate"
+  },
+  {
+    "id": "c_140",
+    "name": "Qatar",
+    "capital": "Doha",
+    "lat": 25.5,
+    "lon": 51.25,
+    "aqi": 83,
+    "pm25": 37,
+    "category": "Moderate"
+  },
+  {
+    "id": "c_141",
+    "name": "Romania",
+    "capital": "Bucharest",
+    "lat": 46,
+    "lon": 25,
+    "aqi": 75,
+    "pm25": 34,
+    "category": "Moderate"
+  },
+  {
+    "id": "c_142",
+    "name": "Russia",
+    "capital": "Moscow",
+    "lat": 60,
+    "lon": 100,
+    "aqi": 16,
+    "pm25": 7,
+    "category": "Good"
+  },
+  {
+    "id": "c_143",
+    "name": "Rwanda",
+    "capital": "Kigali",
+    "lat": -2,
+    "lon": 30,
+    "aqi": 71,
+    "pm25": 32,
+    "category": "Moderate"
+  },
+  {
+    "id": "c_144",
+    "name": "Saint Kitts and Nevis",
+    "capital": "Basseterre",
+    "lat": 17.33333333,
+    "lon": -62.75,
+    "aqi": 65,
+    "pm25": 29,
+    "category": "Moderate"
+  },
+  {
+    "id": "c_145",
+    "name": "Saint Lucia",
+    "capital": "Castries",
+    "lat": 13.88333333,
+    "lon": -60.96666666,
+    "aqi": 30,
+    "pm25": 14,
+    "category": "Good"
+  },
+  {
+    "id": "c_146",
+    "name": "Samoa",
+    "capital": "Apia",
+    "lat": -13.58333333,
+    "lon": -172.33333333,
+    "aqi": 99,
+    "pm25": 45,
+    "category": "Moderate"
+  },
+  {
+    "id": "c_147",
+    "name": "San Marino",
+    "capital": "San Marino",
+    "lat": 43.76666666,
+    "lon": 12.41666666,
+    "aqi": 58,
+    "pm25": 26,
+    "category": "Moderate"
+  },
+  {
+    "id": "c_148",
+    "name": "Sao Tome and Principe",
+    "capital": "Sao Tome",
+    "lat": 1,
+    "lon": 7,
+    "aqi": 82,
+    "pm25": 37,
+    "category": "Moderate"
+  },
+  {
+    "id": "c_149",
+    "name": "Saudi Arabia",
+    "capital": "Riyadh",
+    "lat": 25,
+    "lon": 45,
+    "aqi": 82,
+    "pm25": 37,
+    "category": "Moderate"
+  },
+  {
+    "id": "c_150",
+    "name": "Senegal",
+    "capital": "Dakar",
+    "lat": 14,
+    "lon": -14,
+    "aqi": 85,
+    "pm25": 38,
+    "category": "Moderate"
+  },
+  {
+    "id": "c_151",
+    "name": "Serbia",
+    "capital": "Belgrade",
+    "lat": 44,
+    "lon": 21,
+    "aqi": 83,
+    "pm25": 37,
+    "category": "Moderate"
+  },
+  {
+    "id": "c_152",
+    "name": "Seychelles",
+    "capital": "Victoria",
+    "lat": -4.6574977,
+    "lon": 55.4540146,
+    "aqi": 122,
+    "pm25": 55,
+    "category": "Poor"
+  },
+  {
+    "id": "c_153",
+    "name": "Sierra Leone",
+    "capital": "Freetown",
+    "lat": 8.5,
+    "lon": -11.5,
+    "aqi": 72,
+    "pm25": 32,
+    "category": "Moderate"
+  },
+  {
+    "id": "c_154",
+    "name": "Singapore",
+    "capital": "Singapore",
+    "lat": 1.36666666,
+    "lon": 103.8,
+    "aqi": 87,
+    "pm25": 39,
+    "category": "Moderate"
+  },
+  {
+    "id": "c_155",
+    "name": "Slovakia",
+    "capital": "Bratislava",
+    "lat": 48.66666666,
+    "lon": 19.5,
+    "aqi": 53,
+    "pm25": 24,
+    "category": "Moderate"
+  },
+  {
+    "id": "c_156",
+    "name": "Slovenia",
+    "capital": "Ljubljana",
+    "lat": 46.11666666,
+    "lon": 14.81666666,
+    "aqi": 50,
+    "pm25": 23,
+    "category": "Good"
+  },
+  {
+    "id": "c_157",
+    "name": "Solomon Islands",
+    "capital": "Honiara",
+    "lat": -8,
+    "lon": 159,
+    "aqi": 47,
+    "pm25": 21,
+    "category": "Good"
+  },
+  {
+    "id": "c_158",
+    "name": "Somalia",
+    "capital": "Mogadishu",
+    "lat": 10,
+    "lon": 49,
+    "aqi": 68,
+    "pm25": 31,
+    "category": "Moderate"
+  },
+  {
+    "id": "c_159",
+    "name": "South Africa",
+    "capital": "Pretoria",
+    "lat": -29,
+    "lon": 24,
+    "aqi": 124,
+    "pm25": 56,
+    "category": "Poor"
+  },
+  {
+    "id": "c_160",
+    "name": "South Korea",
+    "capital": "Seoul",
+    "lat": 37,
+    "lon": 127.5,
+    "aqi": 168,
+    "pm25": 76,
+    "category": "Unhealthy"
+  },
+  {
+    "id": "c_161",
+    "name": "South Sudan",
+    "capital": "Juba",
+    "lat": 7,
+    "lon": 30,
+    "aqi": 131,
+    "pm25": 59,
+    "category": "Poor"
+  },
+  {
+    "id": "c_162",
+    "name": "Spain",
+    "capital": "Madrid",
+    "lat": 40,
+    "lon": -4,
+    "aqi": 47,
+    "pm25": 21,
+    "category": "Good"
+  },
+  {
+    "id": "c_163",
+    "name": "Sri Lanka",
+    "capital": "Colombo",
+    "lat": 7,
+    "lon": 81,
+    "aqi": 181,
+    "pm25": 81,
+    "category": "Unhealthy"
+  },
+  {
+    "id": "c_164",
+    "name": "Sudan",
+    "capital": "Khartoum",
+    "lat": 15,
+    "lon": 30,
+    "aqi": 85,
+    "pm25": 38,
+    "category": "Moderate"
+  },
+  {
+    "id": "c_165",
+    "name": "Suriname",
+    "capital": "Paramaribo",
+    "lat": 4,
+    "lon": -56,
+    "aqi": 91,
+    "pm25": 41,
+    "category": "Moderate"
+  },
+  {
+    "id": "c_166",
+    "name": "Sweden",
+    "capital": "Stockholm",
+    "lat": 62,
+    "lon": 15,
+    "aqi": 22,
+    "pm25": 10,
+    "category": "Good"
+  },
+  {
+    "id": "c_167",
+    "name": "Switzerland",
+    "capital": "Bern",
+    "lat": 47,
+    "lon": 8,
+    "aqi": 73,
+    "pm25": 33,
+    "category": "Moderate"
+  },
+  {
+    "id": "c_168",
+    "name": "Syria",
+    "capital": "Damascus",
+    "lat": 35,
+    "lon": 38,
+    "aqi": 91,
+    "pm25": 41,
+    "category": "Moderate"
+  },
+  {
+    "id": "c_169",
+    "name": "Taiwan",
+    "capital": "Taipei",
+    "lat": 23.5,
+    "lon": 121,
+    "aqi": 132,
+    "pm25": 59,
+    "category": "Poor"
+  },
+  {
+    "id": "c_170",
+    "name": "Tajikistan",
+    "capital": "Dushanbe",
+    "lat": 39,
+    "lon": 71,
+    "aqi": 109,
+    "pm25": 49,
+    "category": "Poor"
+  },
+  {
+    "id": "c_171",
+    "name": "Tanzania",
+    "capital": "Dodoma",
+    "lat": -6,
+    "lon": 35,
+    "aqi": 120,
+    "pm25": 54,
+    "category": "Poor"
+  },
+  {
+    "id": "c_172",
+    "name": "Thailand",
+    "capital": "Bangkok",
+    "lat": 15,
+    "lon": 100,
+    "aqi": 75,
+    "pm25": 34,
+    "category": "Moderate"
+  },
+  {
+    "id": "c_173",
+    "name": "Timor-Leste",
+    "capital": "Dili",
+    "lat": -8.83333333,
+    "lon": 125.91666666,
+    "aqi": 96,
+    "pm25": 43,
+    "category": "Moderate"
+  },
+  {
+    "id": "c_174",
+    "name": "Togo",
+    "capital": "Lome",
+    "lat": 8,
+    "lon": 1.16666666,
+    "aqi": 61,
+    "pm25": 27,
+    "category": "Moderate"
+  },
+  {
+    "id": "c_175",
+    "name": "Tonga",
+    "capital": "Nuku'alofa",
+    "lat": -20,
+    "lon": -175,
+    "aqi": 94,
+    "pm25": 42,
+    "category": "Moderate"
+  },
+  {
+    "id": "c_176",
+    "name": "Trinidad and Tobago",
+    "capital": "Port of Spain",
+    "lat": 11,
+    "lon": -61,
+    "aqi": 77,
+    "pm25": 35,
+    "category": "Moderate"
+  },
+  {
+    "id": "c_177",
+    "name": "Tunisia",
+    "capital": "Tunis",
+    "lat": 34,
+    "lon": 9,
+    "aqi": 117,
+    "pm25": 53,
+    "category": "Poor"
+  },
+  {
+    "id": "c_178",
+    "name": "Turkey",
+    "capital": "Ankara",
+    "lat": 39,
+    "lon": 35,
+    "aqi": 113,
+    "pm25": 51,
+    "category": "Poor"
+  },
+  {
+    "id": "c_179",
+    "name": "Turkmenistan",
+    "capital": "Ashgabat",
+    "lat": 40,
+    "lon": 60,
+    "aqi": 95,
+    "pm25": 43,
+    "category": "Moderate"
+  },
+  {
+    "id": "c_180",
+    "name": "Tuvalu",
+    "capital": "Funafuti",
+    "lat": -8,
+    "lon": 178,
+    "aqi": 42,
+    "pm25": 19,
+    "category": "Good"
+  },
+  {
+    "id": "c_181",
+    "name": "Uganda",
+    "capital": "Kampala",
+    "lat": 1,
+    "lon": 32,
+    "aqi": 86,
+    "pm25": 39,
+    "category": "Moderate"
+  },
+  {
+    "id": "c_182",
+    "name": "Ukraine",
+    "capital": "Kyiv",
+    "lat": 49,
+    "lon": 32,
+    "aqi": 55,
+    "pm25": 25,
+    "category": "Moderate"
+  },
+  {
+    "id": "c_183",
+    "name": "United Arab Emirates",
+    "capital": "Abu Dhabi",
+    "lat": 24,
+    "lon": 54,
+    "aqi": 58,
+    "pm25": 26,
+    "category": "Moderate"
+  },
+  {
+    "id": "c_184",
+    "name": "United Kingdom",
+    "capital": "London",
+    "lat": 54,
+    "lon": -2,
+    "aqi": 85,
+    "pm25": 38,
+    "category": "Moderate"
+  },
+  {
+    "id": "c_185",
+    "name": "United States",
+    "capital": "Washington D.C.",
+    "lat": 38,
+    "lon": -97,
+    "aqi": 29,
+    "pm25": 13,
+    "category": "Good"
+  },
+  {
+    "id": "c_186",
+    "name": "Uruguay",
+    "capital": "Montevideo",
+    "lat": -33,
+    "lon": -56,
+    "aqi": 71,
+    "pm25": 32,
+    "category": "Moderate"
+  },
+  {
+    "id": "c_187",
+    "name": "Uzbekistan",
+    "capital": "Tashkent",
+    "lat": 41,
+    "lon": 64,
+    "aqi": 54,
+    "pm25": 24,
+    "category": "Moderate"
+  },
+  {
+    "id": "c_188",
+    "name": "Vanuatu",
+    "capital": "Port Vila",
+    "lat": -16,
+    "lon": 167,
+    "aqi": 70,
+    "pm25": 32,
+    "category": "Moderate"
+  },
+  {
+    "id": "c_189",
+    "name": "Vatican City",
+    "capital": "Vatican City",
+    "lat": 41.9,
+    "lon": 12.45,
+    "aqi": 32,
+    "pm25": 14,
+    "category": "Good"
+  },
+  {
+    "id": "c_190",
+    "name": "Venezuela",
+    "capital": "Caracas",
+    "lat": 8,
+    "lon": -66,
+    "aqi": 26,
+    "pm25": 12,
+    "category": "Good"
+  },
+  {
+    "id": "c_191",
+    "name": "Vietnam",
+    "capital": "Hanoi",
+    "lat": 16.16666666,
+    "lon": 107.83333333,
+    "aqi": 92,
+    "pm25": 41,
+    "category": "Moderate"
+  },
+  {
+    "id": "c_192",
+    "name": "Yemen",
+    "capital": "Sanaa",
+    "lat": 15,
+    "lon": 48,
+    "aqi": 85,
+    "pm25": 38,
+    "category": "Moderate"
+  },
+  {
+    "id": "c_193",
+    "name": "Zambia",
+    "capital": "Lusaka",
+    "lat": -15,
+    "lon": 30,
+    "aqi": 94,
+    "pm25": 42,
+    "category": "Moderate"
+  },
+  {
+    "id": "c_194",
+    "name": "Zimbabwe",
+    "capital": "Harare",
+    "lat": -20,
+    "lon": 30,
+    "aqi": 79,
+    "pm25": 36,
+    "category": "Moderate"
+  }
+]

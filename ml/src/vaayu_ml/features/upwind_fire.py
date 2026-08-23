@@ -4,6 +4,21 @@ import pandas as pd
 from vaayu_ml.features.align import haversine_distance
 
 
+def _fire_power(fires) -> "np.ndarray":
+    """Fire radiative power, whichever column name the caller supplies.
+
+    load_fire_clusters yields `total_frp` (summed over a cluster) while raw
+    FIRMS detections carry `frp` (per detection). This module read `frp`
+    unconditionally, so wiring it to the cluster loader raised KeyError. It is
+    latent only because run_attribution.py is still a mock.
+    """
+    if "total_frp" in fires:
+        return fires["total_frp"].values
+    if "frp" in fires:
+        return fires["frp"].values
+    raise KeyError("fires must carry either 'total_frp' or 'frp'")
+
+
 def upwind_fire_exposure(
     receptor_lat: float,
     receptor_lon: float,
@@ -17,7 +32,7 @@ def upwind_fire_exposure(
 
     Args:
         receptor_lat, receptor_lon: Target location
-        fires: DataFrame with columns ['lat', 'lon', 'frp']
+        fires: DataFrame with 'lat', 'lon', and either 'total_frp' or 'frp'
         wind_u, wind_v: Wind vector at receptor (m/s)
         decay_hours: Exponential decay time constant for transport
 
@@ -32,7 +47,7 @@ def upwind_fire_exposure(
         dists = haversine_distance(
             receptor_lat, receptor_lon, fires["lat"].values, fires["lon"].values
         )
-        return float(np.sum(fires["frp"].values / (1 + dists)))
+        return float(np.sum(_fire_power(fires) / (1 + dists)))
 
     wind_speed_ms = np.sqrt(wind_u**2 + wind_v**2)
     # Wind vector direction (where it's going)
@@ -76,6 +91,6 @@ def upwind_fire_exposure(
     transport_hours = dists_km / wind_speed_kmh
 
     # Calculate contribution: FRP * alignment * decay
-    contribution = fires["frp"].values * wind_alignment * np.exp(-transport_hours / decay_hours)
+    contribution = _fire_power(fires) * wind_alignment * np.exp(-transport_hours / decay_hours)
 
     return float(np.sum(contribution))

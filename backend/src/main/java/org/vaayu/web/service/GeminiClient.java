@@ -3,6 +3,7 @@ package org.vaayu.web.service;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
+import java.net.http.HttpClient;
 import java.time.Duration;
 import java.util.List;
 import java.util.Map;
@@ -22,14 +23,26 @@ public class GeminiClient implements GeminiClassifier {
             """;
 
     private final GeminiProperties properties;
+    private static final Duration CONNECT_TIMEOUT = Duration.ofSeconds(5);
+    private static final Duration READ_TIMEOUT = Duration.ofSeconds(10);
+
     private final RestClient client;
     private final ObjectMapper objectMapper;
 
     public GeminiClient(GeminiProperties properties, ObjectMapper objectMapper) {
         this.properties = properties;
         this.objectMapper = objectMapper;
-        JdkClientHttpRequestFactory factory = new JdkClientHttpRequestFactory();
-        factory.setReadTimeout(Duration.ofSeconds(10));
+        // A read timeout alone is not enough. The JDK HTTP client's default
+        // connect timeout is infinite, so a blackholed endpoint -- one that
+        // accepts nothing and never resets -- hangs the calling thread forever
+        // rather than for ten seconds. The connect timeout has to be set on the
+        // HttpClient itself; JdkClientHttpRequestFactory only exposes the read
+        // timeout.
+        HttpClient httpClient = HttpClient.newBuilder()
+                .connectTimeout(CONNECT_TIMEOUT)
+                .build();
+        JdkClientHttpRequestFactory factory = new JdkClientHttpRequestFactory(httpClient);
+        factory.setReadTimeout(READ_TIMEOUT);
         this.client = RestClient.builder().requestFactory(factory).build();
     }
 

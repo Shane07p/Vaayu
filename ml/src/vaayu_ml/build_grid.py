@@ -119,8 +119,12 @@ def generate_cells(bbox: tuple[float, float, float, float] = NCR_BBOX) -> list[d
     mid_lat = (min_lat + max_lat) / 2
     lon_step = CELL_SIZE_KM / km_per_degree_lon(mid_lat)
 
-    n_rows = int((max_lat - min_lat) / lat_step)
-    n_cols = int((max_lon - min_lon) / lon_step)
+    # Ceil, not int. Truncating dropped the partial row and column at the north
+    # and east edges, so the bounding box was not actually covered: stations
+    # near those edges mapped to a cell that did not exist. The final row and
+    # column may extend slightly past the box, which is preferable to a gap.
+    n_rows = math.ceil((max_lat - min_lat) / lat_step)
+    n_cols = math.ceil((max_lon - min_lon) / lon_step)
 
     cells = []
     for row in range(n_rows):
