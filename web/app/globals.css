@@ -124,3 +124,52 @@ body {
 .animate-subtle-pulse {
   animation: pulseSubtle 3s cubic-bezier(0.4, 0, 0.6, 1) infinite;
 }
+
+/* Map marker: the AQI colour is applied by AQIMarkers as --aqi-color. */
+.vaayu-aqi-marker {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  cursor: pointer;
+  border: 0;
+  background: transparent;
+  transition: transform 140ms ease;
+}
+
+.vaayu-aqi-marker:hover,
+.vaayu-aqi-marker:focus-visible {
+  transform: translateY(-3px) scale(1.07);
+  outline: none;
+}
+
+.vaayu-aqi-marker__value {
+  min-width: 2.75rem;
+  padding: 0.38rem 0.62rem;
+  border: 1.5px solid var(--aqi-color);
+  border-radius: 999px;
+  background: rgb(0 0 0 / 0.58);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  color: var(--aqi-color);
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  font-size: 0.83rem;
+  font-weight: 800;
+  line-height: 1;
+  text-align: center;
+}
+
+.vaayu-aqi-marker__name {
+  max-width: 9rem;
+  margin-top: 0.25rem;
+  padding: 0.12rem 0.36rem;
+  overflow: hidden;
+  border-radius: 0.25rem;
+  background: rgb(7 10 14 / 0.78);
+  color: #e2e8f0;
+  font-family: ui-sans-serif, system-ui, sans-serif;
+  font-size: 0.66rem;
+  font-weight: 700;
+  line-height: 1.1;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}

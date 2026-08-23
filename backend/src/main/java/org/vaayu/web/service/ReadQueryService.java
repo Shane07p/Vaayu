@@ -9,6 +9,10 @@ import java.util.Map;
 import java.util.Optional;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
+import org.springframework.cache.Cache;
+import org.springframework.cache.CacheManager;
+import org.springframework.transaction.support.TransactionSynchronization;
+import org.springframework.transaction.support.TransactionSynchronizationManager;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.vaayu.web.dto.AlertResponse;
@@ -23,9 +27,11 @@ import org.vaayu.web.dto.WorklistItemResponse;
 @Transactional(readOnly = true)
 public class ReadQueryService implements ReadQueryOperations {
     private final NamedParameterJdbcTemplate jdbc;
+    private final CacheManager cacheManager;
 
-    public ReadQueryService(NamedParameterJdbcTemplate jdbc) {
+    public ReadQueryService(NamedParameterJdbcTemplate jdbc, CacheManager cacheManager) {
         this.jdbc = jdbc;
+        this.cacheManager = cacheManager;
     }
 
     @Cacheable("stations")
@@ -55,10 +61,17 @@ public class ReadQueryService implements ReadQueryOperations {
                     WHERE p.grid_cell_id = g.id
                     ORDER BY p.ts DESC, p.id DESC LIMIT 1
                 ) p ON TRUE
-                WHERE ST_Within(
-                    g.centroid::geometry,
-                    ST_MakeEnvelope(:minLon, :minLat, :maxLon, :maxLat, 4326)
-                )
+                -- && is the bounding-box overlap operator and is the only spatial
+                -- predicate here that can use idx_grid_cell_centroid. ST_Within on
+                -- g.centroid::geometry casts every row before comparing, so the
+                -- index could not be used and the query sequentially scanned the
+                -- whole grid, then ran one LATERAL probe per cell. That was 400
+                -- cells when this was written and is 5,929 now.
+                --
+                -- ST_Within also excludes points lying exactly on the envelope
+                -- edge, silently dropping boundary cells from the map. && is
+                -- inclusive, which is the behaviour a viewport query wants.
+                WHERE g.centroid::geometry && ST_MakeEnvelope(:minLon, :minLat, :maxLon, :maxLat, 4326)
                 """,
                 Map.of("minLon", minLon, "minLat", minLat, "maxLon", maxLon, "maxLat", maxLat),
                 (rs, row) -> new GridPredictionResponse(
@@ -142,8 +155,42 @@ public class ReadQueryService implements ReadQueryOperations {
         return alerts.stream().findFirst();
     }
 
+    /**
+     * Record an enforcement action and drop the cached worklist afterwards.
+     *
+     * <p>The cache is evicted from an after-commit callback rather than with
+     * {@code @CacheEvict}. The transaction and cache interceptors have no defined
+     * ordering between them, so the annotation can evict while the transaction is
+     * still open: a concurrent read then repopulates the cache from pre-commit
+     * rows and serves them for the full five-minute TTL.
+     *
+     * <p>What that looks like to a user is a cluster someone has just actioned
+     * still showing consecutive_days_unactioned at its old value, and therefore
+     * still displaying the Direction 95 escalation badge. That is a false claim
+     * that a statutory escalation threshold has been crossed, so it is worth the
+     * extra few lines to evict only once the data is actually visible.
+     */
+    private void evictWorklistAfterCommit() {
+        if (!TransactionSynchronizationManager.isSynchronizationActive()) {
+            clearWorklistCache();
+            return;
+        }
+        TransactionSynchronizationManager.registerSynchronization(new TransactionSynchronization() {
+            @Override
+            public void afterCommit() {
+                clearWorklistCache();
+            }
+        });
+    }
+
+    private void clearWorklistCache() {
+        Cache cache = cacheManager.getCache("worklist");
+        if (cache != null) {
+            cache.clear();
+        }
+    }
+
     @Transactional
-    @org.springframework.cache.annotation.CacheEvict(value = "worklist", allEntries = true)
     public WorklistActionResponse recordWorklistAction(long clusterId, String receptor, String actionedBy) {
         List<WorklistActionResponse> actions = jdbc.query(
                 """
@@ -160,6 +207,7 @@ public class ReadQueryService implements ReadQueryOperations {
                 Map.of("clusterId", clusterId, "receptor", receptor, "actionedBy", actionedBy),
                 (rs, row) -> new WorklistActionResponse(
                         rs.getString("code"), timestamp(rs, "last_actioned_at"), rs.getString("actioned_by")));
+        evictWorklistAfterCommit();
         if (actions.isEmpty()) {
             throw new java.util.NoSuchElementException("worklist cluster was not found");
         }

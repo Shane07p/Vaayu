@@ -34,6 +34,7 @@ from vaayu_ml.db import (
 from vaayu_ml.evaluation.exceedance import exceedance_metrics
 from vaayu_ml.evaluation.loso_cv import loso_splits
 from vaayu_ml.features.grid import add_cyclic_features
+from vaayu_ml.features.wind import wind_direction_from, wind_speed
 from vaayu_ml.models.nowcast_xgb import NowcastModel
 
 MODEL_NAME = "nowcast_xgb"
@@ -68,8 +69,8 @@ def derive_wind(frame: pd.DataFrame) -> pd.DataFrame:
         frame["wind_direction"] = np.nan
         return frame
 
-    frame["wind_speed"] = np.hypot(u, v)
-    frame["wind_direction"] = (np.degrees(np.arctan2(-u, -v)) + 360.0) % 360.0
+    frame["wind_speed"] = wind_speed(u, v)
+    frame["wind_direction"] = wind_direction_from(u, v)
     return frame
 
 
@@ -123,9 +124,26 @@ def assemble(hours: int) -> tuple[pd.DataFrame, pd.DataFrame]:
         direction="nearest",
         tolerance=pd.Timedelta(hours=SNAPSHOT_TOLERANCE_HOURS),
     )
-    # merge_asof keeps unmatched left rows with null right columns; a reading
-    # with no satellite retrieval within tolerance is not a training example.
-    training = training[training["blh"].notna()]
+    # merge_asof keeps unmatched left rows with null right columns, so unmatched
+    # readings must be dropped explicitly.
+    #
+    # This previously tested only `blh`, which comes from met_snapshot, while the
+    # comment claimed it excluded rows with no satellite retrieval. Those are
+    # different tables: a row could have meteorology and no AOD at all and still
+    # pass. Combined with the timestamp misalignment between the ingestion jobs,
+    # that meant every training row had null satellite features and the model
+    # still reported a plausible RMSE -- trained on meteorology alone while
+    # appearing to use satellite data.
+    #
+    # Requiring the satellite column too makes the guard mean what it says. AOD
+    # is the feature the nowcast exists to exploit; without it this is a
+    # meteorology regression wearing a satellite model's name.
+    required = ["blh", "aod_047"]
+    before = len(training)
+    training = training.dropna(subset=required)
+    dropped = before - len(training)
+    if dropped:
+        print(f"  dropped {dropped} of {before} rows lacking {required}")
     # Overwrite the merged cell-level value with the distance to the station
     # this row is actually labelled by.
     training["distance_to_nearest_station_km"] = training["distance_km"]
@@ -196,6 +214,15 @@ def run(hours: int = 720, dry_run: bool = False) -> None:
     metrics = evaluate(model, training)
     for key, value in metrics.items():
         print(f"  {key}: {value}")
+
+    # Predict only the most recent snapshot. Scoring the whole lookback window
+    # wrote a prediction for every historical hour on every run, and because each
+    # run stamps a fresh model_version the ON CONFLICT upsert never fired, so
+    # grid_prediction grew without bound. The nowcast is a current-conditions
+    # surface; back-filling history is a separate job with different semantics.
+    latest_ts = frame["ts"].max()
+    frame = frame[frame["ts"] == latest_ts].reset_index(drop=True)
+    print(f"  predicting {len(frame)} cells at {latest_ts}")
 
     predictions = model.predict(frame)
     output = pd.DataFrame(

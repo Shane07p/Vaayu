@@ -19,12 +19,12 @@ from __future__ import annotations
 
 import argparse
 import json
-from datetime import UTC, datetime
 
 from ingestion.gee.client import (
     EarthEngineUnavailableError,
     credentials_present,
     initialise,
+    snapshot_timestamp,
 )
 from ingestion.settings import settings
 from ingestion.source import Source, SourceUnavailableError
@@ -107,8 +107,9 @@ class Era5Source(Source):
             bands = FORECAST_BANDS if forecast else REANALYSIS_BANDS
 
             # Computed once in Python: see the note in maiac_aod._fetch_live.
-            window_end = datetime.now(UTC)
-            timestamp = window_end.isoformat()
+            # Hour-aligned so all three snapshot tables share a ts and can be
+            # joined. See snapshot_timestamp for why this matters.
+            timestamp = snapshot_timestamp()
 
             now = ee.Date(timestamp)
             if forecast:

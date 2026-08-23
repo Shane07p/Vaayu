@@ -23,6 +23,12 @@ import org.vaayu.web.service.ReadQueryOperations;
 @RequestMapping("/api/v1")
 @Tag(name = "Authority console", description = "Requires the X-Console-Secret header.")
 public class ConsoleController {
+
+    /** Matches the @Size(max = 200) bound on WorklistActionRequest.actionedBy. */
+    private static final int MAX_ACTOR_LENGTH = 200;
+
+    private static final String DEFAULT_ACTOR = "console";
+
     private final ReadQueryOperations queries;
 
     public ConsoleController(ReadQueryOperations queries) {
@@ -63,9 +69,37 @@ public class ConsoleController {
         if (clusterId < 1 || receptor.isBlank() || receptor.length() > 100) {
             throw new IllegalArgumentException("clusterId and receptor must be valid");
         }
-        String actionedBy = request != null && request.actionedBy() != null && !request.actionedBy().isBlank()
-                ? request.actionedBy().trim()
-                : (headerActor == null || headerActor.isBlank() ? "console" : headerActor.trim());
+        String bodyActor = request == null ? null : request.actionedBy();
+        String actionedBy = bodyActor != null && !bodyActor.isBlank()
+                ? sanitiseActor(bodyActor)
+                : sanitiseActor(headerActor);
         return queries.recordWorklistAction(clusterId, receptor, actionedBy);
+    }
+
+    /**
+     * Normalise an actor identity before it reaches the audit column.
+     *
+     * <p>{@code actionedBy} in the request body is bounded by {@code @Size(max = 200)},
+     * but the {@code X-Console-Actor} header bypassed that and reached the same
+     * {@code fire_cluster_impact.actioned_by} column unvalidated. The column is
+     * TEXT, so an oversized value is stored rather than rejected, and embedded
+     * newlines let a caller forge additional lines in anything that renders the
+     * audit trail.
+     *
+     * <p>This column records who ordered an enforcement action, so it should be
+     * hard to write nonsense into.
+     */
+    private static String sanitiseActor(String candidate) {
+        if (candidate == null || candidate.isBlank()) {
+            return DEFAULT_ACTOR;
+        }
+        // Strip control characters, including CR and LF, so a value cannot span lines.
+        String cleaned = candidate.replaceAll("\\p{Cntrl}", " ").trim();
+        if (cleaned.isEmpty()) {
+            return DEFAULT_ACTOR;
+        }
+        return cleaned.length() > MAX_ACTOR_LENGTH
+                ? cleaned.substring(0, MAX_ACTOR_LENGTH)
+                : cleaned;
     }
 }
