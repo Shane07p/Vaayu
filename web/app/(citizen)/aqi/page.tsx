@@ -2,35 +2,55 @@
 
 
 import FullScreenMap from '@/components/citizen/FullScreenMap';
-import { fetchGrid, fetchStations, fetchForecast } from '@/lib/api';
+import { fetchGrid } from '@/lib/api';
 import { useAQIStore } from '@/store/aqiStore';
-import { useEffect } from 'react';
-import type { GridPrediction, Forecast } from '@/lib/schemas';
+import { Suspense, useEffect } from 'react';
+import { useSearchParams } from 'next/navigation';
 
-export default function AqiPage() {
-  const { loadGrid, setLoading } = useAQIStore();
+function AqiView() {
+  const { loadGrid, setLoading, loadLocationData } = useAQIStore();
+  const params = useSearchParams();
+  const lat = params.get('lat');
+  const lon = params.get('lon');
+  const name = params.get('name');
 
   useEffect(() => {
     const loadData = async () => {
+      // Arriving from a ranking, with a place already chosen. Load that rather
+      // than the NCR grid: loadLocationData fetches the cells around the point
+      // and falls back to the nearest station where the 1 km surface does not
+      // reach, which is everywhere outside Delhi-NCR.
+      if (lat && lon) {
+        const latitude = Number(lat);
+        const longitude = Number(lon);
+        if (Number.isFinite(latitude) && Number.isFinite(longitude)) {
+          await loadLocationData(latitude, longitude, name ?? 'Selected location');
+          return;
+        }
+      }
+
       setLoading(true);
       try {
-        const [gridList, stations] = await Promise.all([
-          fetchGrid('76.80,28.20,77.60,28.90'),
-          fetchStations(),
-        ]);
-        loadGrid(gridList);
-        if (stations && stations[0]) {
-          const fc = await fetchForecast(stations[0].id);
-          // TODO: store forecasts if needed
-        }
-      } catch (e) {
-        console.error(e);
+        loadGrid(await fetchGrid('76.80,28.20,77.60,28.90'));
+      } catch (error) {
+        // The map renders without cells and says so; a thrown error here would
+        // blank the page over a failure the map already reports.
+        console.error(error);
       } finally {
         setLoading(false);
       }
     };
     loadData();
-  }, [loadGrid, setLoading]);
+  }, [lat, lon, name, loadGrid, setLoading, loadLocationData]);
 
   return <FullScreenMap />;
+}
+
+export default function AqiPage() {
+  // useSearchParams needs a Suspense boundary above it.
+  return (
+    <Suspense fallback={<FullScreenMap />}>
+      <AqiView />
+    </Suspense>
+  );
 }

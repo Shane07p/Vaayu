@@ -18,6 +18,25 @@ public class CitizenReportService {
 
     private static final Set<String> ALLOWED_BANDS = Set.of("GOOD", "MODERATE", "POOR", "SEVERE");
 
+    /**
+     * Decimal places kept on a submitted position: two, about 1.1 km.
+     *
+     * <p>The class comment has always claimed coarse location. Until now it was
+     * only a claim: whatever the client sent was stored verbatim, and browser
+     * geolocation resolves to a few metres. A report pairs a position with a
+     * photograph and a timestamp, and these reports frequently concern a
+     * neighbour's burning, so an exact fix records who was standing where.
+     *
+     * <p>Rounded here as well as in the browser. Client-side rounding keeps the
+     * precise position off the wire, but a guarantee that depends on every caller
+     * behaving is not a guarantee: an API client, or a future caller that forgets,
+     * would store an exact position under a comment promising otherwise.
+     *
+     * <p>A neighbourhood is enough to corroborate a report against satellite and
+     * station data. A doorstep is not needed for any of it.
+     */
+    private static final int STORED_COORDINATE_DECIMALS = 2;
+
     private final NamedParameterJdbcOperations jdbc;
     private final GeminiClassifier gemini;
 
@@ -48,8 +67,8 @@ public class CitizenReportService {
                 RETURNING id, submitted_at, status
                 """,
                 new MapSqlParameterSource()
-                        .addValue("latitude", request.latitude())
-                        .addValue("longitude", request.longitude())
+                        .addValue("latitude", coarsen(request.latitude()))
+                        .addValue("longitude", coarsen(request.longitude()))
                         .addValue("photoUri", request.photoUri()),
                 (rs, row) -> new StoredReport(
                         rs.getLong("id"),
@@ -97,6 +116,19 @@ public class CitizenReportService {
                 && assessment.confidence() != null
                 && assessment.confidence() >= 0
                 && assessment.confidence() <= 1;
+    }
+
+    /**
+     * Round a coordinate to {@link #STORED_COORDINATE_DECIMALS} places.
+     *
+     * <p>{@link Math#round} rather than BigDecimal: the input is already bounded
+     * to a valid latitude or longitude by request validation, so the scaling
+     * cannot overflow, and half-up on a coordinate has no meaningful bias at this
+     * precision.
+     */
+    static double coarsen(double coordinate) {
+        double scale = Math.pow(10, STORED_COORDINATE_DECIMALS);
+        return Math.round(coordinate * scale) / scale;
     }
 
     private record StoredReport(long id, OffsetDateTime submittedAt, String status) {}

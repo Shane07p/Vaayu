@@ -1,6 +1,17 @@
 /**
  * Geographic reference points for the citizen map.
  *
+ * Coordinates and names only. These files previously carried an `aqi`, `pm25`
+ * and `category` on every one of 5,699 entries, and the markers rendered them
+ * as though they were measurements. They were not: every state in a country
+ * carried its country's figure copied down, frozen, from no stated source, on
+ * the public page where a reader takes a coloured number for current air
+ * quality. 17,097 such fields were removed.
+ *
+ * Air quality comes from the API, which reports what was measured, by whom,
+ * and when. If a place has no measurement, the honest answer is that it has
+ * none -- not a plausible-looking number.
+ *
  * These are fetched at runtime, not imported.
  *
  * The previous version used `import rawStates from "@/public/processed_states.json"`,
@@ -23,9 +34,6 @@ export interface ContinentLocation {
   name: string;
   lat: number;
   lon: number;
-  aqi: number;
-  pm25: number;
-  category: string;
 }
 
 export interface CountryLocation {
@@ -34,9 +42,6 @@ export interface CountryLocation {
   capital?: string;
   lat: number;
   lon: number;
-  aqi: number;
-  pm25: number;
-  category: string;
 }
 
 export interface StateLocation {
@@ -45,9 +50,6 @@ export interface StateLocation {
   country?: string;
   lat: number;
   lon: number;
-  aqi: number;
-  pm25: number;
-  category: string;
 }
 
 export interface CityLocation {
@@ -58,9 +60,6 @@ export interface CityLocation {
   tier: number;
   lat: number;
   lon: number;
-  aqi: number;
-  pm25: number;
-  category: string;
 }
 
 /** Re-export with legacy name for backward compatibility. */

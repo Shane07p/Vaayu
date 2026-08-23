@@ -23,6 +23,7 @@ from io import StringIO
 import httpx
 
 from ingestion.db import write_fire_detections
+from ingestion.runner import run_source
 from ingestion.settings import settings
 from ingestion.source import Source, SourceUnavailableError
 
@@ -120,6 +121,7 @@ def main() -> None:
     parser.add_argument("--days", type=int, default=1, help="recent days to request (1-10)")
     args = parser.parse_args()
     source = FirmsSource(settings.firms_map_key, days=args.days)
-    records = source.fetch()
-    count = len(records) if args.dry_run else write_fire_detections(records, source.mode)
+    # See the note in cpcb.main: the outcome is recorded exactly once here,
+    # including the failure paths that previously left no trace.
+    count = run_source(source, write_fire_detections, dry_run=args.dry_run)
     print(f"FIRMS {source.mode}: {count} records")

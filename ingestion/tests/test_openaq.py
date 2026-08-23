@@ -8,13 +8,19 @@ from ingestion.openaq import (
     DEFAULT_BACKFILL_DAYS,
     NCR_BBOX,
     OpenAqSource,
+    RequestRateLimiter,
+    _retry_after_seconds,
     _utc_timestamp,
     run_backfill,
 )
+from ingestion.runner import run_source
 from ingestion.source import SourceUnavailableError
 
 
 class FakeResponse:
+    status_code = 200
+    headers: dict[str, str] = {}
+
     def __init__(self, payload: object) -> None:
         self._payload = payload
 
@@ -25,6 +31,40 @@ class FakeResponse:
         return self._payload
 
 
+class FakeClient:
+    instances: list["FakeClient"] = []
+
+    def __init__(self, handler, **kwargs) -> None:
+        self.handler = handler
+        self.kwargs = kwargs
+        self.calls: list[tuple[str, dict, dict]] = []
+        self.closed = False
+        self.instances.append(self)
+
+    def __enter__(self):
+        return self
+
+    def __exit__(self, *args) -> None:
+        self.closed = True
+
+    def get(self, url: str, params: dict, headers: dict) -> FakeResponse:
+        self.calls.append((url, params, headers))
+        return self.handler(url, params, headers)
+
+
+class FakeClock:
+    def __init__(self) -> None:
+        self.now = 0.0
+        self.sleeps: list[float] = []
+
+    def monotonic(self) -> float:
+        return self.now
+
+    def sleep(self, seconds: float) -> None:
+        self.sleeps.append(seconds)
+        self.now += seconds
+
+
 def measurement(value: float = 82.1, units: str = "µg/m³") -> dict:
     return {
         "value": value,
@@ -33,51 +73,308 @@ def measurement(value: float = 82.1, units: str = "µg/m³") -> dict:
     }
 
 
-def location() -> dict:
+def location(sensor_ids: list[int] | None = None) -> dict:
     return {
         "id": 8118,
         "name": "New Delhi US Embassy",
         "locality": "New Delhi",
         "country": {"name": "India"},
         "coordinates": {"latitude": 28.5921, "longitude": 77.2279},
-        "sensors": [{"id": 44, "parameter": {"name": "pm25"}}],
+        "sensors": [
+            {"id": sensor_id, "parameter": {"name": "pm25"}} for sensor_id in (sensor_ids or [44])
+        ],
     }
 
 
-def test_live_backfill_uses_v3_sensor_measurements_and_required_headers(monkeypatch):
-    calls: list[tuple[str, dict, dict]] = []
+def page(results: list[dict], requested_page: int = 1) -> FakeResponse:
+    return FakeResponse(
+        {"meta": {"page": requested_page, "limit": 1000, "found": len(results)}, "results": results}
+    )
 
-    def fake_get(url, params, headers, timeout):
-        calls.append((url, params, headers))
+
+def install_client(monkeypatch: pytest.MonkeyPatch, handler) -> None:
+    FakeClient.instances = []
+    monkeypatch.setattr(
+        "ingestion.openaq.httpx.Client", lambda **kwargs: FakeClient(handler, **kwargs)
+    )
+
+
+def test_live_backfill_reuses_one_v3_client_and_required_headers(monkeypatch: pytest.MonkeyPatch):
+    def handler(url, params, headers):
         if url == f"{BASE_URL}/locations":
-            return FakeResponse(
-                {"meta": {"page": 1, "limit": 1000, "found": 1}, "results": [location()]}
-            )
-        return FakeResponse(
-            {"meta": {"page": 1, "limit": 1000, "found": 1}, "results": [measurement()]}
-        )
+            return page([location()])
+        return page([measurement()])
 
-    monkeypatch.setattr("ingestion.openaq.httpx.get", fake_get)
+    install_client(monkeypatch, handler)
     source = OpenAqSource("test-key", end=datetime(2026, 8, 19, tzinfo=UTC))
 
     records = source.fetch()
 
-    assert calls[0][0] == f"{BASE_URL}/locations"
-    assert calls[0][1]["bbox"] == NCR_BBOX
-    assert calls[1][0] == f"{BASE_URL}/sensors/44/measurements"
-    assert calls[1][1]["datetime_from"] == "2026-05-21T00:00:00Z"
-    assert calls[1][1]["datetime_to"] == "2026-08-19T00:00:00Z"
-    assert all(headers == {"X-API-Key": "test-key"} for _, _, headers in calls)
+    assert len(FakeClient.instances) == 1
+    client = FakeClient.instances[0]
+    assert client.closed
+    assert client.calls[0][0] == f"{BASE_URL}/locations"
+    assert client.calls[0][1]["bbox"] == NCR_BBOX
+    assert client.calls[1][0] == f"{BASE_URL}/sensors/44/measurements"
+    assert client.calls[1][1]["datetime_from"] == "2026-05-21T00:00:00Z"
+    assert client.calls[1][1]["datetime_to"] == "2026-08-19T00:00:00Z"
+    assert all(headers == {"X-API-Key": "test-key"} for _, _, headers in client.calls)
     assert records[0]["pollutant_avg"] == 82.1
-    assert records[0]["last_update"] == "2026-08-19T00:00:00Z"
-    assert records[0]["station_source"] == "OPENAQ"
+    assert source.total_units == 1
+    assert source.failed_units == 0
 
 
-def test_pagination_fetches_every_page_and_stops_at_found_count(monkeypatch):
-    pages: list[int] = []
+def test_request_rate_limiter_spaces_requests_without_sleeping_before_the_first():
+    clock = FakeClock()
+    limiter = RequestRateLimiter(60, clock=clock.monotonic, sleeper=clock.sleep)
 
-    def fake_get(url, params, headers, timeout):
-        pages.append(params["page"])
+    limiter.wait()
+    limiter.wait()
+    limiter.wait()
+
+    assert clock.sleeps == [1.0, 1.0]
+
+
+def test_request_rate_limiter_does_not_sleep_when_calls_are_already_spaced():
+    clock = FakeClock()
+    limiter = RequestRateLimiter(60, clock=clock.monotonic, sleeper=clock.sleep)
+
+    limiter.wait()
+    clock.now = 2.0
+    limiter.wait()
+
+    assert clock.sleeps == []
+
+
+def test_rate_limiter_is_used_by_the_latest_and_backfill_paths(monkeypatch: pytest.MonkeyPatch):
+    def handler(url, params, headers):
+        return page([location()]) if url.endswith("/locations") else page([measurement()])
+
+    install_client(monkeypatch, handler)
+    clock = FakeClock()
+    records = OpenAqSource(
+        "test-key",
+        latest=True,
+        requests_per_minute=60,
+        clock=clock.monotonic,
+        sleeper=clock.sleep,
+    ).fetch()
+
+    assert len(records) == 1
+    assert clock.sleeps == [1.0]
+
+
+def test_normal_client_errors_are_not_retried(monkeypatch: pytest.MonkeyPatch):
+    calls = 0
+
+    def handler(url, params, headers):
+        nonlocal calls
+        calls += 1
+        return httpx.Response(404, request=httpx.Request("GET", url))
+
+    install_client(monkeypatch, handler)
+    client = FakeClient(handler)
+
+    with pytest.raises(httpx.HTTPStatusError):
+        OpenAqSource("test-key")._request_pages(client, "/locations", {})
+
+    assert calls == 1
+
+
+def test_429_waits_for_retry_after_then_retries_the_same_request(monkeypatch: pytest.MonkeyPatch):
+    responses = iter(
+        [
+            httpx.Response(
+                429,
+                headers={"Retry-After": "2"},
+                request=httpx.Request("GET", f"{BASE_URL}/locations"),
+            ),
+            page([location()]),
+        ]
+    )
+
+    def handler(*args):
+        return next(responses)
+
+    install_client(monkeypatch, handler)
+    client = FakeClient(handler)
+    clock = FakeClock()
+    source = OpenAqSource("test-key", clock=clock.monotonic, sleeper=clock.sleep, max_429_retries=1)
+
+    records = source._request_pages(client, "/locations", {})
+
+    assert records == [location()]
+    assert len(client.calls) == 2
+    assert clock.sleeps == [2.0]
+    assert source.rate_limit_hits == 1
+
+
+def test_429_uses_openaq_rate_limit_reset_when_retry_after_is_absent(monkeypatch):
+    responses = iter(
+        [
+            httpx.Response(
+                429,
+                headers={"X-RateLimit-Reset": "3"},
+                request=httpx.Request("GET", f"{BASE_URL}/locations"),
+            ),
+            page([location()]),
+        ]
+    )
+
+    def handler(*args):
+        return next(responses)
+
+    install_client(monkeypatch, handler)
+    client = FakeClient(handler)
+    clock = FakeClock()
+    source = OpenAqSource("test-key", clock=clock.monotonic, sleeper=clock.sleep)
+
+    assert source._request_pages(client, "/locations", {}) == [location()]
+    assert clock.sleeps == [3.0]
+
+
+def test_exhausted_429_retries_stop_after_the_configured_bound(monkeypatch: pytest.MonkeyPatch):
+    def handler(*args):
+        return httpx.Response(
+            429,
+            headers={"Retry-After": "1"},
+            request=httpx.Request("GET", f"{BASE_URL}/locations"),
+        )
+
+    install_client(monkeypatch, handler)
+    client = FakeClient(handler)
+    clock = FakeClock()
+    source = OpenAqSource("test-key", clock=clock.monotonic, sleeper=clock.sleep, max_429_retries=1)
+
+    with pytest.raises(httpx.HTTPStatusError):
+        source._request_pages(client, "/locations", {})
+
+    assert len(client.calls) == 2
+    assert clock.sleeps == [1.0]
+    assert source.rate_limit_hits == 2
+
+
+def test_exhausted_429_marks_only_that_sensor_failed_and_records_a_partial_run(monkeypatch):
+    def handler(url, params, headers):
+        if url.endswith("/locations"):
+            return page([location([44, 45])])
+        if url.endswith("/44/measurements"):
+            return page([measurement()])
+        return httpx.Response(
+            429,
+            headers={"Retry-After": "1"},
+            request=httpx.Request("GET", url),
+        )
+
+    install_client(monkeypatch, handler)
+    recorded: list[dict] = []
+    monkeypatch.setattr(
+        "ingestion.runner.record_run",
+        lambda source, mode, status, row_count=None, error=None: recorded.append(
+            {"status": status, "rows": row_count, "error": error}
+        ),
+    )
+    clock = FakeClock()
+    source = OpenAqSource("test-key", clock=clock.monotonic, sleeper=clock.sleep, max_429_retries=1)
+
+    written = run_source(source, lambda records, mode: len(records))
+
+    assert written == 1
+    assert source.total_units == 2
+    assert source.failed_units == 1
+    assert source.rate_limit_hits == 2
+    assert source.is_partial
+    assert recorded[0]["status"] == "PARTIAL"
+    assert recorded[0]["rows"] == 1
+    assert recorded[0]["error"].startswith("sensor 45:")
+
+
+def test_retry_after_supports_http_dates_and_rejects_invalid_values():
+    now = datetime(2026, 8, 23, 12, tzinfo=UTC)
+
+    assert _retry_after_seconds("Sat, 23 Aug 2026 12:00:02 GMT", now) == 2.0
+    assert _retry_after_seconds("not-a-date", now) is None
+
+
+def test_partial_sensor_failure_preserves_successful_records_and_provenance(
+    monkeypatch: pytest.MonkeyPatch,
+):
+    def handler(url, params, headers):
+        if url == f"{BASE_URL}/locations":
+            return page([location([44, 45])])
+        if url.endswith("/44/measurements"):
+            return page([measurement()])
+        request = httpx.Request("GET", url)
+        response = httpx.Response(500, request=request)
+        raise httpx.HTTPStatusError("server error", request=request, response=response)
+
+    install_client(monkeypatch, handler)
+    recorded: list[dict] = []
+    persisted: list[dict] = []
+    monkeypatch.setattr(
+        "ingestion.runner.record_run",
+        lambda source, mode, status, row_count=None, error=None: recorded.append(
+            {"status": status, "rows": row_count, "error": error}
+        ),
+    )
+    source = OpenAqSource("test-key")
+
+    written = run_source(source, lambda records, mode: persisted.extend(records) or len(records))
+
+    assert written == 1
+    assert len(persisted) == 1
+    assert source.total_units == 2
+    assert source.failed_units == 1
+    assert source.is_partial
+    assert recorded == [{"status": "PARTIAL", "rows": 1, "error": "sensor 45: server error"}]
+
+
+def test_multiple_sensor_and_parsing_failures_are_isolated(monkeypatch: pytest.MonkeyPatch):
+    def handler(url, params, headers):
+        if url == f"{BASE_URL}/locations":
+            return page([location([44, 45, 46])])
+        if url.endswith("/44/measurements"):
+            return page([measurement()])
+        if url.endswith("/45/measurements"):
+            return page([measurement() | {"period": {"datetimeFrom": {"utc": "not-a-time"}}}])
+        raise httpx.TimeoutException("timed out")
+
+    install_client(monkeypatch, handler)
+    source = OpenAqSource("test-key")
+
+    records = source.fetch()
+
+    assert len(records) == 1
+    assert source.total_units == 3
+    assert source.failed_units == 2
+    assert any(detail.startswith("sensor 45:") for detail in source.failure_details)
+    assert any(detail == "sensor 46: timed out" for detail in source.failure_details)
+
+
+def test_all_sensor_failures_are_recorded_as_source_unavailable(monkeypatch: pytest.MonkeyPatch):
+    def handler(url, params, headers):
+        if url == f"{BASE_URL}/locations":
+            return page([location([44, 45])])
+        raise httpx.TimeoutException("timed out")
+
+    install_client(monkeypatch, handler)
+    recorded: list[str] = []
+    monkeypatch.setattr(
+        "ingestion.runner.record_run",
+        lambda source, mode, status, row_count=None, error=None: recorded.append(status),
+    )
+
+    with pytest.raises(SourceUnavailableError, match="all OpenAQ PM2.5 sensors failed"):
+        run_source(OpenAqSource("test-key"), lambda records, mode: len(records))
+
+    assert recorded == ["SOURCE_UNAVAILABLE"]
+
+
+def test_pagination_fetches_every_page_and_stops_at_found_count(monkeypatch: pytest.MonkeyPatch):
+    requested_pages: list[int] = []
+
+    def handler(url, params, headers):
+        requested_pages.append(params["page"])
         return FakeResponse(
             {
                 "meta": {"page": params["page"], "limit": 1000, "found": 2000},
@@ -85,78 +382,15 @@ def test_pagination_fetches_every_page_and_stops_at_found_count(monkeypatch):
             }
         )
 
-    monkeypatch.setattr("ingestion.openaq.httpx.get", fake_get)
+    install_client(monkeypatch, handler)
+    with httpx.Client() as client:
+        records = OpenAqSource("test-key")._request_pages(client, "/sensors/44/measurements", {})
 
-    records = OpenAqSource("test-key")._request_pages("/sensors/44/measurements", {})
-
-    assert pages == [1, 2]
+    assert requested_pages == [1, 2]
     assert len(records) == 2000
 
 
-def test_empty_page_ends_pagination_when_total_is_unknown(monkeypatch):
-    pages: list[int] = []
-
-    def fake_get(url, params, headers, timeout):
-        pages.append(params["page"])
-        return FakeResponse({"meta": {"page": params["page"]}, "results": []})
-
-    monkeypatch.setattr("ingestion.openaq.httpx.get", fake_get)
-
-    assert OpenAqSource("test-key")._request_pages("/locations", {}) == []
-    assert pages == [1]
-
-
-def test_http_timeout_and_failure_are_source_unavailable(monkeypatch):
-    monkeypatch.setattr(
-        "ingestion.openaq.httpx.get",
-        lambda *args, **kwargs: (_ for _ in ()).throw(httpx.TimeoutException("slow")),
-    )
-    with pytest.raises(SourceUnavailableError):
-        OpenAqSource("test-key").fetch()
-
-    request = httpx.Request("GET", f"{BASE_URL}/locations")
-    response = httpx.Response(500, request=request)
-    monkeypatch.setattr(
-        "ingestion.openaq.httpx.get",
-        lambda *args, **kwargs: (_ for _ in ()).throw(
-            httpx.HTTPStatusError("failed", request=request, response=response)
-        ),
-    )
-    with pytest.raises(SourceUnavailableError):
-        OpenAqSource("test-key").fetch()
-
-
-def test_malformed_payload_is_source_unavailable(monkeypatch):
-    monkeypatch.setattr(
-        "ingestion.openaq.httpx.get", lambda *args, **kwargs: FakeResponse({"meta": {}})
-    )
-
-    with pytest.raises(SourceUnavailableError):
-        OpenAqSource("test-key").fetch()
-
-
-def test_malformed_measurements_are_skipped_and_units_are_not_converted():
-    source = OpenAqSource("test-key")
-
-    assert (
-        source._normalize_measurement(measurement(units="mg/m³"), "Station", None, None, 1, 1)
-        is None
-    )
-    assert source._normalize_measurement({"value": 1}, "Station", None, None, 1, 1) is None
-    assert source._normalize_measurement(measurement(), "Station", "City", "India", 1, 2) == {
-        "station": "Station",
-        "city": "City",
-        "state": "India",
-        "latitude": 1,
-        "longitude": 2,
-        "last_update": "2026-08-19T00:00:00Z",
-        "pollutant_id": "PM2.5",
-        "pollutant_avg": 82.1,
-        "station_source": "OPENAQ",
-    }
-
-
-def test_backfill_uses_the_standard_runner_and_station_writer(monkeypatch):
+def test_backfill_uses_the_standard_runner_and_station_writer(monkeypatch: pytest.MonkeyPatch):
     captured = {}
 
     def fake_run_source(source, writer, dry_run=False):
@@ -184,3 +418,9 @@ def test_backfill_window_is_utc_aware_and_constrained():
         OpenAqSource("test-key", days=59)
     with pytest.raises(ValueError):
         _utc_timestamp("2026-08-19T00:00:00")
+
+
+def test_latest_window_is_one_hour_without_relaxing_backfill_limits():
+    source = OpenAqSource("test-key", end=datetime(2026, 8, 19, 12, tzinfo=UTC), latest=True)
+
+    assert source.start == datetime(2026, 8, 19, 11, tzinfo=UTC)

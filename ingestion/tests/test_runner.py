@@ -47,6 +47,17 @@ class TestOutcomeIsAlwaysRecorded:
         assert written == 1
         assert recorded == [{"source": "STUB", "mode": "LIVE", "status": "SUCCESS", "rows": 1}]
 
+    def test_partial_source_records_partial_with_failure_details(self, recorded):
+        source = StubSource(api_key="k")
+        source.total_units = 2
+        source.failed_units = 1
+        source.failure_details = ["sensor 45: server error"]
+
+        run_source(source, lambda records, mode: len(records))
+
+        assert recorded[0]["status"] == "PARTIAL"
+        assert recorded[0]["rows"] == 1
+
     def test_upstream_outage_records_source_unavailable_and_re_raises(self, recorded):
         """Previously this left no ingestion_run row at all."""
         with pytest.raises(SourceUnavailableError):
@@ -127,5 +138,5 @@ class TestOfflineFlagParsing:
         assert source.fixture_file == "openmeteo_sample.json"
         records = source.fetch()
         assert records
-        assert {"time", "pm2_5", "us_aqi"} <= set(records[0])
+        assert {"issued_at", "valid_at", "horizon_hours", "pm25", "aqi"} <= set(records[0])
         assert "pollutant_avg" not in records[0]

@@ -41,6 +41,17 @@ class Source(ABC):
         # Treat blank strings as absent: an empty .env entry means fixture mode.
         self._api_key = api_key or None
 
+        # Units this source read, and how many of them failed.
+        #
+        # A source making one upstream call leaves these at zero and is recorded
+        # as SUCCESS or SOURCE_UNAVAILABLE as before. A source reading many units
+        # in one run -- OPENAQ_LATEST reads several hundred stations -- sets them
+        # so the runner can record PARTIAL rather than choosing between hiding
+        # the gap and discarding the readings that arrived.
+        self.total_units = 0
+        self.failed_units = 0
+        self.failure_details: list[str] = []
+
     @property
     def mode(self) -> str:
         """``"LIVE"`` when a key is present, otherwise ``"FIXTURE"``."""
@@ -62,6 +73,11 @@ class Source(ABC):
         path = FIXTURE_DIR / self.fixture_file
         with path.open(encoding="utf-8") as handle:
             return json.load(handle)
+
+    @property
+    def is_partial(self) -> bool:
+        """Whether some independently fetched units failed in an otherwise usable run."""
+        return self.total_units > 0 and self.failed_units > 0
 
     @abstractmethod
     def _fetch_live(self) -> list[dict]:

@@ -20,6 +20,7 @@ from __future__ import annotations
 from collections import defaultdict
 from datetime import datetime
 from hashlib import sha256
+from math import isfinite
 from zoneinfo import ZoneInfo
 
 from sqlalchemy import create_engine, text
@@ -370,6 +371,68 @@ def write_met_snapshot(records: list[dict], mode: str) -> int:
     return len(rows)
 
 
+def write_cams_forecasts(records: list[dict], mode: str) -> int:
+    """Write Open-Meteo CAMS forecasts, keyed by issue and target time."""
+    if not records:
+        return 0
+
+    rows = []
+    for record in records:
+        latitude = _as_float(record.get("latitude"))
+        longitude = _as_float(record.get("longitude"))
+        pm25 = _as_float(record.get("pm25"))
+        aqi = _as_float(record.get("aqi"))
+        horizon = record.get("horizon_hours")
+        if (
+            latitude is None
+            or longitude is None
+            or not -90 <= latitude <= 90
+            or not -180 <= longitude <= 180
+        ):
+            raise ValueError("CAMS forecast has invalid coordinates")
+        if pm25 is None or not isfinite(pm25) or pm25 < 0:
+            raise ValueError("CAMS forecast has an invalid PM2.5 value")
+        if aqi is not None and (not isfinite(aqi) or aqi < 0):
+            raise ValueError("CAMS forecast has an invalid AQI value")
+        if not isinstance(horizon, int) or horizon < 0:
+            raise ValueError("CAMS forecast has an invalid horizon")
+        if not isinstance(record.get("issued_at"), datetime) or not isinstance(
+            record.get("valid_at"), datetime
+        ):
+            raise ValueError("CAMS forecast has no issue or target timestamp")
+        rows.append(
+            {
+                "latitude": latitude,
+                "longitude": longitude,
+                "issued_at": record["issued_at"],
+                "valid_at": record["valid_at"],
+                "horizon_hours": horizon,
+                "pm25": pm25,
+                "aqi": int(aqi) if aqi is not None else None,
+                "source": mode,
+            }
+        )
+
+    with engine.begin() as connection:
+        connection.execute(
+            text(
+                """
+                INSERT INTO cams_forecast
+                    (latitude, longitude, issued_at, valid_at, horizon_hours, pm25, aqi, source)
+                VALUES (:latitude, :longitude, :issued_at, :valid_at, :horizon_hours,
+                        :pm25, :aqi, :source)
+                ON CONFLICT (latitude, longitude, issued_at, valid_at, source) DO UPDATE SET
+                    horizon_hours = EXCLUDED.horizon_hours,
+                    pm25 = EXCLUDED.pm25,
+                    aqi = EXCLUDED.aqi,
+                    ingested_at = now()
+                """
+            ),
+            rows,
+        )
+    return len(rows)
+
+
 def record_run(
     source: str,
     mode: str,
@@ -378,8 +441,8 @@ def record_run(
     error: str | None = None,
 ) -> None:
     """Record completion without erasing the distinction between source and job failures."""
-    if status not in {"SUCCESS", "SOURCE_UNAVAILABLE", "FAILED"}:
-        raise ValueError("status must be SUCCESS, SOURCE_UNAVAILABLE, or FAILED")
+    if status not in {"SUCCESS", "PARTIAL", "SOURCE_UNAVAILABLE", "FAILED"}:
+        raise ValueError("status must be SUCCESS, PARTIAL, SOURCE_UNAVAILABLE, or FAILED")
     with engine.begin() as connection:
         connection.execute(
             text(

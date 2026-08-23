@@ -4,7 +4,11 @@ import java.util.List;
 import java.util.Optional;
 import org.vaayu.web.dto.AlertResponse;
 import org.vaayu.web.dto.ForecastResponse;
+import org.vaayu.web.dto.CityRankingResponse;
 import org.vaayu.web.dto.GridPredictionResponse;
+import org.vaayu.web.dto.NearestStationResponse;
+import org.vaayu.web.dto.ProvenanceResponse;
+import org.vaayu.web.dto.StationReadingResponse;
 import org.vaayu.web.dto.StationResponse;
 import org.vaayu.web.dto.WorklistActionResponse;
 import org.vaayu.web.dto.WorklistItemResponse;
@@ -12,6 +16,14 @@ import org.vaayu.web.dto.WorklistItemResponse;
 /** Public read/write contract consumed by the HTTP controllers. */
 public interface ReadQueryOperations {
     List<StationResponse> stations();
+
+    List<StationReadingResponse> stationReadings();
+
+    ProvenanceResponse provenance();
+
+    Optional<NearestStationResponse> nearest(double lat, double lon);
+
+    CityRankingResponse cityRankings(int limit);
 
     List<GridPredictionResponse> grid(double minLon, double minLat, double maxLon, double maxLat);
 

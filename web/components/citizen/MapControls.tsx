@@ -7,8 +7,9 @@ import { useAQIStore } from '@/store/aqiStore';
 
 import { loadGeoReferenceData } from '@/lib/coordinates';
 import { REGIONS } from '@/lib/regions';
-import { fetchGrid } from '@/lib/api';
+import { fetchCityRankings, fetchGrid } from '@/lib/api';
 import { useCitizenI18n } from '@/lib/i18n';
+import type { CityRanking } from '@/lib/schemas';
 
 /** The subset of a Nominatim search result this component reads. */
 interface NominatimResult {
@@ -21,11 +22,36 @@ interface SuggestionItem {
   display_name: string;
   lat: number;
   lon: number;
+  /** Present when we actually measure this place. Ranked first, and labelled. */
   aqi?: number;
+  stationCount?: number;
 }
 
 interface Props {
   map: Map | null;
+}
+
+
+/**
+ * Cities with a current measurement, cached for the page's lifetime.
+ *
+ * The ranking endpoint already returns exactly what search needs -- name,
+ * coordinates, AQI and station count for every city we measure -- so this needs
+ * no endpoint of its own. A failure yields an empty list and search falls back
+ * to the reference places, which is a degraded search rather than a broken one.
+ */
+let measuredCitiesPromise: Promise<CityRanking[]> | null = null;
+
+function measuredCities(): Promise<CityRanking[]> {
+  if (!measuredCitiesPromise) {
+    measuredCitiesPromise = fetchCityRankings(100)
+      .then((result) => result.cities)
+      .catch(() => {
+        measuredCitiesPromise = null;
+        return [] as CityRanking[];
+      });
+  }
+  return measuredCitiesPromise;
 }
 
 const MapControls: React.FC<Props> = ({ map }) => {
@@ -78,21 +104,41 @@ const MapControls: React.FC<Props> = ({ map }) => {
       setSearching(true);
       const qLower = query.toLowerCase().trim();
 
+      // Places we actually measure come first.
+      //
+      // Search used to run only against the bundled reference list, which is a
+      // fixed set of 510 well-known places and does not include several cities
+      // that do have live stations -- Mandideep, Mandi Gobindgarh and Bhiwadi
+      // among them. A reader could not reach a real reading by typing its name.
+      const measured = await measuredCities();
+      const measuredMatches: SuggestionItem[] = measured
+        .filter((city) => city.city.toLowerCase().includes(qLower))
+        .slice(0, 8)
+        .map((city) => ({
+          display_name: city.city,
+          lat: city.lat,
+          lon: city.lon,
+          aqi: city.aqi,
+          stationCount: city.stationCount,
+        }));
+
       // Fetched rather than bundled; see lib/coordinates.ts. Awaiting inside
       // the debounced handler keeps the megabyte off the critical path: the
       // first search pays for it, subsequent ones hit the cached promise.
       const { cities } = await loadGeoReferenceData();
 
-      // Local match against all 510+ Indian cities & places first
+      // Reference places, minus anything already offered as a measured match.
+      const alreadyOffered = new Set(measuredMatches.map((m) => m.display_name.toLowerCase()));
       const localMatches: SuggestionItem[] = cities.filter((loc) =>
-        loc.name.toLowerCase().includes(qLower) ||
-        loc.state.toLowerCase().includes(qLower) ||
-        (loc.stateCode && loc.stateCode.toLowerCase().includes(qLower))
-      ).slice(0, 15).map((loc) => ({
+        !alreadyOffered.has(loc.name.toLowerCase()) && (
+          loc.name.toLowerCase().includes(qLower) ||
+          loc.state.toLowerCase().includes(qLower) ||
+          (loc.stateCode && loc.stateCode.toLowerCase().includes(qLower))
+        )
+      ).slice(0, 10).map((loc) => ({
         display_name: `${loc.name}, ${loc.state}`,
         lat: loc.lat,
         lon: loc.lon,
-        aqi: loc.aqi,
       }));
 
       try {
@@ -116,22 +162,29 @@ const MapControls: React.FC<Props> = ({ map }) => {
             lon: parseFloat(item.lon),
           }));
 
-          // Merge local and remote without duplicates
-          const combined = [...localMatches];
+          // Measured places lead, then reference places, then geocoder results.
+          // A geocoder hit near a place we already offer is dropped: the same
+          // point twice, once with a reading and once without, is worse than
+          // one entry.
+          const combined = [...measuredMatches, ...localMatches];
           for (const rm of remoteMatches) {
             if (!combined.some((c) => Math.abs(c.lat - rm.lat) < 0.05 && Math.abs(c.lon - rm.lon) < 0.05)) {
               combined.push(rm);
             }
           }
-          setSuggestions(combined.slice(0, 6));
+          setSuggestions(combined.slice(0, 7));
           setShowDropdown(true);
         } else {
-          setSuggestions(localMatches);
-          setShowDropdown(localMatches.length > 0);
+          const combined = [...measuredMatches, ...localMatches];
+          setSuggestions(combined);
+          setShowDropdown(combined.length > 0);
         }
       } catch {
-        setSuggestions(localMatches);
-        setShowDropdown(localMatches.length > 0);
+        // The geocoder is optional. Losing it must not lose the places we
+        // actually measure.
+        const combined = [...measuredMatches, ...localMatches];
+        setSuggestions(combined);
+        setShowDropdown(combined.length > 0);
       } finally {
         setSearching(false);
       }
@@ -246,14 +299,24 @@ const MapControls: React.FC<Props> = ({ map }) => {
                 className="w-full text-left px-3 py-2 text-xs font-mono text-slate-200 hover:bg-teal-500/15 hover:text-teal-200 transition-colors flex items-start gap-2 border-b border-white/5 last:border-0"
               >
                 <span className="text-teal-400 mt-0.5">📍</span>
-                <div className="truncate">
+                <div className="min-w-0 flex-1">
                   <div className="font-semibold truncate">
                     {item.display_name.split(",")[0]}
                   </div>
                   <div className="text-[10px] text-slate-400 truncate">
-                    {item.display_name.split(",").slice(1).join(",").trim()}
+                    {/* A measured place says so, with what it measured. The
+                        alternative is two visually identical rows where one
+                        leads to a reading and the other to "no data". */}
+                    {item.aqi !== undefined
+                      ? `AQI ${item.aqi} · ${item.stationCount === 1 ? "1 station" : `${item.stationCount} stations`}`
+                      : item.display_name.split(",").slice(1).join(",").trim()}
                   </div>
                 </div>
+                {item.aqi !== undefined && (
+                  <span className="text-[9px] font-mono uppercase tracking-wider text-teal-400/80 mt-0.5 flex-shrink-0">
+                    measured
+                  </span>
+                )}
               </button>
             ))}
           </div>

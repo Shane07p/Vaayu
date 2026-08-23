@@ -238,6 +238,19 @@ def latest_met_by_cell() -> pd.DataFrame:
         return pd.DataFrame(connection.execute(query).mappings().all())
 
 
+def load_cams_forecasts() -> pd.DataFrame:
+    """Latest available Open-Meteo CAMS baselines for model-supported horizons."""
+    query = text("""
+        SELECT DISTINCT ON (horizon_hours)
+               latitude, longitude, issued_at, valid_at, horizon_hours, pm25, aqi, source
+        FROM cams_forecast
+        WHERE horizon_hours IN (6, 24, 72)
+        ORDER BY horizon_hours, issued_at DESC
+    """)
+    with engine.begin() as connection:
+        return pd.DataFrame(connection.execute(query).mappings().all())
+
+
 # --------------------------------------------------------------------------
 # Writers
 # --------------------------------------------------------------------------
@@ -304,6 +317,15 @@ _INSERT_FORECAST = text("""
     VALUES (:station_id, :grid_cell_id, :issued_at, :horizon_hours, :valid_at,
             :pm25, :aqi, :ci_low, :ci_high, :baseline_persistence, :baseline_cams,
             :model_version, :source)
+    ON CONFLICT (station_id, grid_cell_id, issued_at, horizon_hours, model_version) DO UPDATE SET
+        valid_at = EXCLUDED.valid_at,
+        pm25 = EXCLUDED.pm25,
+        aqi = EXCLUDED.aqi,
+        ci_low = EXCLUDED.ci_low,
+        ci_high = EXCLUDED.ci_high,
+        baseline_persistence = EXCLUDED.baseline_persistence,
+        baseline_cams = EXCLUDED.baseline_cams,
+        source = EXCLUDED.source
 """)
 
 

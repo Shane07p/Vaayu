@@ -41,6 +41,18 @@ def credentials_present() -> bool:
     key = settings.gee_service_account_key
     if not key:
         return False
+    # A value that is plainly a credential rather than a path is a
+    # misconfiguration, not an absence. Cloud secret injection hands the JSON
+    # itself to an env var, and returning False here would drop the source into
+    # fixture mode and serve committed samples as though they were satellite
+    # observations -- silently, in the deployed environment, which is the one
+    # place that failure would matter most.
+    if key.lstrip().startswith("{"):
+        raise EarthEngineUnavailableError(
+            "GEE_SERVICE_ACCOUNT_KEY holds credential JSON, but a filesystem path "
+            "is expected. Write the JSON to a file and point this at it."
+        )
+
     return Path(key).is_file()
 
 
@@ -66,7 +78,11 @@ def initialise() -> None:
         payload = json.loads(key_path.read_text(encoding="utf-8"))
         service_account = payload["client_email"]
         credentials = ee.ServiceAccountCredentials(service_account, str(key_path))
-        ee.Initialize(credentials)
+        # The project is passed explicitly. Earth Engine resolves a service
+        # account against a registered Cloud project, and leaving it implicit
+        # relies on inference that the current documented examples do not use.
+        # The key file names its own project, so there is nothing to configure.
+        ee.Initialize(credentials, project=payload["project_id"])
     except Exception as exc:  # noqa: BLE001 - re-raised as a typed error
         raise EarthEngineUnavailableError(f"Earth Engine initialisation failed: {exc}") from exc
 

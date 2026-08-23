@@ -1,5 +1,5 @@
 import { fetchWorklist } from "@/lib/api";
-import { StatusStrip } from "@/components/status-strip";
+import { ProvenanceStrip } from "@/components/provenance-strip";
 import type { WorklistItem } from "@/lib/schemas";
 
 export default async function WorklistPage() {
@@ -27,7 +27,7 @@ export default async function WorklistPage() {
         </p>
       </div>
 
-      <StatusStrip />
+      <ProvenanceStrip />
 
       {/* Summary Cards */}
       <div className="grid grid-cols-3 gap-4">

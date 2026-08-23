@@ -58,7 +58,7 @@ def test_openmeteo_is_live_without_an_api_key(monkeypatch: pytest.MonkeyPatch):
     monkeypatch.setattr(httpx, "get", lambda *args, **kwargs: StubResponse(payload))
     source = OpenMeteoSource()
     assert source.mode == "LIVE"
-    assert source.fetch()[0]["pm2_5"] == 100
+    assert source.fetch()[0]["pm25"] == 100
 
 
 def test_malformed_upstream_payload_is_source_unavailable(monkeypatch: pytest.MonkeyPatch):
