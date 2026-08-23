@@ -71,9 +71,7 @@ class TestCpcbRecordsItsRun:
         written: list[int] = []
         monkeypatch.setattr(cpcb.CpcbSource, "fetch", lambda self: [{"station": "X"}])
         monkeypatch.setattr(cpcb.CpcbSource, "mode", "LIVE")
-        monkeypatch.setattr(
-            cpcb, "write_station_readings", lambda records, mode: written.append(1)
-        )
+        monkeypatch.setattr(cpcb, "write_station_readings", lambda records, mode: written.append(1))
         monkeypatch.setattr("sys.argv", ["vaayu-cpcb", "--dry-run"])
 
         cpcb.main()
