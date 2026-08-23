@@ -86,7 +86,7 @@ class _FakeForecastModel:
                 "ci_low": np.full(len(frame), 160.0),
                 "ci_high": np.full(len(frame), 190.0),
                 "baseline_persistence": baseline,
-                "baseline_cams": np.full(len(frame), np.nan),
+                "baseline_cams": frame.get(f"cams_pm25_{horizon}h", np.nan),
             }
         )
 
@@ -98,6 +98,7 @@ def _patch_data(monkeypatch: pytest.MonkeyPatch) -> None:
     monkeypatch.setattr(run_forecast, "load_grid_cells", lambda: cells)
     monkeypatch.setattr(run_forecast, "load_station_cell_map", lambda: station_cells)
     monkeypatch.setattr(run_forecast, "load_fire_clusters", lambda: pd.DataFrame())
+    monkeypatch.setattr(run_forecast, "load_cams_forecasts", lambda: pd.DataFrame())
 
 
 def test_run_loads_database_frames_and_writes_all_horizons(monkeypatch: pytest.MonkeyPatch) -> None:
@@ -158,6 +159,36 @@ def test_repeated_runs_keep_the_same_logical_issue_time(monkeypatch: pytest.Monk
     run_forecast.run(hours=100)
 
     assert writes[0]["issued_at"].iloc[0] == writes[1]["issued_at"].iloc[0]
+
+
+def test_run_propagates_available_cams_baselines(monkeypatch: pytest.MonkeyPatch) -> None:
+    _patch_data(monkeypatch)
+    monkeypatch.setattr(run_forecast, "ForecastModel", _FakeForecastModel)
+    monkeypatch.setattr(
+        run_forecast,
+        "load_cams_forecasts",
+        lambda: pd.DataFrame(
+            {
+                "horizon_hours": [6, 24, 72],
+                "pm25": [111.0, 122.0, 133.0],
+            }
+        ),
+    )
+    writes: list[pd.DataFrame] = []
+    monkeypatch.setattr(
+        run_forecast,
+        "write_forecasts",
+        lambda frame, model_version, source: writes.append(frame.copy()) or len(frame),
+    )
+    monkeypatch.setattr(run_forecast, "record_model_run", lambda *args, **kwargs: None)
+
+    run_forecast.run(hours=100)
+
+    assert writes[0].groupby("horizon_hours")["baseline_cams"].first().to_dict() == {
+        6: 111.0,
+        24: 122.0,
+        72: 133.0,
+    }
 
 
 def test_run_handles_empty_feature_frame(monkeypatch: pytest.MonkeyPatch) -> None:

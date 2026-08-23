@@ -50,5 +50,7 @@ def run_source(
         record_run(source.name, source.mode, "FAILED", 0, str(exc))
         raise
 
-    record_run(source.name, source.mode, "SUCCESS", written)
+    status = "PARTIAL" if source.is_partial else "SUCCESS"
+    error = "; ".join(source.failure_details) if source.is_partial else None
+    record_run(source.name, source.mode, status, written, error)
     return written

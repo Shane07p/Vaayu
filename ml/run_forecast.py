@@ -17,6 +17,7 @@ import pandas as pd
 
 from vaayu_ml.db import (
     EmptyTrainingSetError,
+    load_cams_forecasts,
     load_feature_frame,
     load_fire_clusters,
     load_grid_cells,
@@ -90,6 +91,18 @@ def add_fire_exposure(frame: pd.DataFrame, clusters: pd.DataFrame) -> pd.DataFra
     return result
 
 
+def add_cams_baselines(frame: pd.DataFrame, cams: pd.DataFrame) -> pd.DataFrame:
+    """Attach nullable CAMS PM2.5 baselines for each supported horizon."""
+    result = frame.copy()
+    for horizon in ForecastModel.HORIZONS:
+        value = np.nan
+        rows = cams[cams["horizon_hours"] == horizon] if not cams.empty else cams
+        if not rows.empty:
+            value = float(rows.iloc[0]["pm25"])
+        result[f"cams_pm25_{horizon}h"] = value
+    return result
+
+
 def assemble(hours: int) -> pd.DataFrame:
     """Join stored hourly station PM2.5 to the nearest feature snapshot."""
     features = load_feature_frame(hours=hours)
@@ -140,7 +153,10 @@ def assemble(hours: int) -> pd.DataFrame:
             "No station reading has a feature snapshot within the allowed time tolerance."
         )
 
-    return add_fire_exposure(add_lag_features(aligned), load_fire_clusters())
+    return add_cams_baselines(
+        add_fire_exposure(add_lag_features(aligned), load_fire_clusters()),
+        load_cams_forecasts(),
+    )
 
 
 def forecast_output(
