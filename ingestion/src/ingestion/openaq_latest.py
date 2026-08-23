@@ -241,7 +241,9 @@ class OpenAqLatestSource(Source):
                 try:
                     reported_at = datetime.fromisoformat(str(last).replace("Z", "+00:00"))
                 except ValueError:
-                    logger.warning("Skipping OpenAQ location with unparsable datetimeLast: %s", last)
+                    logger.warning(
+                        "Skipping OpenAQ location with unparsable datetimeLast: %s", last
+                    )
                     continue
                 if reported_at < cutoff:
                     continue
