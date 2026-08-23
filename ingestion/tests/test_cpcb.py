@@ -13,7 +13,7 @@ from zoneinfo import ZoneInfo
 
 import pytest
 
-from ingestion.cpcb import BASE_URL, RESOURCE_ID, CpcbSource
+from ingestion.cpcb import BASE_URL, RESOURCE_ID, CpcbSource, run_cpcb
 from ingestion.db import _as_float, _cpcb_timestamp
 
 FIXTURES = Path(__file__).resolve().parents[1] / "fixtures"
@@ -123,3 +123,18 @@ class TestClientShape:
 
         with pytest.raises(SourceUnavailableError):
             CpcbSource(api_key="secret").fetch()
+
+    def test_cpcb_uses_the_shared_provenance_aware_runner(self, monkeypatch):
+        captured = {}
+
+        def fake_run_source(source, writer, dry_run=False):
+            captured.update({"source": source, "writer": writer, "dry_run": dry_run})
+            return 3
+
+        monkeypatch.setattr("ingestion.cpcb.run_source", fake_run_source)
+        source = CpcbSource(api_key="secret")
+
+        assert run_cpcb(source, dry_run=True) == 3
+        assert captured["source"] is source
+        assert captured["writer"].__name__ == "write_station_readings"
+        assert captured["dry_run"] is True

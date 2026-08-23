@@ -19,6 +19,7 @@ import argparse
 import httpx
 
 from ingestion.db import write_station_readings
+from ingestion.runner import run_source
 from ingestion.settings import settings
 from ingestion.source import Source
 
@@ -46,11 +47,15 @@ class CpcbSource(Source):
         return records
 
 
+def run_cpcb(source: CpcbSource, dry_run: bool = False) -> int:
+    """Execute CPCB ingestion through the shared provenance-aware runner."""
+    return run_source(source, write_station_readings, dry_run=dry_run)
+
+
 def main() -> None:
     parser = argparse.ArgumentParser(description="Ingest CPCB station readings")
     parser.add_argument("--dry-run", action="store_true", help="fetch and validate without writing")
     args = parser.parse_args()
     source = CpcbSource(settings.data_gov_in_api_key)
-    records = source.fetch()
-    count = len(records) if args.dry_run else write_station_readings(records, source.mode)
+    count = run_cpcb(source, args.dry_run)
     print(f"CPCB {source.mode}: {count} records")
