@@ -232,7 +232,12 @@ const FullScreenMap: React.FC = () => {
               {dataSource === 'API' && selectedCellData && (
                 <>
                   <div className="bg-white/[0.04] p-2.5 rounded-xl border border-white/5">
-                    <span className="text-slate-400 block text-[9px] uppercase tracking-wider">90% Range</span>
+                    {/* q10 to q90 spans 80 per cent of the distribution, not 90.
+                        The same two columns are labelled "80% Interval" in
+                        citizen-hero, so one of the two was wrong about how much
+                        confidence the range carries -- and this one overstated
+                        it. */}
+                    <span className="text-slate-400 block text-[9px] uppercase tracking-wider">80% Range</span>
                     <span className="text-slate-300">
                       {Math.round(selectedCellData.pm25Q10)}–{Math.round(selectedCellData.pm25Q90)}
                     </span>
@@ -395,8 +400,13 @@ const FullScreenMap: React.FC = () => {
 
           {nearestStation.stale && (
             <p className="mb-2 rounded border border-amber-800/60 bg-amber-950/30 px-2 py-1 text-[10px] font-mono text-amber-300">
+              {/* The sentence ends in t.notReported. A trailing "rather than as
+                  a current reading." used to sit here as bare JSX text: it is
+                  outside the translation table, so Hindi and Punjabi readers got
+                  a line of their own language followed by a fragment of English,
+                  and JSX drops the newline between an expression and adjacent
+                  text, so even in English it rendered as "real age.rather". */}
               {t.notReported}
-              rather than as a current reading.
             </p>
           )}
 
@@ -404,6 +414,11 @@ const FullScreenMap: React.FC = () => {
           <div className="text-[10px] font-mono text-slate-500 border-t border-white/5 pt-2">
             {nearestStation.name}
           </div>
+
+          {/* Also on the opening card, not only after a click: the page lands
+              here, and a feature reachable only by exploring is one most
+              readers never find. */}
+          <StationAdvisory lat={nearestStation.lat} lon={nearestStation.lon} />
         </div>
       )}
 
