@@ -431,6 +431,33 @@ public class ReadQueryService implements ReadQueryOperations {
     }
 
     /**
+     * Stations that actually have a forecast.
+     *
+     * <p>The forecast page used to take the first station from {@link #stations()},
+     * which was fine while the only stations were the five seeded ones. National
+     * ingestion added several hundred, so the alphabetically first station became
+     * one in Jaipur that has never been forecast, and the page correctly but
+     * uselessly reported that no forecast was available. Asking for a station
+     * that can answer is the fix; widening the page's error message would not
+     * have been.
+     */
+    @Cacheable("forecastStations")
+    public List<StationResponse> forecastStations() {
+        return jdbc.query(
+                """
+                SELECT DISTINCT s.id, s.code, s.name, s.city, s.state,
+                       ST_X(s.geom::geometry) AS lon, ST_Y(s.geom::geometry) AS lat, s.source
+                FROM station s
+                JOIN forecast f ON f.station_id = s.id
+                ORDER BY s.name
+                """,
+                (rs, row) -> new StationResponse(
+                        rs.getLong("id"), rs.getString("code"), rs.getString("name"),
+                        rs.getString("city"), rs.getString("state"), rs.getDouble("lon"),
+                        rs.getDouble("lat"), rs.getString("source")));
+    }
+
+    /**
      * Feeds this system ingests, declared rather than discovered.
      *
      * <p>A feed that has never run leaves no row in {@code ingestion_run}, and

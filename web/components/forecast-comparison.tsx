@@ -103,7 +103,7 @@ export function ForecastComparison({ forecasts }: { forecasts: Forecast[] }) {
                 fill="#14b8a6"
                 fillOpacity={0.1}
                 stroke="none"
-                name="95% CI"
+                name="80% prediction interval"
                 legendType="none"
               />
               {/* VAAYU Model */}
@@ -200,10 +200,21 @@ export function ForecastComparison({ forecasts }: { forecasts: Forecast[] }) {
                 </div>
               </div>
 
-              {/* Confidence Interval */}
+              {/* The interval the model actually produces.
+
+                  ci_low and ci_high are LightGBM quantile fits at alpha 0.1
+                  and 0.9 (ForecastModel in forecast_lgbm.py), so the band is
+                  an 80% interval. Labelling it 95% claimed the truth falls
+                  inside it 19 times in 20 when the model only aims for 4 in 5
+                  -- an overstatement of confidence in the one number this
+                  project exists to be careful about.
+
+                  "Prediction interval", not "confidence interval": a
+                  confidence interval bounds a parameter, this bounds a future
+                  observation. */}
               <div className="p-2.5 rounded-lg bg-slate-900 border border-slate-800">
                 <div className="text-[9px] font-mono text-slate-500 uppercase tracking-wider mb-1">
-                  95% Confidence Interval
+                  80% Prediction Interval
                 </div>
                 <div className="text-sm font-mono text-slate-200">
                   {Math.round(forecast.ciLow)} – {Math.round(forecast.ciHigh)}{" "}

@@ -3,6 +3,7 @@ import { SeverityBadge } from "@/components/severity-badge";
 import { ProvenanceStrip } from "@/components/provenance-strip";
 import { fetchAlerts } from "@/lib/api";
 import type { Alert } from "@/lib/schemas";
+import { AlertBriefing } from "@/components/alert-briefing";
 
 function getGrapColor(stage: string): string {
   switch (stage) {
@@ -96,7 +97,7 @@ export default async function AlertsPage() {
                   </div>
                   <div className="p-3 rounded-lg bg-slate-900/80 border border-slate-800">
                     <div className="text-[9px] font-mono uppercase text-slate-500 mb-0.5">
-                      95% CI
+                      80% interval
                     </div>
                     <div className="text-lg font-bold font-mono text-slate-200">
                       {alert.ciLow}–{alert.ciHigh}
@@ -186,6 +187,10 @@ export default async function AlertsPage() {
                 <div className="mt-2 text-[10px] font-mono text-slate-500">
                   Model: {alert.modelVersion}
                 </div>
+
+                {/* Generated on request, not on load: it takes a few seconds
+                    and the model's free tier is metered. */}
+                <AlertBriefing alertId={alert.alertId} />
               </div>
             </article>
           ))}

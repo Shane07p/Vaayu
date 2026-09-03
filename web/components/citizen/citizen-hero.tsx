@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useAQIStore } from "@/store/aqiStore";
 import { AtmosphericBackground } from "./atmospheric-background";
 import { AqiSeverityScale } from "./aqi-severity-scale";
 import { SourceBadge } from "../source-badge";
@@ -51,10 +51,35 @@ function getSeverityMeta(aqi: number) {
   };
 }
 
+/**
+ * When the estimate was made, read off the estimate itself.
+ *
+ * This line used to be component state initialised to the literal string
+ * "22 AUG 2026 · 14:51 IST", so every reader was told the air had been measured
+ * at a quarter to three on a day in August, whatever the data said. A timestamp
+ * is a claim about when something was observed, and there is only one honest
+ * source for it: the row on screen.
+ */
+function formatMeasuredAt(iso: string): string {
+  const measured = new Date(iso);
+  if (Number.isNaN(measured.getTime())) {
+    return "unknown";
+  }
+  const day = measured
+    .toLocaleDateString("en-IN", { day: "2-digit", month: "short", year: "numeric" })
+    .toUpperCase();
+  const time = measured.toLocaleTimeString("en-IN", { hour: "2-digit", minute: "2-digit" });
+  return `${day} · ${time}`;
+}
+
 export function CitizenHero({ initialEstimate }: CitizenHeroProps) {
-  const [locating, setLocating] = useState(false);
-  const [locationName, setLocationName] = useState("Delhi-NCR · Central Pilot");
-  const [lastUpdated, setLastUpdated] = useState("22 AUG 2026 · 14:51 IST");
+  // Locating is the store's job, not this component's. The button here used to
+  // call getCurrentPosition itself and, on success, rewrite the location label
+  // and the timestamp -- without fetching anything. The panel then showed the
+  // reader's own coordinates and the current time above the estimate for
+  // wherever the map had previously been, which is the same number relabelled
+  // as a measurement of somewhere else.
+  const { locationName, loading, locateMe } = useAQIStore();
 
   // Every one of these had a hardcoded fallback -- 182 ug/m3, a 142-231 range,
   // 67% coverage, cell "NCR-0042", model "VAAYU-XGB-v1" -- shown whenever no
@@ -88,26 +113,9 @@ export function CitizenHero({ initialEstimate }: CitizenHeroProps) {
   const aqi = initialEstimate.aqi;
   const severity = getSeverityMeta(aqi);
 
-  const handleLocate = () => {
-    if (!navigator.geolocation) return;
-    setLocating(true);
-    navigator.geolocation.getCurrentPosition(
-      (pos) => {
-        setLocating(false);
-        setLocationName(
-          `${pos.coords.latitude.toFixed(3)}°N, ${pos.coords.longitude.toFixed(3)}°E · Nearest 1 km Cell`
-        );
-        const now = new Date();
-        setLastUpdated(
-          `${now.toLocaleDateString("en-IN", { day: "2-digit", month: "short", year: "numeric" }).toUpperCase()} · ${now.toLocaleTimeString("en-IN", { hour: "2-digit", minute: "2-digit" })} IST`
-        );
-      },
-      () => {
-        setLocating(false);
-      },
-      { timeout: 8000 }
-    );
-  };
+  // The estimate's own timestamp. Grid rows are stored in UTC and rendered in
+  // the reader's locale, so the label says which zone it is showing.
+  const lastUpdated = formatMeasuredAt(initialEstimate.ts);
 
   return (
     <div className="relative rounded-3xl border border-white/10 overflow-hidden shadow-2xl p-6 sm:p-8 space-y-6">
@@ -124,20 +132,20 @@ export function CitizenHero({ initialEstimate }: CitizenHeroProps) {
             </span>
           </div>
           <p className="text-[11px] font-mono text-slate-400">
-            Updated: {lastUpdated}
+            Measured: {lastUpdated}
           </p>
         </div>
 
         <div className="flex items-center gap-2">
           <button
             type="button"
-            onClick={handleLocate}
-            disabled={locating}
+            onClick={() => void locateMe()}
+            disabled={loading}
             className="px-3 py-1.5 rounded-xl bg-white/[0.06] hover:bg-white/[0.12] text-xs font-mono text-slate-200 border border-white/10 transition-all flex items-center gap-1.5 disabled:opacity-50"
             title="Use current GPS location"
           >
-            <span className={locating ? "animate-spin" : ""}>⌖</span>
-            <span>{locating ? "Locating…" : "Locate Me"}</span>
+            <span className={loading ? "animate-spin" : ""}>⌖</span>
+            <span>{loading ? "Locating…" : "Locate Me"}</span>
           </button>
           <SourceBadge source={source} />
         </div>
@@ -204,37 +212,34 @@ export function CitizenHero({ initialEstimate }: CitizenHeroProps) {
         </div>
       </div>
 
-      {/* 5. Compact Supporting Weather Strip */}
+      {/* 5. Meteorological context, when there is any.
+       *
+       * This was four tiles reading 34°C · Sunny, 44%, 21.2 km/h NW and a UV
+       * index of 8.1, under the heading "Meteorological Context (IMD / ERA5)".
+       * None of it came from anywhere. It was constant across every location,
+       * every AQI band and every day, and it was attributed by name to the India
+       * Meteorological Department and to ERA5 reanalysis -- two real sources,
+       * neither of which had said any such thing.
+       *
+       * Fabricated numbers are bad; fabricated numbers wearing somebody else's
+       * name are worse, because a reader who checks the attribution is misled
+       * twice. VAAYU does not currently ingest meteorology for the citizen
+       * surface: met_snapshot is empty, because the Earth Engine credential that
+       * feeds ERA5 has never been issued.
+       *
+       * So the strip says that. When the credential arrives and met_snapshot
+       * fills, this becomes a real panel reading real columns. Until then the
+       * honest rendering of "we have no weather data" is the sentence "we have
+       * no weather data".
+       */}
       <div className="pt-2 border-t border-white/10">
-        <div className="text-[10px] font-mono uppercase tracking-wider text-slate-400 mb-2.5">
-          Meteorological Context (IMD / ERA5)
+        <div className="text-[10px] font-mono uppercase tracking-wider text-slate-400 mb-2">
+          Meteorological context
         </div>
-        <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5">
-          <div className="p-2.5 rounded-xl bg-white/[0.04] border border-white/5 backdrop-blur-sm">
-            <div className="text-[10px] font-mono text-slate-400">TEMPERATURE</div>
-            <div className="text-sm font-mono font-semibold text-slate-200 mt-0.5">
-              34°C · Sunny
-            </div>
-          </div>
-          <div className="p-2.5 rounded-xl bg-white/[0.04] border border-white/5 backdrop-blur-sm">
-            <div className="text-[10px] font-mono text-slate-400">HUMIDITY</div>
-            <div className="text-sm font-mono font-semibold text-slate-200 mt-0.5">
-              44%
-            </div>
-          </div>
-          <div className="p-2.5 rounded-xl bg-white/[0.04] border border-white/5 backdrop-blur-sm">
-            <div className="text-[10px] font-mono text-slate-400">WIND SPEED</div>
-            <div className="text-sm font-mono font-semibold text-slate-200 mt-0.5">
-              21.2 km/h NW
-            </div>
-          </div>
-          <div className="p-2.5 rounded-xl bg-white/[0.04] border border-white/5 backdrop-blur-sm">
-            <div className="text-[10px] font-mono text-slate-400">UV INDEX</div>
-            <div className="text-sm font-mono font-semibold text-amber-300 mt-0.5">
-              8.1 Very High
-            </div>
-          </div>
-        </div>
+        <p className="text-[11px] font-mono text-slate-500">
+          Not ingested yet. Temperature, humidity, wind and UV are not shown
+          because VAAYU has not measured them here.
+        </p>
       </div>
 
       {/* Footer Model Disclaimer */}

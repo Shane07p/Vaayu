@@ -12,6 +12,7 @@ import {
   forecastSchema,
   cityRankingsSchema,
   gridPredictionSchema,
+  narrativeSchema,
   nearestStationSchema,
   provenanceSchema,
   stationReadingSchema,
@@ -21,6 +22,7 @@ import {
   type Forecast,
   type GridPrediction,
   type CityRankings,
+  type NarrativeResult,
   type NearestStation,
   type Provenance,
   type Station,
@@ -69,10 +71,31 @@ function apiBaseUrl(): string {
 const CONSOLE_SECRET =
   process.env.CONSOLE_SECRET ?? "dev-only-not-a-real-secret";
 
-async function get<T>(path: string, schema: z.ZodType<T>, fallback?: T): Promise<T> {
+/**
+ * A read of stored data should be quick or not happen.
+ */
+const READ_TIMEOUT_MS = 2000;
+
+/**
+ * Generation is not a read.
+ *
+ * Producing four sentences of grounded prose measures at about twenty seconds
+ * against the configured model. The two second read timeout aborted every
+ * narrative before the model had answered, which the UI would then report as
+ * the service being unavailable -- the same mistake the backend made with its
+ * ten second read timeout, one layer up.
+ */
+const GENERATION_TIMEOUT_MS = 60000;
+
+async function get<T>(
+  path: string,
+  schema: z.ZodType<T>,
+  fallback?: T,
+  timeoutMs: number = READ_TIMEOUT_MS,
+): Promise<T> {
   try {
     const controller = new AbortController();
-    const timeoutId = setTimeout(() => controller.abort(), 2000);
+    const timeoutId = setTimeout(() => controller.abort(), timeoutMs);
     const response = await fetch(`${apiBaseUrl()}${path}`, {
       cache: "no-store",
       signal: controller.signal,
@@ -89,10 +112,15 @@ async function get<T>(path: string, schema: z.ZodType<T>, fallback?: T): Promise
   }
 }
 
-async function getConsole<T>(path: string, schema: z.ZodType<T>, fallback?: T): Promise<T> {
+async function getConsole<T>(
+  path: string,
+  schema: z.ZodType<T>,
+  fallback?: T,
+  timeoutMs: number = READ_TIMEOUT_MS,
+): Promise<T> {
   try {
     const controller = new AbortController();
-    const timeoutId = setTimeout(() => controller.abort(), 2000);
+    const timeoutId = setTimeout(() => controller.abort(), timeoutMs);
     const response = await fetch(`${apiBaseUrl()}${path}`, {
       cache: "no-store",
       headers: { "X-Console-Secret": CONSOLE_SECRET },
@@ -155,6 +183,48 @@ export const fetchCityRankings = (limit = 20): Promise<CityRankings> =>
  */
 export const fetchStationReadings = (): Promise<StationReading[]> =>
   get("/api/v1/public/stations/readings", z.array(stationReadingSchema));
+
+/**
+ * Stations that have a forecast.
+ *
+ * The forecast page took the first of all stations, which was fine while the
+ * only stations were the five seeded ones. National ingestion added several
+ * hundred, so that became a station in Jaipur with no forecast and the page
+ * reported none available -- truthfully, about a station it should not have
+ * asked.
+ */
+export const fetchForecastStations = (): Promise<Station[]> =>
+  get("/api/v1/public/stations/forecastable", z.array(stationSchema), SEED_STATIONS);
+
+/**
+ * Officer briefing for an alert.
+ *
+ * No seed fallback. A fabricated briefing is the one thing this feature exists
+ * to prevent, and a stand-in would be indistinguishable from a real one.
+ */
+export const fetchAlertNarrative = (
+  alertId: string,
+  lang: string,
+): Promise<NarrativeResult> =>
+  getConsole(
+    `/api/v1/alerts/${encodeURIComponent(alertId)}/narrative?lang=${lang}`,
+    narrativeSchema,
+    undefined,
+    GENERATION_TIMEOUT_MS,
+  );
+
+/** Plain-language advisory for a point, in the requested language. */
+export const fetchAdvisory = (
+  lat: number,
+  lon: number,
+  lang: string,
+): Promise<NarrativeResult> =>
+  get(
+    `/api/v1/public/advisory?lang=${lang}&lat=${lat}&lon=${lon}`,
+    narrativeSchema,
+    undefined,
+    GENERATION_TIMEOUT_MS,
+  );
 
 export const fetchStations = (): Promise<Station[]> =>
   get("/api/v1/public/stations", z.array(stationSchema), SEED_STATIONS);

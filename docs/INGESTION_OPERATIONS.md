@@ -60,3 +60,48 @@ the command start/end time, sensor totals, failures, records fetched, rows
 written, and ingestion status; then query `station` and `station_reading` for
 non-zero counts, multiple stations, and timestamp coverage across the requested
 window.
+
+## Which connector serves current readings — 2026-08-23
+
+Two code paths fetch current OpenAQ PM2.5:
+
+| | `vaayu-openaq --latest` | `vaayu-openaq-latest` |
+|---|---|---|
+| Default extent | NCR bbox | all-India bbox, filtered to country `IN` |
+| Stations reached | ~40 | ~290 |
+| `station.state` | stores the country ("India") | left null |
+| Recorded as | `OPENAQ` | `OPENAQ_LATEST` |
+
+The schedule runs `vaayu-openaq-latest`. Scheduling the backfill's latest mode
+would have cut national coverage to the NCR bbox and recorded it under a
+different source, so the provenance strip would show one feed quietly replacing
+another rather than a gap.
+
+The dedicated connector also carries guards the backfill does not need and does
+not have, because it reads a different endpoint:
+
+- the bounding box is a rectangle containing Peshawar, Lahore and Dhaka, so the
+  country code is checked
+- `/locations/{id}/latest` carries no parameter field, so each value's sensor is
+  resolved against the station's sensor list to prove it is PM2.5; without that
+  a CO reading was stored as a PM2.5 of 3320 ug/m3
+- stations whose newest measurement predates the freshness window are skipped
+  rather than ingested, since many Indian stations in OpenAQ stopped reporting
+  years ago
+
+Both share the same `RequestRateLimiter`. `--latest` on the backfill is left in
+place and is no longer scheduled; it remains useful for a single-region pull.
+
+## Running the schedule locally
+
+`infra/scheduler-jobs.json` is the Cloud Scheduler handoff, and nothing executes
+it outside the cloud. `vaayu-scheduler` reads that same file so the two cadences
+cannot drift:
+
+    docker compose --profile scheduler up -d scheduler
+
+It is opt-in because it makes outbound API calls on a timer, and `--run-now`
+fills an empty stack immediately instead of waiting for the hour. Without it a
+developer stack decays: OpenAQ publishes with a roughly three hour lag against a
+six hour freshness window, so a manual run buys about three hours before every
+reading correctly reports stale.

@@ -90,5 +90,32 @@ services:
       # Read-only: nothing here should ever write to a credential.
       - ./secrets:/app/secrets:ro
 
+  # Runs the scheduled jobs on a developer machine, from the same definitions
+  # Cloud Scheduler is handed in infra/scheduler-jobs.json. Local and deployed
+  # cadence cannot drift because there is one file, not two.
+  #
+  # Opt in, because it makes outbound API calls on a timer:
+  #
+  #   docker compose --profile scheduler up -d scheduler
+  #
+  # --run-now fills an empty stack immediately rather than waiting for the hour.
+  scheduler:
+    build: ./ingestion
+    profiles: ["scheduler"]
+    depends_on:
+      postgres:
+        condition: service_healthy
+    command: ["vaayu-scheduler", "--jobs-file", "/app/infra/scheduler-jobs.json", "--run-now"]
+    volumes:
+      - ./infra:/app/infra:ro
+      - ./secrets:/app/secrets:ro
+    environment:
+      DATABASE_URL: postgresql+psycopg://${POSTGRES_USER:-vaayu}:${POSTGRES_PASSWORD:-vaayu}@postgres:5432/${POSTGRES_DB:-vaayu}
+      DATA_GOV_IN_API_KEY: ${DATA_GOV_IN_API_KEY:-}
+      OPENAQ_API_KEY: ${OPENAQ_API_KEY:-}
+      FIRMS_MAP_KEY: ${FIRMS_MAP_KEY:-}
+      GEE_SERVICE_ACCOUNT_KEY: ${GEE_SERVICE_ACCOUNT_KEY:-}
+      OPENAQ_REQUESTS_PER_MINUTE: ${OPENAQ_REQUESTS_PER_MINUTE:-60}
+
 volumes:
   pgdata:

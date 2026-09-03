@@ -8,7 +8,7 @@ package org.vaayu.grap;
  * The alert table stores {@code predicted_aqi} with its interval on the AQI scale.
  * Copying one interval into the other without converting produced alerts whose
  * stated interval did not contain their own point estimate, for example
- * "AQI 428, 90% interval 146 to 196".
+ * "AQI 428, 80% interval 146 to 196".
  *
  * <p>That matters more here than in most systems. The interval is the project's
  * central honesty claim: an alert recommends statutory restrictions, and an

@@ -4,6 +4,7 @@ import jakarta.validation.Valid;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import java.util.List;
+import java.util.NoSuchElementException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -13,11 +14,16 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
+import org.vaayu.genai.GroundedNarrator;
+import org.vaayu.genai.Narrative;
+import org.vaayu.genai.NarrativeFacts;
+import org.vaayu.genai.NarrativeLanguage;
 import org.vaayu.web.dto.CitizenReportRequest;
 import org.vaayu.web.dto.CitizenReportResponse;
 import org.vaayu.web.dto.ForecastResponse;
 import org.vaayu.web.dto.CityRankingResponse;
 import org.vaayu.web.dto.GridPredictionResponse;
+import org.vaayu.web.dto.NarrativeResponse;
 import org.vaayu.web.dto.NearestStationResponse;
 import org.vaayu.web.dto.ProvenanceResponse;
 import org.vaayu.web.dto.StationReadingResponse;
@@ -33,9 +39,57 @@ public class PublicController {
     private final ReadQueryOperations queries;
     private final CitizenReportService reports;
 
-    public PublicController(ReadQueryOperations queries, CitizenReportService reports) {
+    private final GroundedNarrator narrator;
+
+    public PublicController(
+            ReadQueryOperations queries, CitizenReportService reports, GroundedNarrator narrator) {
         this.queries = queries;
         this.reports = reports;
+        this.narrator = narrator;
+    }
+
+    /**
+     * The framing for a resident. Health guidance, not enforcement.
+     *
+     * <p>A citizen advisory written only in English does not serve the people
+     * most exposed, which is why the language is a parameter rather than a
+     * translation step applied afterwards.
+     */
+    private static final String RESIDENT_ROLE =
+            """
+            You are advising a resident of an Indian city about the air quality \
+            near them. Say what the air is like and what they should do today. \
+            Be practical and calm. Do not give medical advice.""";
+
+    @GetMapping("/advisory")
+    @Operation(summary = "Plain-language air quality advisory for a point, in the requested language")
+    public NarrativeResponse advisory(
+            @RequestParam(defaultValue = "en") String lang,
+            @RequestParam double lat,
+            @RequestParam double lon) {
+        NarrativeLanguage language = NarrativeLanguage.fromCode(lang);
+        NearestStationResponse station = queries.nearest(lat, lon)
+                .orElseThrow(() -> new NoSuchElementException("no station reports near this point"));
+
+        NarrativeFacts facts = NarrativeFacts.builder()
+                .number("AQI", station.aqi())
+                .number("PM2.5 in micrograms per cubic metre", station.pm25())
+                // The distance is the substance, not a caveat: a measurement
+                // taken kilometres away is not a measurement of here, and the
+                // narrative must be able to say so.
+                .number("Distance in kilometres", station.distanceKm())
+                .fact("Station", station.name())
+                .fact("City", station.city())
+                .fact("Reading is recent", station.stale() ? "no" : "yes")
+                .build();
+
+        Narrative narrative = narrator.narrate(RESIDENT_ROLE, facts, language);
+        return new NarrativeResponse(
+                narrative.text(),
+                narrative.language().code(),
+                narrative.status().name(),
+                narrative.unsourcedNumbers(),
+                facts.asMap());
     }
 
     @GetMapping("/provenance")
@@ -74,6 +128,12 @@ public class PublicController {
     @Operation(summary = "Every station with a reading, and that reading")
     public List<StationReadingResponse> stationReadings() {
         return queries.stationReadings();
+    }
+
+    @GetMapping("/stations/forecastable")
+    @Operation(summary = "Stations that have a forecast, so a caller can ask one that can answer")
+    public List<StationResponse> forecastStations() {
+        return queries.forecastStations();
     }
 
     @GetMapping("/stations")

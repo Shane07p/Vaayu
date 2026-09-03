@@ -80,7 +80,7 @@ Every output of this system terminates in one of three places:
                                  ▼
 ┌──────────────────────── INFERENCE (Vertex AI) ─────────────────────────────┐
 │                                                                            │
-│  [A] NOWCAST      XGBoost quantile → 1km PM2.5 surface + 90% interval      │
+│  [A] NOWCAST      XGBoost quantile → 1km PM2.5 surface + 80% interval      │
 │  [B] FORECAST     LightGBM multi-horizon 6/24/72h + persistence baseline   │
 │  [C] ATTRIBUTION  HYSPLIT back-trajectory → fire cluster → impact rank     │
 │  [D] CITIZEN      Gemini multimodal → AQI band (soft evidence only)        │
@@ -186,7 +186,7 @@ This section exists because it is where most submissions in this space fail.
 | **Temporal generalisation** | Forward-chaining blocked CV | Random splits on time series leak the future. |
 | **Episode skill** | Precision / Recall / F1 on AQI > 300 exceedance | RMSE is dominated by ordinary days. The product is about spikes. |
 | **Seasonal breakdown** | Metrics reported separately for winter / monsoon / summer | Monsoon degrades AOD–PM relationships; a single annual number hides this. |
-| **Calibration** | Reliability diagram on quantile intervals | A 90% interval must contain truth ~90% of the time. |
+| **Calibration** | Reliability diagram on quantile intervals | The surface is fitted at quantiles 0.1, 0.5 and 0.9 (`NowcastModel.QUANTILES`), so q10-q90 is an 80% central interval and must contain truth ~80% of the time. Scoring it against 90% would read a well-calibrated model as under-covering. |
 
 **Reported results** _(fill from your run)_:
 

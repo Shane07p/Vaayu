@@ -84,8 +84,6 @@ function buildTiers(data: GeoReferenceData): DataPoint[][] {
   ];
 }
 
-const NO_TIERS: DataPoint[][] = [[], [], [], [], []];
-
 /* ───── Props ───── */
 interface Props { map: Map | null; }
 
