@@ -21,8 +21,6 @@ export default async function MapPage() {
     loadError = true;
   }
 
-  const source = grid[0]?.source ?? "UNKNOWN";
-
   return (
     <div className="space-y-5">
       {/* Header */}
