@@ -2,7 +2,7 @@
 import { create } from 'zustand';
 import { devtools } from 'zustand/middleware';
 import { GridPrediction, Forecast, NearestStation, StationReading } from '@/lib/schemas';
-import { fetchGrid, fetchStations, fetchForecast, fetchNearest } from '@/lib/api';
+import { fetchGrid, fetchNearest } from '@/lib/api';
 import type { Map } from 'maplibre-gl';
 
 export type AQITab = 'aqi' | 'weather';
@@ -21,6 +21,34 @@ export type AQITab = 'aqi' | 'weather';
  * The grid covers Delhi-NCR; everywhere else now says so.
  */
 
+
+/**
+ * The grid cell nearest a point, or null when there are none.
+ *
+ * Squared degrees, not metres. Over a bbox half a degree wide the ranking by
+ * squared degree distance and by great-circle distance agree, and the answer
+ * here is which of a handful of candidates is closest, not how far away it is.
+ * Latitude is weighted by the cosine of the point's latitude so a degree of
+ * longitude is not treated as a degree of latitude; at 28°N they differ by
+ * about twelve per cent, which is enough to pick the wrong cell.
+ */
+function closestCell(cells: GridPrediction[], lat: number, lon: number): GridPrediction | null {
+  const lonScale = Math.cos((lat * Math.PI) / 180);
+  let best: GridPrediction | null = null;
+  let bestDistance = Number.POSITIVE_INFINITY;
+
+  for (const cell of cells) {
+    const dLat = cell.lat - lat;
+    const dLon = (cell.lon - lon) * lonScale;
+    const distance = dLat * dLat + dLon * dLon;
+    if (distance < bestDistance) {
+      bestDistance = distance;
+      best = cell;
+    }
+  }
+
+  return best;
+}
 
 /** Data from the clicked marker (known before API call) */
 export interface MarkerInfo {
@@ -209,12 +237,23 @@ export const useAQIStore = create<AQIState>()(
 
         const gridList = await fetchGrid(bbox);
         if (gridList && gridList.length > 0) {
-          // We got real API data!
-          const midCell = gridList[Math.floor(gridList.length / 2)] ?? gridList[0];
+          // The cell covering the place that was asked about, not the middle of
+          // the box that was fetched.
+          //
+          // This used to take gridList[length / 2]. The bbox above spans half a
+          // degree of longitude and four tenths of latitude -- roughly 50 km by
+          // 44 km -- and the API returns its cells in no order the caller
+          // defines, so the "middle" one could be thirty kilometres from the
+          // searched point and belong to a different city. The card then
+          // reported that cell's PM2.5, interval and coverage under the name of
+          // the place the reader typed. Same class of mistake as loadGrid's old
+          // auto-selection: a real number, presented as a measurement of
+          // somewhere it does not describe.
+          const nearestCell = closestCell(gridList, lat, lon);
           set({
             gridData: gridList,
-            selectedCellData: midCell,
-            selectedCellId: midCell?.gridCellId ?? null,
+            selectedCellData: nearestCell,
+            selectedCellId: nearestCell?.gridCellId ?? null,
             dataSource: 'API',
           });
         } else {
