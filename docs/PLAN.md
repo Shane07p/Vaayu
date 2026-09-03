@@ -3,6 +3,17 @@
 **4 September 2026.** Written after a full codebase audit, an external evidence
 review, and a spatial-statistics check against our own station data.
 
+**Read alongside this:**
+
+| Document | What it holds |
+|---|---|
+| [ORIENTATION.md](ORIENTATION.md) | How to run it, the non-negotiable rules, where every file lives, what is real versus seed, and **instructions for AI agents** (§8) |
+| [EVIDENCE.md](EVIDENCE.md) | Every research finding in full, with URLs, sample sizes and an honesty grade, cross-referenced to the task IDs below |
+| [TECHNICAL.md](TECHNICAL.md) | Architecture and the validation protocol |
+
+**If you are picking up a task:** read your block in Part 5, then the EVIDENCE
+sections it cites, then ORIENTATION §2 (the rules) and §8 (agent instructions).
+
 This document is meant to be read in order. Part 1 says what was wrong. Part 2
 says what the evidence says people need. Part 3 says what our own data will and
 will not support — it retires a feature we had planned. Part 4 is the product
@@ -401,6 +412,7 @@ Every task is marked **[real data]** — buildable today — or **[blocked]**.
 *The differentiator. Everything here runs on data we already have.*
 
 **A1. Explain-in-place components** **[real data]**
+*Files:* `web/components/` (new), `web/lib/i18n.tsx`. *Evidence:* EVIDENCE §1.1, §1.2.
 Build the three mechanisms in §4.1 as reusable components: `Figure` (number +
 band + action sentence), `ExplainInline` (expands a term where it stands), and
 `FirstVisit` (three-step, skippable, uses the reader's real number).
@@ -408,6 +420,7 @@ band + action sentence), `ExplainInline` (expands a term where it stands), and
 band and an action sentence beside it.
 
 **A2. Guidance content, per band and per audience** **[real data]**
+*Files:* `web/components/citizen/citizen-guidance.tsx` (currently unreachable — see ORIENTATION §5), `web/lib/i18n.tsx`. *Evidence:* EVIDENCE §1.1, §1.2, §1.5, §3.4.
 The action sentences themselves. Six CPCB bands × the audiences in §2.6 (general,
 asthma/COPD, pregnant, elderly, outdoor worker, children). Written plainly.
 *Grounded in §2.1 and §2.6.* Present these as directionally reasonable, not as
@@ -417,12 +430,14 @@ is explicit that overall evidence quality is lacking.
 tailoring is visible without an account or a profile.
 
 **A3. Extend the grounding validator beyond numerals** **[real data]**
+*Files:* `backend/src/main/java/org/vaayu/genai/GroundingValidator.java`, `GroundedNarrator.java`, `NarrativeFacts.java`. *Evidence:* EVIDENCE §5.
 The numeral check is load-bearing and works. Extend coverage so every generated
 *sentence* is checked against the supplied facts, not only its digits. Frame the
 system prompt explicitly as translation and simplification only, never new facts.
 *Grounded in §2.7 and the hallucination literature.*
 
 **A4. Make the generated summary discoverable** **[real data]**
+*Files:* `web/components/narrative-panel.tsx`, `web/components/citizen/station-advisory.tsx`, `web/components/alert-briefing.tsx`.
 Today it hides behind a button labelled "Explain this" that produces nothing
 until clicked. Our most differentiated capability is invisible.
 *Done when:* a first-time reader encounters the plain-language explanation
@@ -435,20 +450,24 @@ without having to guess that a button will produce one.
 *Owns everything a member of the public sees.*
 
 **B1. Home page: answer first, explain below** **[real data]**
+*Files:* `web/app/page.tsx`. *Evidence:* EVIDENCE §1.1, §1.5.
 Live number as the hero, no marketing above it. Below the fold: where the number
 comes from, what we cannot tell you yet, and the three onward links.
 *Done when:* a first-time visitor who scrolls once can say what VAAYU does and
 why it is trustworthy.
 
 **B2. Implement the answer rule** **[real data]**
+*Files:* `web/store/aqiStore.ts`, `web/components/citizen/FullScreenMap.tsx`, `web/lib/api.ts` (`fetchNearest`). *Evidence:* EVIDENCE §1.4, §3.2; thresholds from PLAN §3.
 The three states in §4.2, using the 10 km / 30 km thresholds from §3.
 *Done when:* a location with no monitor within 30 km gets a refusal that names a
 place we do know — never a number borrowed from another city.
 
 **B3. Rename everything** **[real data]**
+*Files:* `web/components/sidebar.tsx`, `topbar.tsx`, `web/app/(console)/**`, `web/app/page.tsx`, `web/lib/i18n.tsx`.
 The table in §4.3, end to end. Delete the contradictory status chrome.
 
 **B4. Eight languages, and beyond text** **[real data]**
+*Files:* `web/lib/i18n.tsx` (3 languages), `backend/.../genai/NarrativeLanguage.java` (8, authoritative). *Evidence:* EVIDENCE §3.3.
 The API supports eight; the UI offers three. Close it. Then add voice output and
 an icon system — §2.6 says translated text alone does not reach low-literacy
 users, and GIGW 3.0 sets the accessibility floor.
@@ -456,6 +475,7 @@ users, and GIGW 3.0 sets the accessibility floor.
 and an audio reading.
 
 **B5. Outdoor-worker view** **[real data]**
+*Files:* `web/app/(citizen)/`, reads `/api/v1/public/stations/readings`. *Evidence:* EVIDENCE §3.1.
 A one-tap mode reframing today's real hourly station data around shift timing —
 "worse 7–10am here today, deliver later if you can." Derivable from real readings
 without any forecast.
@@ -474,6 +494,7 @@ reboot.
 *Done when:* ingestion runs unattended and a dashboard shows rows-per-hour.
 
 **C2. Sensor anomaly detection** **[real data]** — *this is the ML*
+*Files:* `ml/src/vaayu_ml/` (new module), `ingestion/src/ingestion/openaq_latest.py`. *Evidence:* PLAN §3.2.
 Flag readings that contradict their neighbours: stuck sensors, unit errors, a CO
 reading stored as PM2.5. §3.2 shows short-range disagreement exceeding regional
 variance, so there is real signal here — and we have already shipped this exact
@@ -496,6 +517,7 @@ no temporal validation, ever. Either fix it or record clearly that we have no
 history and stop implying otherwise.
 
 **C5. Run the validation that already exists** **[real data]**
+*Files:* `ml/src/vaayu_ml/evaluation/{loso_cv,blocked_cv,calibration,exceedance}.py` — all written, tested, never called. Results go to `docs/TECHNICAL.md` §6.5.
 `loso_splits`, `blocked_cv`, `calibration`, `exceedance` are all written and
 tested and have **never been called**. Wire them to a runner so §6.5 of
 `TECHNICAL.md` stops being a table of dashes. Apply to C2 first, since that is
@@ -508,12 +530,14 @@ the model we will actually have.
 *Owns the console and everything that makes it deployable.*
 
 **D1. Replace the console hero with "What needs attention today"** **[real data]**
+*Files:* `web/app/(console)/map/page.tsx`, `backend/.../ReadQueryService.java`. *Evidence:* EVIDENCE §4.2, §4.3.
 §4.4. Built only from real measurements, real FIRMS clusters, and real alert
 timestamps.
 *Done when:* every row names a place, a reason, and an action, and none of it
 comes from seed data.
 
 **D2. Downwind cross-jurisdiction fire attribution** **[real data]**
+*Files:* `ml/src/vaayu_ml/trajectory.py`, `attribution/`, `ingestion/src/ingestion/openmeteo.py` (single-coordinate today — needs extending). *Evidence:* EVIDENCE §4.1 — Dipoppa & Gulzar, Nature 2024.
 *The highest-evidence feature in this document.* For each fire cluster, compute
 where the smoke goes using wind, which jurisdiction's population it lands on, and
 name the accountable authority.

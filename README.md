@@ -10,6 +10,18 @@ attribution — wired into India's existing GRAP and stubble-burning enforcement
 
 ## Documentation
 
+**Start here if you are joining, or if you are an AI agent picking up a task:**
+
+- [**ORIENTATION.md**](docs/ORIENTATION.md) — how to run it, the non-negotiable
+  rules, where every file lives, what is real versus seed data, and instructions
+  for AI agents (§8)
+- [**PLAN.md**](docs/PLAN.md) — where the project stands and the next month's
+  work, divided four ways
+- [**EVIDENCE.md**](docs/EVIDENCE.md) — the research behind those decisions, with
+  sources and honesty grades
+
+Reference:
+
 - [What we are building, in plain language](docs/OVERVIEW.md)
 - [Technical reference: architecture, data sources, validation protocol](docs/TECHNICAL.md)
 - [Source research: accuracy ceilings, prior art, failure modes](docs/RESEARCH.md)
