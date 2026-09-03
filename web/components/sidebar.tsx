@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import type { Provenance } from "@/lib/schemas";
 
 interface NavItem {
   href: string;
@@ -82,7 +83,15 @@ const NAV_GROUPS: NavGroup[] = [
   },
 ];
 
-export function Sidebar() {
+type SidebarProps = {
+  /**
+   * The model behind the numbers, from /provenance. Null when the console could
+   * not reach the API, which is reported as such rather than as a model name.
+   */
+  model?: Provenance["model"] | null;
+};
+
+export function Sidebar({ model }: SidebarProps) {
   const pathname = usePathname();
 
   return (
@@ -203,9 +212,37 @@ export function Sidebar() {
       {/* System Status Footer */}
       <div className="p-4 border-t border-white/10 bg-[#070a0e]/50">
         <div className="space-y-1.5 text-[10px] font-mono text-slate-400">
-          <div className="flex justify-between">
+          {/* The model actually behind the numbers, not the one we would like
+              to have. This read "VAAYU-XGB-v1" unconditionally, on every page of
+              the enforcement console, while model_run held "seed" -- hand-written
+              demo rows. No model has been trained: the Earth Engine credential
+              that feeds the predictors has never been issued, so run_nowcast has
+              never had inputs. An officer reading this footer was told a gradient
+              boosted model stood behind an alert that a person had typed in.
+
+              Now it reports what latestModel() found, and says plainly when that
+              is seed data rather than a trained model. */}
+          <div className="flex justify-between gap-2">
             <span className="text-slate-500">Model Engine:</span>
-            <span className="text-slate-300 font-semibold">VAAYU-XGB-v1</span>
+            {model?.version ? (
+              <span
+                className={
+                  model.isTrainedModel
+                    ? "text-slate-300 font-semibold"
+                    : "text-amber-400 font-semibold"
+                }
+                title={
+                  model.isTrainedModel
+                    ? undefined
+                    : "Seed data, not a trained model. Predictions are placeholders."
+                }
+              >
+                {model.version}
+                {model.isTrainedModel ? "" : " (seed)"}
+              </span>
+            ) : (
+              <span className="text-amber-400 font-semibold">none trained</span>
+            )}
           </div>
           <div className="flex justify-between">
             <span className="text-slate-500">Statutory Loop:</span>
