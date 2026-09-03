@@ -57,7 +57,9 @@ public class PublicController {
      */
     private static final String RESIDENT_ROLE =
             """
-            You are advising a resident of an Indian city about the air quality             near them. Say what the air is like and what they should do today.             Be practical and calm. Do not give medical advice.""";
+            You are advising a resident of an Indian city about the air quality \
+            near them. Say what the air is like and what they should do today. \
+            Be practical and calm. Do not give medical advice.""";
 
     @GetMapping("/advisory")
     @Operation(summary = "Plain-language air quality advisory for a point, in the requested language")

@@ -50,7 +50,24 @@ public class GroundedNarrator {
      */
     @Cacheable(
             value = "narratives",
-            key = "#role.hashCode() + ':' + #facts.contentHash() + ':' + #language.code()")
+            key = "#role.hashCode() + ':' + #facts.contentHash() + ':' + #language.code()",
+            // Only a narrative that exists is worth keeping.
+            //
+            // The cache holds entries for six hours, which is right for prose
+            // generated from facts that no longer change. It is wrong for a
+            // failure. The free tier allows twenty generate_content requests a
+            // day, and the twenty-first returns 429, which this method correctly
+            // reports as SOURCE_UNAVAILABLE -- and which was then cached. So a
+            // single burst of demo traffic pinned "the model could not be
+            // reached" onto that alert for the next six hours, long after the
+            // quota had reset and the model was answering again, with no way to
+            // clear it short of restarting the service.
+            //
+            // UNGROUNDED is excluded for a different reason: generation is not
+            // deterministic, so the next attempt may well come back grounded.
+            // Caching the refusal would deny the reader a summary the system is
+            // perfectly able to produce.
+            unless = "#result == null || #result.status() != T(org.vaayu.genai.Narrative.Status).OK")
     public Narrative narrate(String role, NarrativeFacts facts, NarrativeLanguage language) {
         String systemPrompt = buildSystemPrompt(role, facts, language);
 

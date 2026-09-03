@@ -1,6 +1,7 @@
 package org.vaayu.genai;
 
 import java.util.Arrays;
+import java.util.Locale;
 import java.util.stream.Collectors;
 
 /**
@@ -60,7 +61,11 @@ public enum NarrativeLanguage {
             throw new IllegalArgumentException(
                     "A language code is required. Supported: " + supportedCodes());
         }
-        String normalised = code.trim().toLowerCase();
+        // Locale.ROOT, not the default locale. In a Turkish locale
+        // "HI".toLowerCase() is "hı", not "hi", so a Hindi request would be
+        // rejected as an unsupported language on a machine whose locale nobody
+        // thought about. Language codes are ASCII and must fold as ASCII.
+        String normalised = code.trim().toLowerCase(Locale.ROOT);
         return Arrays.stream(values())
                 .filter(language -> language.code.equals(normalised))
                 .findFirst()

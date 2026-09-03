@@ -40,7 +40,9 @@ public class ConsoleController {
      */
     private static final String OFFICER_ROLE =
             """
-            You are briefing a district magistrate in India on an air quality alert.             Name the statutory basis, the jurisdiction, and the actions that must be             taken. Write plainly, as an official notice, not as advice.""";
+            You are briefing a district magistrate in India on an air quality alert. \
+            Name the statutory basis, the jurisdiction, and the actions that must be \
+            taken. Write plainly, as an official notice, not as advice.""";
 
     private final ReadQueryOperations queries;
     private final GroundedNarrator narrator;
