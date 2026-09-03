@@ -63,9 +63,12 @@ PM25_PARAMETER_ID = 2
 PM25_UNITS = {"ug/m3", "µg/m³"}
 INDIA_COUNTRY_CODE = "IN"
 
-# OpenAQ's `locality` is null for every Indian station -- all 168 in a national
-# run -- so grouping by city has nothing to group by. The station name does carry
-# it, in a shape the boards use consistently:
+# OpenAQ's `locality` is null for almost every Indian station -- all 168 in one
+# national run -- so grouping by city has nothing to group by. Where it is set it
+# is not always a city: three stations return the country, "India". See
+# `_city_of`, which is what decides whether to believe it.
+#
+# The station name does carry the city, in a shape the boards use consistently:
 #
 #     "R K Puram, Delhi - DPCC"
 #     "Zoo Park, Hyderabad - TSPCB"
@@ -121,6 +124,48 @@ def _city_from_name(name: str) -> str | None:
     """
     match = STATION_CITY.match(name)
     return match.group(1).strip() if match else None
+
+
+def _city_of(location: dict, name: str) -> str | None:
+    """The city to file a station under, or None.
+
+    ``locality`` is preferred when the source supplies a usable one, and the
+    station name is read otherwise.
+
+    The check on ``locality`` is not defensive tidying. The module docstring
+    recorded that OpenAQ returns a null locality for every Indian station, which
+    was true of the run it was measured on and is no longer true: three stations
+    now come back with ``locality`` set to the string "India". Taken at face
+    value that stored a country as a city, and because the ranking groups by
+    ``station.city`` and orders by the worst reading, "India" appeared in the
+    citizen rankings as a city in its own right -- above every real one, since
+    it aggregated stations from Delhi, Mumbai and Chennai at once.
+
+    A locality equal to the station's own country is not a locality. Those three
+    stations are named "New Delhi", "Mumbai" and "Chennai", which carry no comma
+    and so yield no city from the name either; they are left unattributed and
+    counted in the ranking's `unattributedStations`, where their absence is
+    visible. That is the standing rule here: an omission a reader can see beats
+    an attribution a reader cannot check.
+    """
+    country = location.get("country") or {}
+    disallowed = {
+        str(value).strip().casefold()
+        for value in (country.get("name"), country.get("code"))
+        if value
+    }
+
+    locality = location.get("locality")
+    if isinstance(locality, str) and locality.strip():
+        if locality.strip().casefold() not in disallowed:
+            return locality.strip()
+        logger.warning(
+            "Ignoring OpenAQ locality %r for station %r: it names the country, not a city",
+            locality,
+            name,
+        )
+
+    return _city_from_name(name)
 
 
 class OpenAqLatestSource(Source):
@@ -273,10 +318,10 @@ class OpenAqLatestSource(Source):
                     {
                         "id": location.get("id"),
                         "name": name,
-                        # locality when the source supplies one, otherwise read
-                        # from the station name. `country` is deliberately not
-                        # stored as `state`: see _to_record.
-                        "city": location.get("locality") or _city_from_name(name),
+                        # locality when the source supplies a usable one,
+                        # otherwise read from the station name. `country` is
+                        # deliberately not stored as `state`: see _to_record.
+                        "city": _city_of(location, name),
                         "pm25_sensors": pm25_sensors,
                         "latitude": float(latitude),
                         "longitude": float(longitude),

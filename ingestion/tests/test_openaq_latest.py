@@ -51,7 +51,9 @@ def _location(
         "id": location_id,
         "name": name,
         "locality": locality,
-        "country": {"id": 9, "code": country, "name": "Country"},
+        # The real country block, not a placeholder: `locality` is checked
+        # against it, and a fake that says "Country" cannot exercise that.
+        "country": {"id": 9, "code": country, "name": "India" if country == "IN" else country},
         "sensors": sensors,
         "datetimeLast": {"utc": _iso(datetime.now(UTC) - age)},
         "coordinates": {"latitude": 28.64, "longitude": 77.31},
@@ -391,4 +393,31 @@ class TestCityComesFromTheStationName:
             latest={1: [_measurement(60.0, timedelta(minutes=5))]},
         )
 
+        assert _source(api).fetch()[0]["city"] == "Agra"
+
+    def test_a_locality_naming_the_country_is_not_a_city(self):
+        """A country is not a city, however confidently the source says so.
+
+        Three Indian stations return locality "India". Stored, that put "India"
+        in the citizen rankings as a city, aggregating Delhi, Mumbai and Chennai
+        into one row that outranked every real city.
+        """
+        api = FakeApi(
+            locations=[_location(1, "New Delhi", timedelta(minutes=5), locality="India")],
+            latest={1: [_measurement(60.0, timedelta(minutes=5))]},
+        )
+
+        # Unattributed, not misattributed. The name carries no city either, and
+        # the ranking counts what it could not place.
+        assert _source(api).fetch()[0]["city"] is None
+
+    def test_the_country_code_is_refused_as_a_city_too(self):
+        api = FakeApi(
+            locations=[
+                _location(1, "Sanjay Palace, Agra - UPPCB", timedelta(minutes=5), locality="IN")
+            ],
+            latest={1: [_measurement(60.0, timedelta(minutes=5))]},
+        )
+
+        # Falls back to the name, which does carry one.
         assert _source(api).fetch()[0]["city"] == "Agra"
