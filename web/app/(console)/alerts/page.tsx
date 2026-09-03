@@ -97,7 +97,7 @@ export default async function AlertsPage() {
                   </div>
                   <div className="p-3 rounded-lg bg-slate-900/80 border border-slate-800">
                     <div className="text-[9px] font-mono uppercase text-slate-500 mb-0.5">
-                      95% CI
+                      80% interval
                     </div>
                     <div className="text-lg font-bold font-mono text-slate-200">
                       {alert.ciLow}–{alert.ciHigh}
