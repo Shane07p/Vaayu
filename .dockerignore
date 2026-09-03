@@ -1,0 +1,13 @@
+.git
+.next
+node_modules
+**/__pycache__
+**/.venv
+**/.pytest_cache
+**/.ruff_cache
+.uv-cache-task
+ml/mlruns
+ml/artifacts
+secrets
+.env
+.env.*

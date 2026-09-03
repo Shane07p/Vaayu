@@ -41,6 +41,7 @@ from __future__ import annotations
 
 import argparse
 import logging
+import math
 import re
 import time
 from datetime import UTC, datetime, timedelta
@@ -380,7 +381,7 @@ class OpenAqLatestSource(Source):
             return None
 
         value = measurement.get("value")
-        if not isinstance(value, (int, float)):
+        if not isinstance(value, (int, float)) or not math.isfinite(value) or value < 0:
             return None
 
         observed = (measurement.get("datetime") or {}).get("utc")
@@ -423,13 +424,16 @@ def main() -> None:
     logging.basicConfig(level=logging.INFO, format="%(message)s")
 
     from ingestion.db import write_station_readings
+    from ingestion.quality import scan_recent_openaq_readings
     from ingestion.runner import run_source
 
     source = OpenAqLatestSource(settings.openaq_api_key, args.bbox, args.max_stations)
     count = run_source(source, write_station_readings, dry_run=args.dry_run)
+    flagged = 0 if args.dry_run else scan_recent_openaq_readings()
     print(
         f"OpenAQ latest {source.mode}: {count} records from "
-        f"{source.total_units - source.failed_units}/{source.total_units} stations"
+        f"{source.total_units - source.failed_units}/{source.total_units} stations; "
+        f"{flagged} quality holdouts"
     )
 
 

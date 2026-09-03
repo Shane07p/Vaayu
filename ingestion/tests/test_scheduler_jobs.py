@@ -12,7 +12,8 @@ def test_scheduler_handoff_defines_the_current_ingestion_job_set():
     jobs = {job["name"]: job for job in payload["jobs"]}
 
     assert payload["runner"]["name"] == "vaayu-ingestion"
-    assert payload["runner"]["build_context"] == "ingestion"
+    assert payload["runner"]["build_context"] == "."
+    assert payload["runner"]["working_directory"] == "/app/ingestion"
     assert "uv sync --frozen --no-dev" in RUNNER_DOCKERFILE.read_text(encoding="utf-8")
     assert set(jobs) == {
         "vaayu-openaq-latest",

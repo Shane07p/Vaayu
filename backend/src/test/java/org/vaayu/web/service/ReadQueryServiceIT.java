@@ -4,6 +4,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.DynamicPropertyRegistry;
 import org.springframework.test.context.DynamicPropertySource;
@@ -33,6 +34,9 @@ class ReadQueryServiceIT {
     @Autowired
     private ReadQueryService queries;
 
+    @Autowired
+    private JdbcTemplate jdbc;
+
     @Test
     void returns_seeded_station_grid_and_forecast_projections() {
         var stations = queries.stations();
@@ -49,5 +53,31 @@ class ReadQueryServiceIT {
         assertThat(queries.worklist("DELHI-NCR")).hasSize(2);
         assertThat(queries.alerts()).extracting(alert -> alert.alertId())
                 .contains("SEED-VAAYU-0001");
+    }
+
+    @Test
+    void excludes_an_active_sensor_holdout_and_reports_its_reason() {
+        var before = queries.stationReadings().getFirst();
+        jdbc.update(
+                """
+                INSERT INTO station_reading_anomaly (reading_id, reason, details)
+                SELECT r.id, 'IMPOSSIBLE_CONCENTRATION', '{}'::jsonb
+                FROM station_reading r
+                WHERE r.station_id = ?
+                ORDER BY r.ts DESC
+                LIMIT 1
+                """,
+                before.stationId());
+
+        var after = queries.stationReadings().stream()
+                .filter(reading -> reading.stationId() == before.stationId())
+                .findFirst()
+                .orElseThrow();
+
+        assertThat(after.measuredAt()).isBefore(before.measuredAt());
+        assertThat(queries.dataQuality().heldOutReadings()).isEqualTo(1);
+        assertThat(queries.dataQuality().reasons())
+                .extracting(reason -> reason.reason())
+                .containsExactly("IMPOSSIBLE_CONCENTRATION");
     }
 }

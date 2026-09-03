@@ -5,6 +5,7 @@ import java.util.Optional;
 import org.vaayu.web.dto.AlertResponse;
 import org.vaayu.web.dto.ForecastResponse;
 import org.vaayu.web.dto.CityRankingResponse;
+import org.vaayu.web.dto.DataQualityResponse;
 import org.vaayu.web.dto.GridPredictionResponse;
 import org.vaayu.web.dto.NearestStationResponse;
 import org.vaayu.web.dto.ProvenanceResponse;
@@ -22,6 +23,8 @@ public interface ReadQueryOperations {
     List<StationResponse> forecastStations();
 
     ProvenanceResponse provenance();
+
+    DataQualityResponse dataQuality();
 
     Optional<NearestStationResponse> nearest(double lat, double lon);
 

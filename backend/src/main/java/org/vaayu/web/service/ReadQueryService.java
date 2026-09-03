@@ -21,6 +21,7 @@ import org.vaayu.grap.AqiScale;
 import org.vaayu.web.dto.AlertResponse;
 import org.vaayu.web.dto.ForecastResponse;
 import org.vaayu.web.dto.CityRankingResponse;
+import org.vaayu.web.dto.DataQualityResponse;
 import org.vaayu.web.dto.GridPredictionResponse;
 import org.vaayu.web.dto.NearestStationResponse;
 import org.vaayu.web.dto.ProvenanceResponse;
@@ -271,6 +272,11 @@ public class ReadQueryService implements ReadQueryOperations {
                 JOIN LATERAL (
                     SELECT ts, pm25, source FROM station_reading
                     WHERE station_id = s.id AND pm25 IS NOT NULL
+                      AND NOT EXISTS (
+                          SELECT 1 FROM station_reading_anomaly anomaly
+                          WHERE anomaly.reading_id = station_reading.id
+                            AND anomaly.status IN ('OPEN', 'CONFIRMED')
+                      )
                     ORDER BY ts DESC LIMIT 1
                 ) r ON TRUE
                 -- <-> is the KNN distance operator and uses idx_station_geom.
@@ -319,6 +325,11 @@ public class ReadQueryService implements ReadQueryOperations {
                     JOIN LATERAL (
                         SELECT pm25, ts FROM station_reading
                         WHERE station_id = s.id AND pm25 IS NOT NULL
+                          AND NOT EXISTS (
+                              SELECT 1 FROM station_reading_anomaly anomaly
+                              WHERE anomaly.reading_id = station_reading.id
+                                AND anomaly.status IN ('OPEN', 'CONFIRMED')
+                          )
                         ORDER BY ts DESC LIMIT 1
                     ) r ON TRUE
                     WHERE s.city IS NOT NULL
@@ -356,8 +367,13 @@ public class ReadQueryService implements ReadQueryOperations {
                 SELECT COUNT(DISTINCT s.city)
                 FROM station s
                 JOIN LATERAL (
-                    SELECT ts FROM station_reading
-                    WHERE station_id = s.id AND pm25 IS NOT NULL
+                        SELECT ts FROM station_reading
+                        WHERE station_id = s.id AND pm25 IS NOT NULL
+                          AND NOT EXISTS (
+                              SELECT 1 FROM station_reading_anomaly anomaly
+                              WHERE anomaly.reading_id = station_reading.id
+                                AND anomaly.status IN ('OPEN', 'CONFIRMED')
+                          )
                     ORDER BY ts DESC LIMIT 1
                 ) r ON TRUE
                 WHERE s.city IS NOT NULL
@@ -366,6 +382,11 @@ public class ReadQueryService implements ReadQueryOperations {
                       JOIN LATERAL (
                           SELECT ts FROM station_reading
                           WHERE station_id = s2.id AND pm25 IS NOT NULL
+                            AND NOT EXISTS (
+                                SELECT 1 FROM station_reading_anomaly anomaly
+                                WHERE anomaly.reading_id = station_reading.id
+                                  AND anomaly.status IN ('OPEN', 'CONFIRMED')
+                            )
                           ORDER BY ts DESC LIMIT 1
                       ) r2 ON TRUE
                       WHERE s2.city IS NOT NULL AND r2.ts >= :cutoff
@@ -383,6 +404,11 @@ public class ReadQueryService implements ReadQueryOperations {
                 JOIN LATERAL (
                     SELECT ts FROM station_reading
                     WHERE station_id = s.id AND pm25 IS NOT NULL
+                      AND NOT EXISTS (
+                          SELECT 1 FROM station_reading_anomaly anomaly
+                          WHERE anomaly.reading_id = station_reading.id
+                            AND anomaly.status IN ('OPEN', 'CONFIRMED')
+                      )
                     ORDER BY ts DESC LIMIT 1
                 ) r ON TRUE
                 WHERE s.city IS NULL AND r.ts >= :cutoff
@@ -413,6 +439,11 @@ public class ReadQueryService implements ReadQueryOperations {
                 JOIN LATERAL (
                     SELECT pm25, ts, source FROM station_reading
                     WHERE station_id = s.id AND pm25 IS NOT NULL
+                      AND NOT EXISTS (
+                          SELECT 1 FROM station_reading_anomaly anomaly
+                          WHERE anomaly.reading_id = station_reading.id
+                            AND anomaly.status IN ('OPEN', 'CONFIRMED')
+                      )
                     ORDER BY ts DESC LIMIT 1
                 ) r ON TRUE
                 ORDER BY r.pm25 DESC
@@ -515,6 +546,22 @@ public class ReadQueryService implements ReadQueryOperations {
                 .toList();
 
         return new ProvenanceResponse(feeds, latestModel());
+    }
+
+    /** Active holdouts and their reasons, derived only from reviewer-visible rows. */
+    public DataQualityResponse dataQuality() {
+        List<DataQualityResponse.ReasonCount> reasons = jdbc.query(
+                """
+                SELECT reason, COUNT(*) AS count
+                FROM station_reading_anomaly
+                WHERE status IN ('OPEN', 'CONFIRMED')
+                GROUP BY reason
+                ORDER BY reason
+                """,
+                (rs, row) -> new DataQualityResponse.ReasonCount(
+                        rs.getString("reason"), rs.getInt("count")));
+        return new DataQualityResponse(
+                reasons.stream().mapToInt(DataQualityResponse.ReasonCount::count).sum(), reasons);
     }
 
     /** Maps a recorded run onto what a reader needs to know about the feed. */

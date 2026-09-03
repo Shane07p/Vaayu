@@ -1,0 +1,22 @@
+{
+  "title": "VAAYU collector throughput",
+  "timezone": "utc",
+  "schemaVersion": 39,
+  "panels": [
+    {
+      "title": "Station rows per hour",
+      "type": "timeseries",
+      "targets": [
+        {
+          "format": "time_series",
+          "rawSql": "SELECT hour AS time, source AS metric, rows_ingested AS value FROM station_reading_hourly_throughput WHERE $__timeFilter(hour) ORDER BY hour",
+          "refId": "A"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": { "unit": "short", "min": 0 },
+        "overrides": []
+      }
+    }
+  ]
+}

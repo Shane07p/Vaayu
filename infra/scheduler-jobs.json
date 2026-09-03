@@ -4,8 +4,8 @@
   "runner": {
     "name": "vaayu-ingestion",
     "image": "REGION-docker.pkg.dev/PROJECT_ID/vaayu/vaayu-ingestion:TAG",
-    "build_context": "ingestion",
-    "working_directory": "/app"
+    "build_context": ".",
+    "working_directory": "/app/ingestion"
   },
   "jobs": [
     {
@@ -35,7 +35,7 @@
         "scope": "job transport failure only"
       },
       "depends_on": [],
-      "notes": "Runs the dedicated current-readings connector rather than `vaayu-openaq --latest`. Both fetch current PM2.5, but the backfill's latest mode defaults to the NCR bbox and would cut national coverage from roughly 290 reporting stations to about 40, recorded under source OPENAQ instead of OPENAQ_LATEST -- so the provenance strip would show one feed quietly replacing another. This connector filters to country IN (the bounding box also contains Peshawar, Lahore and Dhaka), resolves each value's sensor to prove it is PM2.5, skips stations whose newest reading is outside the freshness window, and leaves station.state null rather than storing the country in it. It shares the same RequestRateLimiter."
+      "notes": "Runs the dedicated current-readings connector rather than `vaayu-openaq --latest`. Both fetch current PM2.5, but the backfill's latest mode defaults to the NCR bbox and would cut national coverage from roughly 290 reporting stations to about 40, recorded under source OPENAQ instead of OPENAQ_LATEST -- so the provenance strip would show one feed quietly replacing another. This connector filters to country IN (the bounding box also contains Peshawar, Lahore and Dhaka), resolves each value's sensor to prove it is PM2.5, skips stations whose newest reading is outside the freshness window, leaves station.state null rather than storing the country in it, then runs the conservative quality gate. It shares the same RequestRateLimiter."
     },
     {
       "name": "vaayu-firms",
