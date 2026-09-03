@@ -30,7 +30,7 @@ JSON deliberately does not create cloud resources.
 
 | Job | Cadence | Exact command (working directory: ingestion/) |
 |---|---|---|
-| vaayu-openaq-latest | Hourly at :05 UTC | `uv run --no-sync vaayu-openaq --latest` |
+| vaayu-openaq-latest | Hourly at :05 UTC | `uv run --no-sync vaayu-openaq-latest --max-stations 300` |
 | vaayu-firms | Hourly at :10 UTC | `uv run --no-sync vaayu-firms --days 1` |
 | vaayu-openmeteo | Hourly at :15 UTC | `uv run --no-sync vaayu-openmeteo` |
 | vaayu-gee-maiac | Daily, 03:00 UTC | `uv run --no-sync python -m ingestion.gee.maiac_aod --days-back 1` |
@@ -105,3 +105,53 @@ fills an empty stack immediately instead of waiting for the hour. Without it a
 developer stack decays: OpenAQ publishes with a roughly three hour lag against a
 six hour freshness window, so a manual run buys about three hours before every
 reading correctly reports stale.
+
+
+## Unattended current-readings collector
+
+The local Compose scheduler is useful for development but is not operational: a
+laptop reboot stops it, and the six-hour freshness window then makes the product
+correctly refuse to call the data current. The OpenAQ current-readings collector
+must run at `5 * * * *` UTC outside a laptop.
+
+The deployable command is declared once in
+[`scheduler-jobs.json`](../infra/scheduler-jobs.json). It runs
+`vaayu-openaq-latest --max-stations 300`, then the conservative quality scan.
+The scanner records holdouts in `station_reading_anomaly`; it never deletes a
+source reading and it never replaces a failed source with fixtures.
+
+Create a least-privileged `vaayu-ingestion` service account with Cloud SQL
+Client and Secret Accessor on `vaayu-ingestion-database-url` and
+`vaayu-openaq-key`. Create `vaayu-scheduler` and grant it
+`roles/run.invoker` for the `vaayu-openaq-latest` job. The database-url
+secret is a percent-encoded SQLAlchemy URL using the Cloud SQL Unix socket; see
+the deployment script header for its form.
+
+```powershell
+./infra/cloudrun/deploy-openaq-collector.ps1 `
+  -ProjectId YOUR_PROJECT -Region asia-south1 -Repository vaayu `
+  -InstanceConnectionName YOUR_PROJECT:asia-south1:vaayu-postgres
+```
+
+This creates a Cloud Run Job and an OAuth-authenticated Cloud Scheduler trigger.
+It is intentionally not performed by CI or `make up`: both would create a
+writing job and an external schedule without an operator choosing the project.
+
+## Throughput dashboard
+
+Import [`grafana-ingestion-throughput.json`](../infra/monitoring/grafana-ingestion-throughput.json)
+with the production PostgreSQL datasource. Its single series queries
+`station_reading_hourly_throughput`, a database view populated only by written
+station rows. A healthy run is normally about 250 PM2.5 rows per hour; zero is a
+collector problem, not a clean-air reading.
+
+## Quality holdouts
+
+`GET /api/v1/public/data-quality` reports active holdouts and their reasons.
+Open or confirmed anomalies are excluded from nearest readings, station markers,
+rankings, and the ML training target. A dismissed anomaly becomes eligible again.
+
+The detector has no labelled fault dataset. Its thresholds are therefore
+conservative and it reports no recall number. Review flagged records before
+confirming or dismissing them; the `details` JSON stores the actual value and
+the peer/stuck-sensor facts that caused the holdout.

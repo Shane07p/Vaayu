@@ -8,15 +8,19 @@ FROM python:3.11-slim
 # on the same dependency set.
 COPY --from=uv /uv /uvx /usr/local/bin/
 
-WORKDIR /app
+WORKDIR /app/ingestion
 
 # Dependency layer first: source edits do not invalidate the slow geospatial
 # dependency install.
-COPY pyproject.toml uv.lock ./
+COPY ingestion/pyproject.toml ingestion/uv.lock ./
 RUN uv sync --frozen --no-dev --no-install-project
 
-COPY src ./src
-COPY fixtures ./fixtures
+COPY ingestion/src ./src
+COPY ingestion/fixtures ./fixtures
+# The collector runs the same small, dependency-free quality module as ML
+# without pulling model training libraries into an hourly Cloud Run Job.
+COPY ml/src/vaayu_ml/__init__.py ./src/vaayu_ml/__init__.py
+COPY ml/src/vaayu_ml/quality ./src/vaayu_ml/quality
 RUN uv sync --frozen --no-dev
 
 ENV PATH="/app/.venv/bin:$PATH"

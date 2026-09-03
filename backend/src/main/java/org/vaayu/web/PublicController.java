@@ -22,6 +22,7 @@ import org.vaayu.web.dto.CitizenReportRequest;
 import org.vaayu.web.dto.CitizenReportResponse;
 import org.vaayu.web.dto.ForecastResponse;
 import org.vaayu.web.dto.CityRankingResponse;
+import org.vaayu.web.dto.DataQualityResponse;
 import org.vaayu.web.dto.GridPredictionResponse;
 import org.vaayu.web.dto.NarrativeResponse;
 import org.vaayu.web.dto.NearestStationResponse;
@@ -96,6 +97,12 @@ public class PublicController {
     @Operation(summary = "Report where the data on screen came from, derived from ingestion_run and model_run")
     public ProvenanceResponse provenance() {
         return queries.provenance();
+    }
+
+    @GetMapping("/data-quality")
+    @Operation(summary = "Readings withheld from public results while sensor-quality concerns are reviewed")
+    public DataQualityResponse dataQuality() {
+        return queries.dataQuality();
     }
 
     @GetMapping("/cities/rankings")

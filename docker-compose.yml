@@ -70,7 +70,9 @@ services:
   # DATABASE_URL points at the service name, not the published host port,
   # because a locally installed PostgreSQL may own 5432 on the host.
   ingestion:
-    build: ./ingestion
+    build:
+      context: .
+      dockerfile: ingestion/Dockerfile
     profiles: ["jobs"]
     depends_on:
       postgres:
@@ -100,7 +102,9 @@ services:
   #
   # --run-now fills an empty stack immediately rather than waiting for the hour.
   scheduler:
-    build: ./ingestion
+    build:
+      context: .
+      dockerfile: ingestion/Dockerfile
     profiles: ["scheduler"]
     depends_on:
       postgres:

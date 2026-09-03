@@ -95,6 +95,14 @@ def load_station_readings(hours: int = 720) -> pd.DataFrame:
         FROM station_reading r
         JOIN station s ON s.id = r.station_id
         WHERE r.pm25 IS NOT NULL
+          -- An active holdout is not training truth. The original value remains
+          -- in station_reading for audit and manual review, never silently
+          -- deleted to make a model run look cleaner.
+          AND NOT EXISTS (
+              SELECT 1 FROM station_reading_anomaly anomaly
+              WHERE anomaly.reading_id = r.id
+                AND anomaly.status IN ('OPEN', 'CONFIRMED')
+          )
           AND r.ts >= now() - make_interval(hours => :hours)
         ORDER BY r.ts
     """)
