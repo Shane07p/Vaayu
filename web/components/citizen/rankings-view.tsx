@@ -1,6 +1,8 @@
 "use client";
 
 import Link from "next/link";
+import { bandFor, colorFor } from "@/lib/aqi-band";
+import { bandName } from "@/lib/guidance";
 import { useCitizenI18n } from "@/lib/i18n";
 import type { CityRankings } from "@/lib/schemas";
 
@@ -13,14 +15,11 @@ import type { CityRankings } from "@/lib/schemas";
  * not deliver.
  */
 
-function bandColor(aqi: number): string {
-  if (aqi <= 50) return "#34d399";
-  if (aqi <= 100) return "#fbbf24";
-  if (aqi <= 200) return "#fb923c";
-  if (aqi <= 300) return "#f472b6";
-  if (aqi <= 400) return "#c084fc";
-  return "#f87171";
-}
+/*
+ * A local bandColor lived here with the correct CPCB thresholds but its own
+ * palette, so the same reading was one colour on the map and another in this
+ * list. lib/aqi-band.ts is now the only scale and the only palette.
+ */
 
 /** Age in words. The exact measurement time is on the station card. */
 /**
@@ -42,7 +41,7 @@ function ago(iso: string, justNow: string): string {
 }
 
 export function RankingsView({ rankings }: { rankings: CityRankings | null }) {
-  const { t } = useCitizenI18n();
+  const { t, language } = useCitizenI18n();
 
   return (
     <div className="space-y-6">
@@ -97,9 +96,20 @@ export function RankingsView({ rankings }: { rankings: CityRankings | null }) {
                   <div className="text-right flex-shrink-0">
                     <div
                       className="font-mono text-2xl font-black leading-none"
-                      style={{ color: bandColor(city.aqi) }}
+                      style={{ color: colorFor(city.aqi) }}
                     >
                       {city.aqi}
+                    </div>
+                    {/* The band, not only the index. Roughly a third of Indians
+                        who have heard of AQI say they understand what it means
+                        (EVIDENCE §1.1), so a bare 401 does not communicate --
+                        "Severe" does, and it is the word a government bulletin
+                        would use. */}
+                    <div
+                      className="text-[11px] font-semibold leading-tight mt-0.5"
+                      style={{ color: colorFor(city.aqi) }}
+                    >
+                      {bandName(bandFor(city.aqi), language)}
                     </div>
                     <div className="text-[10px] font-mono text-slate-500 mt-0.5">
                       {city.pm25} µg/m³
