@@ -112,6 +112,20 @@ public class ConsoleController {
                 .orElseThrow(() -> new NoSuchElementException("alert was not found"));
     }
 
+    /**
+     * Returns one seed/demo alert for the /console/example demonstration page.
+     *
+     * <p>This endpoint exists solely so the Gemini narrative demo has an alert to
+     * narrate. It must never be shown alongside live alerts. The frontend route
+     * that calls this is explicitly labelled as a demonstration.
+     */
+    @GetMapping("/example/alert")
+    @Operation(summary = "Demo alert for the /console/example page — not a live prediction")
+    public AlertResponse exampleAlert() {
+        return queries.exampleAlert()
+                .orElseThrow(() -> new NoSuchElementException("no example alert found"));
+    }
+
     @PostMapping("/worklist/{clusterId}/action")
     @Operation(summary = "Record that a district authority actioned a worklist cluster")
     public WorklistActionResponse action(

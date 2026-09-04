@@ -48,7 +48,9 @@ public class ReadQueryService implements ReadQueryOperations {
                 """
                 SELECT id, code, name, city, state, ST_X(geom::geometry) AS lon,
                        ST_Y(geom::geometry) AS lat, source
-                FROM station ORDER BY name
+                FROM station
+                WHERE source <> 'SEED'
+                ORDER BY name
                 """,
                 (rs, row) -> new StationResponse(
                         rs.getLong("id"), rs.getString("code"), rs.getString("name"),
@@ -67,6 +69,7 @@ public class ReadQueryService implements ReadQueryOperations {
                 JOIN LATERAL (
                     SELECT * FROM grid_prediction p
                     WHERE p.grid_cell_id = g.id
+                      AND p.demo_only = false
                     ORDER BY p.ts DESC, p.id DESC LIMIT 1
                 ) p ON TRUE
                 -- && is the bounding-box overlap operator and is the only spatial
@@ -101,8 +104,10 @@ public class ReadQueryService implements ReadQueryOperations {
                 """
                 SELECT f.* FROM forecast f
                 WHERE f.station_id = :stationId
+                  AND f.demo_only = false
                   AND f.issued_at = (
-                    SELECT MAX(issued_at) FROM forecast WHERE station_id = :stationId
+                    SELECT MAX(issued_at) FROM forecast
+                    WHERE station_id = :stationId AND demo_only = false
                   )
                 ORDER BY f.horizon_hours
                 """,
@@ -149,7 +154,9 @@ public class ReadQueryService implements ReadQueryOperations {
     public List<AlertResponse> alerts() {
         return jdbc.query(
                 """
-                SELECT * FROM alert ORDER BY issued_at DESC, id DESC LIMIT 50
+                SELECT * FROM alert
+                WHERE demo_only = false
+                ORDER BY issued_at DESC, id DESC LIMIT 50
                 """,
                 (rs, row) -> new AlertResponse(
                         rs.getString("alert_id"), timestamp(rs, "issued_at"), rs.getInt("horizon_hours"),
@@ -163,9 +170,30 @@ public class ReadQueryService implements ReadQueryOperations {
     public Optional<AlertResponse> alert(String alertId) {
         List<AlertResponse> alerts = jdbc.query(
                 """
-                SELECT * FROM alert WHERE alert_id = :alertId
+                SELECT * FROM alert WHERE alert_id = :alertId AND demo_only = false
                 """,
                 Map.of("alertId", alertId),
+                (rs, row) -> new AlertResponse(
+                        rs.getString("alert_id"), timestamp(rs, "issued_at"), rs.getInt("horizon_hours"),
+                        rs.getInt("predicted_aqi"), rs.getInt("ci_low"), rs.getInt("ci_high"),
+                        rs.getString("recommended_grap_stage"), rs.getString("statutory_basis"),
+                        textArray(rs, "jurisdiction"), textArray(rs, "mandated_actions"),
+                        nullableLong(rs, "exposed_population"), rs.getString("model_version"),
+                        textArray(rs, "evidence_sources"), rs.getString("source")));
+        return alerts.stream().findFirst();
+    }
+
+    /**
+     * Returns one seed alert for the /example demonstration route.
+     *
+     * <p>This is the only place demo_only = true rows are served. The route is
+     * explicitly labelled as a demonstration so it cannot be confused with live data.
+     */
+    public Optional<AlertResponse> exampleAlert() {
+        List<AlertResponse> alerts = jdbc.query(
+                """
+                SELECT * FROM alert WHERE demo_only = true ORDER BY id LIMIT 1
+                """,
                 (rs, row) -> new AlertResponse(
                         rs.getString("alert_id"), timestamp(rs, "issued_at"), rs.getInt("horizon_hours"),
                         rs.getInt("predicted_aqi"), rs.getInt("ci_low"), rs.getInt("ci_high"),

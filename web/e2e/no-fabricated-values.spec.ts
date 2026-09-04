@@ -29,6 +29,19 @@ const FABRICATIONS: { text: string; was: string }[] = [
     text: "Visual particulate haze",
     was: "a Gemini reasoning paragraph the report form wrote for itself",
   },
+  // Seed predictions that were rendering as live data on the console.
+  // grid_prediction averaged 169 µg/m³ while real stations read ~27.
+  // Forecast predicted AQI 428 Severe for a city currently at 98.
+  // V908 migration flags these demo_only = true; queries now exclude them.
+  // Assert their absence so they cannot silently come back via a query change.
+  {
+    text: "AQI 428",
+    was: "seed forecast predicted AQI 428 for a station reading 98 in real life",
+  },
+  {
+    text: "seed-v0",
+    was: "model_version from V900 seed data, shown on map and forecast pages",
+  },
 ];
 
 test("the citizen surface states no unmeasured value", async ({ page }) => {
