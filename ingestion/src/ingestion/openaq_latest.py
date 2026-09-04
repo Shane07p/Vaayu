@@ -110,6 +110,26 @@ CONNECTION_LIMITS = httpx.Limits(max_connections=8, max_keepalive_connections=8)
 # disagree about what "currently reporting" means.
 FRESHNESS = timedelta(hours=6)
 
+# How far back a reading may be and still be worth storing.
+#
+# Deliberately NOT equal to FRESHNESS. That window answers "should a reader be
+# told this is current"; this one answers "is this a real measurement we should
+# keep". They are different questions and conflating them cost us the dataset.
+#
+# OpenAQ's mirror of the CPCB and state-board network does not publish
+# continuously. Until 23 August its lag sat inside six hours, so the two windows
+# happened to agree and nothing was lost. The lag then grew to roughly 36-48
+# hours, and because discovery filtered at six, the collector began discarding
+# almost the entire government network while still reporting SUCCESS: 286 rows
+# on 23 August, 26 on 4 September. Measured against the live API on 4 September,
+# 53 Indian stations had reported within six hours and 531 within forty-eight.
+#
+# A reading forty hours old is not a false reading. It is a true measurement of
+# a past hour, and it is stored with the measured time it actually carries. What
+# a reader is told about it is decided downstream, where the age is known and
+# shown -- never here, by throwing it away.
+INGEST_WINDOW = timedelta(hours=72)
+
 # Bounds a single run. Without it the job's cost is set by however many stations
 # OpenAQ happens to list, which is not a number this process should discover at
 # runtime in production.
@@ -257,13 +277,16 @@ class OpenAqLatestSource(Source):
     # ---- Discovery -----------------------------------------------------
 
     def _reporting_stations(self) -> list[dict]:
-        """Stations inside the bbox whose last measurement is within FRESHNESS.
+        """Stations inside the bbox that have reported within INGEST_WINDOW.
 
-        ``datetimeLast`` comes back on the locations listing, so staleness is
-        decided here without spending a request per station on the ones that
-        turn out to be dead.
+        ``datetimeLast`` comes back on the locations listing, so a station that
+        has genuinely stopped is dropped here without spending a request per
+        station on the ones that turn out to be dead.
+
+        The bound is INGEST_WINDOW, not FRESHNESS: this decides what is worth
+        storing, not what a reader may be told is current.
         """
-        cutoff = datetime.now(UTC) - FRESHNESS
+        cutoff = datetime.now(UTC) - INGEST_WINDOW
         stations: list[dict] = []
         page = 1
 
@@ -349,7 +372,9 @@ class OpenAqLatestSource(Source):
         self.total_units = len(stations)
         self.failed_units = 0
 
-        cutoff = datetime.now(UTC) - FRESHNESS
+        # Same bound as discovery, so a station that passed the listing check is
+        # not then dropped when its individual readings are read back.
+        cutoff = datetime.now(UTC) - INGEST_WINDOW
         records: list[dict] = []
 
         for station in stations:
