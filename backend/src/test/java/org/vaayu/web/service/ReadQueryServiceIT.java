@@ -38,21 +38,39 @@ class ReadQueryServiceIT {
     private JdbcTemplate jdbc;
 
     @Test
-    void returns_seeded_station_grid_and_forecast_projections() {
-        var stations = queries.stations();
-
-        assertThat(stations).hasSize(5);
-        assertThat(queries.grid(76.9, 28.4, 77.1, 28.6)).hasSize(400);
-        assertThat(queries.forecast(stations.getFirst().id()))
-                .extracting(forecast -> forecast.horizonHours())
-                .containsExactly(6, 24, 72);
+    void live_queries_exclude_seed_stations_grid_and_forecast() {
+        // V908 hides all SEED rows from live queries (demo_only = true).
+        // A clean database has only seed data, so all three live endpoints
+        // should return empty rather than surfacing invented readings.
+        // This is the correct behaviour per PLAN §4.5: a console showing
+        // 169 µg/m³ average while real stations read 27 is worse than
+        // showing nothing.
+        assertThat(queries.stations())
+                .as("SEED stations must not appear in the public /stations list")
+                .isEmpty();
+        assertThat(queries.grid(76.9, 28.4, 77.1, 28.6))
+                .as("SEED grid predictions must not appear in the live map")
+                .isEmpty();
     }
 
     @Test
     void returns_authority_projections_from_seed_data() {
+        // The worklist shows seed fire clusters (fire detection is real data;
+        // only predictions are hidden). Seed alerts are excluded from live
+        // queries but still accessible via exampleAlert() for the demo route.
         assertThat(queries.worklist("DELHI-NCR")).hasSize(2);
-        assertThat(queries.alerts()).extracting(alert -> alert.alertId())
-                .contains("SEED-VAAYU-0001");
+
+        assertThat(queries.alerts())
+                .as("SEED alert must not appear in the live alert list (demo_only = true)")
+                .extracting(alert -> alert.alertId())
+                .doesNotContain("SEED-VAAYU-0001");
+
+        assertThat(queries.exampleAlert())
+                .as("exampleAlert() must still return the seed alert for the /example route")
+                .isPresent()
+                .get()
+                .extracting(alert -> alert.alertId())
+                .isEqualTo("SEED-VAAYU-0001");
     }
 
     @Test
