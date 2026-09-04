@@ -40,5 +40,8 @@ public interface ReadQueryOperations {
 
     Optional<AlertResponse> alert(String alertId);
 
+    /** Returns a seed/demo alert for the /example demonstration route only. */
+    Optional<AlertResponse> exampleAlert();
+
     WorklistActionResponse recordWorklistAction(long clusterId, String receptor, String actionedBy);
 }
