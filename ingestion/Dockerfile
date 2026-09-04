@@ -23,7 +23,19 @@ COPY ml/src/vaayu_ml/__init__.py ./src/vaayu_ml/__init__.py
 COPY ml/src/vaayu_ml/quality ./src/vaayu_ml/quality
 RUN uv sync --frozen --no-dev
 
-ENV PATH="/app/.venv/bin:$PATH"
+# The venv lives beside pyproject.toml, which is WORKDIR -- not /app.
+# WORKDIR moved to /app/ingestion so the build context could be the repo
+# root and COPY ml/src/vaayu_ml/quality would resolve, but this line kept
+# pointing at the old location. A non-existent directory on PATH is silent:
+# the image builds, starts, and every console script is simply missing, so
+# the scheduler exits with "executable file not found in $PATH" and every
+# documented `docker compose run --rm ingestion vaayu-...` fails the same way.
+ENV PATH="/app/ingestion/.venv/bin:$PATH"
+
+# Fail the build rather than the deployment. This is the assertion that the
+# line above is right: it runs the real console script through PATH exactly
+# as the scheduler and the compose jobs do.
+RUN vaayu-scheduler --help > /dev/null
 
 # Jobs are invoked explicitly, so starting the stack cannot write to the
 # database as a side effect.

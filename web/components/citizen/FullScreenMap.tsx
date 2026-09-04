@@ -4,7 +4,10 @@
 import React, { useEffect, useRef, useState } from 'react';
 import maplibregl from 'maplibre-gl';
 import 'maplibre-gl/dist/maplibre-gl.css';
-import AQIMarkers, { getAqiTextColor, getAqiCategory } from '@/components/citizen/AQIMarkers';
+import AQIMarkers from '@/components/citizen/AQIMarkers';
+import { bandFor, colorFor } from '@/lib/aqi-band';
+import { bandName } from '@/lib/guidance';
+import { AirFigure } from '@/components/citizen/air-figure';
 import MapControls from '@/components/citizen/MapControls';
 import { useAQIStore } from '@/store/aqiStore';
 import { useCitizenI18n } from '@/lib/i18n';
@@ -63,7 +66,7 @@ const FullScreenMap: React.FC = () => {
   const mapContainer = useRef<HTMLDivElement>(null);
   const [map, setMap] = useState<maplibregl.Map | null>(null);
   const { selectedCellData, locationName, markerInfo, dataSource, lastUpdated, loading, clearSelection, nearestStation, locationError, hasQueried, selectedStation } = useAQIStore();
-  const { t } = useCitizenI18n();
+  const { t, language } = useCitizenI18n();
   const styleFailed = useRef(false);
   const [basemapDegraded, setBasemapDegraded] = useState(false);
 
@@ -130,10 +133,10 @@ const FullScreenMap: React.FC = () => {
   const displayCategory = markerInfo
     ? markerInfo.category
     : displayAqi !== null
-      ? getAqiCategory(displayAqi)
-      : 'Good';
+      ? bandName(bandFor(displayAqi), language)
+      : bandName('good', language);
 
-  const aqiColor = displayAqi !== null ? getAqiTextColor(displayAqi) : '#34d399';
+  const aqiColor = displayAqi !== null ? colorFor(displayAqi) : '#34d399';
   const aqiImage = displayAqi !== null ? getAqiImage(displayAqi) : '/aqi-images/Green.png';
 
   // A clicked station takes precedence over everything else on screen. It is a
@@ -291,26 +294,12 @@ const FullScreenMap: React.FC = () => {
             {selectedStation.name}
           </div>
 
-          <div className="flex items-baseline gap-2 mb-3">
-            <span
-              className="text-4xl font-mono font-black tracking-tight"
-              style={{ color: getAqiTextColor(selectedStation.aqi) }}
-            >
-              {selectedStation.aqi}
-            </span>
-            <span
-              className="text-sm font-semibold"
-              style={{ color: getAqiTextColor(selectedStation.aqi) }}
-            >
-              {getAqiCategory(selectedStation.aqi)}
-            </span>
-          </div>
+          {/* Number, band and what to do about it, together. See AirFigure:
+              a figure shown without an instruction is the failure mode the
+              research is clearest about. */}
+          <AirFigure aqi={selectedStation.aqi} pm25={selectedStation.pm25} className="mb-3" />
 
           <div className="grid grid-cols-2 gap-2 text-[11px] font-mono">
-            <div className="bg-white/[0.04] p-2.5 rounded-xl border border-white/5">
-              <span className="text-slate-400 block text-[9px] uppercase tracking-wider">PM2.5</span>
-              <span className="font-bold text-slate-100 text-sm">{selectedStation.pm25} µg/m³</span>
-            </div>
             <div className="bg-white/[0.04] p-2.5 rounded-xl border border-white/5">
               <span className="text-slate-400 block text-[9px] uppercase tracking-wider">{t.measuredLabel}</span>
               <span className="text-slate-300">
@@ -366,28 +355,12 @@ const FullScreenMap: React.FC = () => {
             {t.away}
           </p>
 
-          <div className="flex items-baseline gap-2 mb-3">
-            <span
-              className="text-4xl font-mono font-black tracking-tight"
-              style={{ color: getAqiTextColor(nearestStation.aqi) }}
-            >
-              {nearestStation.aqi}
-            </span>
-            <span
-              className="text-sm font-semibold"
-              style={{ color: getAqiTextColor(nearestStation.aqi) }}
-            >
-              {getAqiCategory(nearestStation.aqi)}
-            </span>
-          </div>
+          {/* Number, band and what to do about it, together. See AirFigure:
+              a figure shown without an instruction is the failure mode the
+              research is clearest about. */}
+          <AirFigure aqi={nearestStation.aqi} pm25={nearestStation.pm25} className="mb-3" />
 
           <div className="grid grid-cols-2 gap-2 text-[11px] font-mono mb-3">
-            <div className="bg-white/[0.04] p-2.5 rounded-xl border border-white/5">
-              <span className="text-slate-400 block text-[9px] uppercase tracking-wider">PM2.5</span>
-              <span className="font-bold text-slate-100 text-sm">
-                {nearestStation.pm25} µg/m³
-              </span>
-            </div>
             <div className="bg-white/[0.04] p-2.5 rounded-xl border border-white/5">
               <span className="text-slate-400 block text-[9px] uppercase tracking-wider">{t.measuredLabel}</span>
               <span className="text-slate-300">

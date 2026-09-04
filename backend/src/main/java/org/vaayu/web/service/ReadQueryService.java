@@ -250,10 +250,35 @@ public class ReadQueryService implements ReadQueryOperations {
      * not whether a reading is instantaneous. It hides nothing: every reading
      * carries its measured time, and a stale one is dimmed rather than removed.
      *
-     * <p>Kept equal to {@code openaq_latest.FRESHNESS} so ingestion and the read
-     * API cannot disagree about what "currently reporting" means.
+     * <p>This governs presentation only. What is worth storing is a separate
+     * question with a separate window, {@code openaq_latest.INGEST_WINDOW},
+     * because a reading can be a true measurement of a past hour and still be
+     * too old to describe now. Holding one window for both meant the collector
+     * threw away everything this one would have labelled stale.
      */
     private static final Duration FRESHNESS = Duration.ofHours(6);
+
+    /**
+     * How far back a city ranking may reach.
+     *
+     * <p>Deliberately wider than {@link #FRESHNESS}, because the two answer
+     * different questions. "What is the air near me" is a question about now,
+     * and a reading from the day before yesterday does not answer it -- that
+     * surface keeps the six hour bar and refuses rather than stretches.
+     * "Which cities have the worst air" tolerates a lag, because a city's
+     * pollution is persistent enough day to day that a comparison still holds.
+     *
+     * <p>The window exists because of the upstream, not because we want more
+     * rows. OpenAQ's mirror of the CPCB and state-board network publishes in
+     * batches roughly every 36 to 48 hours. Measured on 4 September, 53 Indian
+     * stations had reported within six hours and 531 within forty-eight, so a
+     * six hour ranking listed one city and silently excluded 213.
+     *
+     * <p>This is not a claim that the readings are current. Every ranked row
+     * carries the time it was measured, and the surface is titled for recency
+     * rather than for now.
+     */
+    private static final Duration RANKING_WINDOW = Duration.ofHours(48);
 
     /**
      * Nearest station to a point that has ever reported a PM2.5 value.
@@ -307,14 +332,14 @@ public class ReadQueryService implements ReadQueryOperations {
     /**
      * Cities ranked by their worst current station reading.
      *
-     * <p>Only cities with a reading inside {@link #FRESHNESS} are ranked. The
+     * <p>Only cities with a reading inside {@link #RANKING_WINDOW} are ranked. The
      * rest are counted and returned as {@code excluded} rather than dropped
      * silently, because a list of the worst air in the country that quietly
      * omits the places it could not measure reads as a statement about those
      * places too.
      */
     public CityRankingResponse cityRankings(int limit) {
-        OffsetDateTime cutoff = OffsetDateTime.now().minus(FRESHNESS);
+        OffsetDateTime cutoff = OffsetDateTime.now().minus(RANKING_WINDOW);
 
         List<CityRankingResponse.CityRanking> ranked = jdbc.query(
                 """

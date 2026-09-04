@@ -13,7 +13,7 @@ import httpx
 import pytest
 
 from ingestion.openaq_latest import (
-    FRESHNESS,
+    INGEST_WINDOW,
     OpenAqLatestSource,
     _city_from_name,
 )
@@ -117,12 +117,35 @@ class TestStaleStationsAreNotIngested:
         assert api.location_calls == [1]
 
     def test_a_fresh_station_with_a_lagging_sensor_drops_that_reading(self):
+        """A station can list as reporting while one sensor lags far behind."""
         api = FakeApi(
             locations=[_location(1, "Lagging Sensor", timedelta(minutes=10))],
-            latest={1: [_measurement(120.0, FRESHNESS + timedelta(hours=2))]},
+            latest={1: [_measurement(120.0, INGEST_WINDOW + timedelta(hours=2))]},
         )
 
         assert _source(api).fetch() == []
+
+    def test_a_reading_older_than_display_freshness_is_still_stored(self):
+        """The store keeps what the reader may not be told is current.
+
+        OpenAQ's mirror of the government network runs 36-48 hours behind, so a
+        collector that only kept readings under six hours old discarded almost
+        all of it -- 286 rows on 23 August, 26 on 4 September, SUCCESS both
+        times. The reading is real; how old it is gets decided and shown
+        downstream, never by dropping it here.
+        """
+        age = timedelta(hours=40)
+        api = FakeApi(
+            locations=[_location(1, "Anand Vihar, Delhi - DPCC", age)],
+            latest={1: [_measurement(96.0, age)]},
+        )
+
+        records = _source(api).fetch()
+
+        assert [r["station"] for r in records] == ["Anand Vihar, Delhi - DPCC"]
+        # Stored with the time it was actually measured, not the time it arrived.
+        measured_at = datetime.fromisoformat(records[0]["last_update"].replace("Z", "+00:00"))
+        assert measured_at < datetime.now(UTC) - timedelta(hours=39)
 
 
 class TestOnlyProvableMeasurementsAreKept:
