@@ -7,6 +7,7 @@
 //
 import React, { useEffect, useMemo, useRef, useState, useCallback } from 'react';
 import maplibregl, { Map } from 'maplibre-gl';
+import { colorFor } from '@/lib/aqi-band';
 import { useAQIStore } from '@/store/aqiStore';
 import { fetchStationReadings } from '@/lib/api';
 import type { StationReading } from '@/lib/schemas';
@@ -19,24 +20,18 @@ import {
   ContinentLocation,
 } from '@/lib/coordinates';
 
-/* ───── colour helpers (unchanged) ───── */
-export const getAqiTextColor = (aqi: number): string => {
-  if (aqi <= 50)  return '#34d399';
-  if (aqi <= 100) return '#fbbf24';
-  if (aqi <= 150) return '#fb923c';
-  if (aqi <= 200) return '#f472b6';
-  if (aqi <= 300) return '#c084fc';
-  return '#f87171';
-};
-
-export const getAqiCategory = (aqi: number): string => {
-  if (aqi <= 50)  return 'Good';
-  if (aqi <= 100) return 'Moderate';
-  if (aqi <= 150) return 'Unhealthy for Sensitive Groups';
-  if (aqi <= 200) return 'Unhealthy';
-  if (aqi <= 300) return 'Very Unhealthy';
-  return 'Hazardous';
-};
+/* ───── colour ─────
+ *
+ * getAqiTextColor and getAqiCategory used to live here. Both implemented the
+ * United States EPA scale -- names Good / Moderate / Unhealthy for Sensitive
+ * Groups / Unhealthy / Very Unhealthy / Hazardous, broken at 50/100/150/200/300
+ * -- while the AQI they were handed is computed server-side against CPCB
+ * breakpoints. The band therefore disagreed with the number it labelled: CPCB
+ * calls 150 Moderate and this called it Unhealthy for Sensitive Groups; CPCB
+ * calls 350 Very Poor and this called it Hazardous.
+ *
+ * There is now one CPCB implementation, in lib/aqi-band.ts, and the band's name
+ * is translated rather than hardcoded in English. */
 
 /* ───── Normalised data-point (no DOM yet) ───── */
 interface DataPoint {
@@ -181,7 +176,7 @@ const AQIMarkers: React.FC<Props> = ({ map }) => {
       const num = document.createElement('span');
       // The measured value, or a dot where there is nothing to show.
       num.textContent = measured ? `${pt.aqi}` : '○';
-      num.style.color = measured ? getAqiTextColor(pt.aqi as number) : '#94a3b8';
+      num.style.color = measured ? colorFor(pt.aqi as number) : '#94a3b8';
       // A station that has stopped reporting is dimmed rather than hidden or
       // shown as current. Its age is in the tooltip.
       if (pt.stale) num.style.opacity = '0.45';
