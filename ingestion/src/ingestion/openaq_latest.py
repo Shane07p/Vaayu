@@ -87,34 +87,13 @@ REQUEST_TIMEOUT = 45.0
 # request at the documented key quota so neither discovery nor station reads burst.
 CONNECTION_LIMITS = httpx.Limits(max_connections=8, max_keepalive_connections=8)
 
-# A station whose most recent measurement is older than this is not reporting.
-#
-# Six hours, matched to what the upstream actually does.
-#
-# This was three hours, chosen on the assumption that CPCB and DPCC stations
-# publish hourly. They do, but OpenAQ mirrors them with a lag: measured across a
-# national run, no station's newest reading was under 120 minutes old, 217 sat
-# between 120 and 180 minutes, and 44 were already past 180. A three hour window
-# therefore marked a fifth of correctly-working stations stale on arrival and the
-# rest within the hour, and cities disappeared from search and rankings between
-# one page load and the next.
-#
-# The window's question is whether a station is still reporting, not whether a
-# reading is instantaneous. Six hours answers that: a station on its normal
-# cadence stays fresh, one that has actually stopped goes stale.
-#
-# This does not hide age. Every reading carries its measured time to the reader,
-# and the map dims a stale one rather than concealing it.
-#
-# Kept equal to ReadQueryService.FRESHNESS so ingestion and the read API cannot
-# disagree about what "currently reporting" means.
-FRESHNESS = timedelta(hours=6)
 
 # How far back a reading may be and still be worth storing.
 #
-# Deliberately NOT equal to FRESHNESS. That window answers "should a reader be
+# Deliberately not the same as the API's staleness bar
+# (ReadQueryService.FRESHNESS, six hours). That one answers "should a reader be
 # told this is current"; this one answers "is this a real measurement we should
-# keep". They are different questions and conflating them cost us the dataset.
+# keep". They are different questions, and conflating them cost us the dataset.
 #
 # OpenAQ's mirror of the CPCB and state-board network does not publish
 # continuously. Until 23 August its lag sat inside six hours, so the two windows

@@ -23,11 +23,22 @@ function bandColor(aqi: number): string {
 }
 
 /** Age in words. The exact measurement time is on the station card. */
+/**
+ * How long ago a reading was measured.
+ *
+ * Days once past a day, rather than "47 h". The ranking window is two days
+ * because OpenAQ mirrors the government network in batches that far behind, so
+ * these ages are routinely in the tens of hours and a reader has to be able to
+ * see at a glance that a figure is from yesterday.
+ */
 function ago(iso: string, justNow: string): string {
   const minutes = Math.floor((Date.now() - new Date(iso).getTime()) / 60000);
   if (minutes < 1) return justNow;
   if (minutes < 60) return `${minutes} min`;
-  return `${Math.floor(minutes / 60)} h`;
+  const hours = Math.floor(minutes / 60);
+  if (hours < 24) return `${hours} h`;
+  const days = Math.floor(hours / 24);
+  return days === 1 ? "1 day" : `${days} days`;
 }
 
 export function RankingsView({ rankings }: { rankings: CityRankings | null }) {
