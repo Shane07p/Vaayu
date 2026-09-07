@@ -231,23 +231,23 @@ const MapControls: React.FC<Props> = ({ map }) => {
   return (
     <div
       ref={wrapperRef}
-      className="absolute top-4 right-4 z-30 flex flex-col sm:flex-row items-end sm:items-center gap-2 max-w-[calc(100vw-2rem)]"
+      className="absolute top-20 right-4 sm:right-6 z-30 flex flex-col sm:flex-row items-end sm:items-center gap-2.5 max-w-[calc(100vw-2rem)] transition-all"
     >
       <label className="flex items-center gap-2 rounded-xl border border-white/15 bg-[#0a0f14]/90 px-3 py-2 text-xs font-mono text-slate-200 shadow-2xl backdrop-blur-xl">
         <span className="text-slate-400">{t.regions}</span>
-        <select value={regionId} onChange={(event) => void selectRegion(event.target.value)} className="bg-transparent font-semibold text-teal-200 outline-none">
+        <select value={regionId} onChange={(event) => void selectRegion(event.target.value)} className="bg-transparent font-semibold text-teal-200 outline-none cursor-pointer">
           {REGIONS.map((region) => <option key={region.id} value={region.id} className="bg-slate-950">{region.name}</option>)}
         </select>
       </label>
-      <div className="rounded-lg border border-white/10 bg-[#080d12]/90 px-2.5 py-1.5 text-[10px] font-mono uppercase tracking-wider text-slate-300 shadow-xl backdrop-blur-xl">
+      <div className="rounded-xl border border-white/10 bg-[#080d12]/90 px-3 py-2 text-[10px] font-mono uppercase tracking-wider text-slate-300 shadow-xl backdrop-blur-xl">
         Showing <span className="font-bold text-teal-300">{markerLevel}</span>
       </div>
 
       {/* Search Input Container */}
-      <div className="relative w-72 sm:w-80">
-        <div className="flex items-center bg-[#0a0f14]/90 hover:bg-[#0d141b] focus-within:bg-[#0d141b] border border-white/15 focus-within:border-teal-500/60 rounded-xl px-3 py-2 shadow-2xl backdrop-blur-xl transition-all">
+      <div className="relative w-72 sm:w-80 md:w-96">
+        <div className="flex items-center bg-[#0a0f14]/90 hover:bg-[#0d141b] focus-within:bg-[#0d141b] border border-white/15 focus-within:border-teal-400 focus-within:ring-2 focus-within:ring-teal-500/20 rounded-xl px-3.5 py-2 shadow-2xl backdrop-blur-xl transition-all">
           <svg
-            className="w-4 h-4 text-slate-400 mr-2 flex-shrink-0"
+            className="w-4 h-4 text-teal-400 mr-2.5 flex-shrink-0"
             viewBox="0 0 24 24"
             fill="none"
             stroke="currentColor"
@@ -265,8 +265,8 @@ const MapControls: React.FC<Props> = ({ map }) => {
             onFocus={() => {
               if (suggestions.length > 0) setShowDropdown(true);
             }}
-            placeholder={t.search}
-            className="bg-transparent text-xs font-mono text-slate-100 placeholder-slate-400 focus:outline-none w-full"
+            placeholder="Search area, city, or district…"
+            className="bg-transparent text-xs font-sans text-slate-100 placeholder-slate-400 focus:outline-none w-full tracking-wide"
           />
           {searching && (
             <div className="w-3.5 h-3.5 border-2 border-teal-400 border-t-transparent rounded-full animate-spin ml-2 flex-shrink-0" />
@@ -278,7 +278,7 @@ const MapControls: React.FC<Props> = ({ map }) => {
                 setSuggestions([]);
                 setShowDropdown(false);
               }}
-              className="text-slate-400 hover:text-slate-200 text-xs ml-1 flex-shrink-0 px-1"
+              className="text-slate-400 hover:text-slate-200 text-xs ml-1 flex-shrink-0 px-1.5 py-0.5 rounded-md hover:bg-white/10 transition-colors"
               title="Clear search"
             >
               ✕
@@ -288,32 +288,30 @@ const MapControls: React.FC<Props> = ({ map }) => {
 
         {/* Suggestion Dropdown */}
         {showDropdown && suggestions.length > 0 && (
-          <div className="absolute top-full mt-1.5 left-0 right-0 bg-[#080d12]/95 border border-white/15 rounded-xl shadow-2xl backdrop-blur-2xl py-1.5 overflow-hidden z-40 max-h-60 overflow-y-auto">
-            <div className="px-3 py-1 text-[10px] font-mono uppercase tracking-wider text-slate-400 border-b border-white/5">
-              Locations
+          <div className="absolute top-full mt-2 left-0 right-0 bg-[#080d12]/95 border border-white/15 rounded-2xl shadow-2xl backdrop-blur-2xl py-1.5 overflow-hidden z-40 max-h-72 overflow-y-auto">
+            <div className="px-3.5 py-1.5 text-[10px] font-mono uppercase tracking-wider text-slate-400 border-b border-white/5 flex items-center justify-between">
+              <span>Locations & Areas</span>
+              <span className="text-teal-400/80">{suggestions.length} found</span>
             </div>
             {suggestions.map((item, idx) => (
               <button
                 key={idx}
                 onClick={() => handleSelectLocation(item)}
-                className="w-full text-left px-3 py-2 text-xs font-mono text-slate-200 hover:bg-teal-500/15 hover:text-teal-200 transition-colors flex items-start gap-2 border-b border-white/5 last:border-0"
+                className="w-full text-left px-3.5 py-2.5 text-xs font-sans text-slate-200 hover:bg-teal-500/15 hover:text-teal-100 transition-colors flex items-start gap-2.5 border-b border-white/5 last:border-0 group"
               >
-                <span className="text-teal-400 mt-0.5">📍</span>
+                <span className="text-teal-400 mt-0.5 group-hover:scale-110 transition-transform">📍</span>
                 <div className="min-w-0 flex-1">
-                  <div className="font-semibold truncate">
+                  <div className="font-semibold truncate text-slate-100 group-hover:text-white">
                     {item.display_name.split(",")[0]}
                   </div>
-                  <div className="text-[10px] text-slate-400 truncate">
-                    {/* A measured place says so, with what it measured. The
-                        alternative is two visually identical rows where one
-                        leads to a reading and the other to "no data". */}
+                  <div className="text-[11px] text-slate-400 truncate">
                     {item.aqi !== undefined
                       ? `AQI ${item.aqi} · ${item.stationCount === 1 ? "1 station" : `${item.stationCount} stations`}`
                       : item.display_name.split(",").slice(1).join(",").trim()}
                   </div>
                 </div>
                 {item.aqi !== undefined && (
-                  <span className="text-[9px] font-mono uppercase tracking-wider text-teal-400/80 mt-0.5 flex-shrink-0">
+                  <span className="text-[10px] font-mono font-medium uppercase tracking-wider text-teal-300 bg-teal-500/15 border border-teal-500/30 rounded-full px-2 py-0.5 mt-0.5 flex-shrink-0">
                     measured
                   </span>
                 )}
@@ -328,7 +326,7 @@ const MapControls: React.FC<Props> = ({ map }) => {
         <button
           onClick={handleLocateMe}
           disabled={locating || loading}
-          className="flex items-center gap-1.5 px-3 py-2 rounded-xl bg-[#0a0f14]/90 hover:bg-[#0d141b] active:scale-95 text-xs font-mono text-slate-200 border border-white/15 hover:border-white/30 backdrop-blur-xl shadow-2xl transition-all disabled:opacity-50"
+          className="flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-[#0a0f14]/90 hover:bg-[#0d141b] active:scale-95 text-xs font-sans font-medium text-slate-200 border border-white/15 hover:border-white/30 backdrop-blur-xl shadow-2xl transition-all disabled:opacity-50"
           title="Fly to current GPS location"
         >
           <span className={locating || loading ? "animate-spin text-teal-400" : "text-teal-400"}>
