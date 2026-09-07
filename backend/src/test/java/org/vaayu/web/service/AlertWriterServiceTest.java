@@ -3,7 +3,6 @@ package org.vaayu.web.service;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.ArgumentMatchers.contains;
-import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -14,6 +13,7 @@ import java.time.OffsetDateTime;
 import java.util.List;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
+import org.mockito.ArgumentMatchers;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcOperations;
@@ -49,20 +49,20 @@ class AlertWriterServiceTest {
         when(cluster.getInt("consecutive_days_unactioned")).thenReturn(3);
         when(cluster.getString("source")).thenReturn("FIRMS");
 
-        when(jdbc.query(anyString(), any(RowMapper.class))).thenAnswer(invocation -> {
+        when(jdbc.query(anyString(), ArgumentMatchers.<RowMapper<Object>>any())).thenAnswer(invocation -> {
             String sql = invocation.getArgument(0);
             RowMapper<?> mapper = invocation.getArgument(1);
             return sql.contains("FROM forecast")
                     ? List.of(mapper.mapRow(forecast, 0))
                     : List.of(mapper.mapRow(cluster, 0));
         });
-        when(jdbc.query(contains("INSERT INTO alert"), any(MapSqlParameterSource.class), any(RowMapper.class)))
+        when(jdbc.query(contains("INSERT INTO alert"), any(MapSqlParameterSource.class), ArgumentMatchers.<RowMapper<Long>>any()))
                 .thenReturn(List.of(99L));
 
         new AlertWriterService(jdbc, grap, new ObjectMapper()).writeScheduledAlerts();
 
         ArgumentCaptor<MapSqlParameterSource> params = ArgumentCaptor.forClass(MapSqlParameterSource.class);
-        verify(jdbc).query(contains("INSERT INTO alert"), params.capture(), any(RowMapper.class));
+        verify(jdbc).query(contains("INSERT INTO alert"), params.capture(), ArgumentMatchers.<RowMapper<Long>>any());
         assert params.getValue().getValue("stage").equals("III");
         assert params.getValue().getValue("alertId").equals("VAAYU-20260821060000-12");
         verify(jdbc).update(contains("INSERT INTO alert_outbox"), any(MapSqlParameterSource.class));
@@ -79,11 +79,11 @@ class AlertWriterServiceTest {
         when(forecast.getDouble("ci_high")).thenReturn(300.0);
         when(forecast.getString("model_version")).thenReturn("forecast-v1");
         when(forecast.getString("source")).thenReturn("CPCB");
-        when(jdbc.query(anyString(), any(RowMapper.class))).thenAnswer(invocation -> {
+        when(jdbc.query(anyString(), ArgumentMatchers.<RowMapper<Object>>any())).thenAnswer(invocation -> {
             RowMapper<?> mapper = invocation.getArgument(1);
             return List.of(mapper.mapRow(forecast, 0));
         });
-        when(jdbc.query(contains("INSERT INTO alert"), any(MapSqlParameterSource.class), any(RowMapper.class)))
+        when(jdbc.query(contains("INSERT INTO alert"), any(MapSqlParameterSource.class), ArgumentMatchers.<RowMapper<Long>>any()))
                 .thenReturn(List.of());
 
         new AlertWriterService(jdbc, grap, new ObjectMapper()).writeScheduledAlerts();

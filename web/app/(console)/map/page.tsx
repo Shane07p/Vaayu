@@ -28,14 +28,14 @@ export default async function MapPage() {
         <div>
           <div className="flex items-center gap-3 mb-1">
             <h1 className="text-xl font-bold tracking-tight text-slate-100">
-              Situation Map
+              Map
             </h1>
             <span className="px-2 py-0.5 rounded text-[10px] font-mono bg-teal-950/50 text-teal-300 border border-teal-800/60">
-              1 km PM2.5 Surface
+              Estimated map
             </span>
           </div>
           <p className="text-sm text-slate-400 font-sans">
-            Delhi-NCR hyper-local nowcast with monitoring stations and ranked fire clusters.
+            Delhi-NCR monitoring stations and ranked fire clusters.
             Amber halos indicate low satellite coverage — read with more uncertainty.
           </p>
         </div>

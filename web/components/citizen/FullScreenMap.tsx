@@ -168,6 +168,49 @@ const FullScreenMap: React.FC = () => {
       {/* Top-Right Search & Navigation Controls */}
       <MapControls map={map} />
 
+      {/* Bottom-Right Map Navigation & Zoom Controls */}
+      <div className="absolute bottom-6 right-4 sm:right-6 z-30 flex flex-col items-center gap-2">
+        {/* Zoom In/Out Pill */}
+        <div className="flex flex-col rounded-2xl border border-white/15 bg-[#0a0f14]/90 p-1 backdrop-blur-xl shadow-2xl">
+          <button
+            type="button"
+            onClick={() => map?.zoomIn({ duration: 250 })}
+            className="flex h-10 w-10 items-center justify-center rounded-xl text-slate-200 hover:bg-white/10 hover:text-white active:scale-95 transition-all"
+            title="Zoom in (+)"
+            aria-label="Zoom in"
+          >
+            <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5">
+              <path strokeLinecap="round" strokeLinejoin="round" d="M12 4v16m8-8H4" />
+            </svg>
+          </button>
+          <div className="h-px w-full bg-white/10" />
+          <button
+            type="button"
+            onClick={() => map?.zoomOut({ duration: 250 })}
+            className="flex h-10 w-10 items-center justify-center rounded-xl text-slate-200 hover:bg-white/10 hover:text-white active:scale-95 transition-all"
+            title="Zoom out (-)"
+            aria-label="Zoom out"
+          >
+            <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5">
+              <path strokeLinecap="round" strokeLinejoin="round" d="M20 12H4" />
+            </svg>
+          </button>
+        </div>
+
+        {/* Reset North Compass */}
+        <button
+          type="button"
+          onClick={() => map?.resetNorthPitch({ duration: 400 })}
+          className="flex h-10 w-10 items-center justify-center rounded-2xl border border-white/15 bg-[#0a0f14]/90 text-slate-300 hover:text-teal-300 hover:bg-white/10 backdrop-blur-xl shadow-2xl active:scale-95 transition-all"
+          title="Reset north orientation"
+          aria-label="Reset north"
+        >
+          <svg className="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+            <polygon points="12 2 19 21 12 17 5 21 12 2" fill="currentColor" className="text-teal-400 opacity-90" />
+          </svg>
+        </button>
+      </div>
+
       {/* Bottom-Left Selected Location Inspector Overlay */}
       {showCard && displayAqi !== null && (
         <div className="absolute bottom-6 left-4 sm:left-6 z-20 max-w-sm w-[calc(100vw-2rem)] sm:w-80 bg-black/65 border border-white/10 rounded-2xl backdrop-blur-md animate-fade-in text-slate-100 overflow-hidden">

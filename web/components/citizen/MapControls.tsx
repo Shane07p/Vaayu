@@ -6,9 +6,7 @@ import type { Map } from 'maplibre-gl';
 import { useAQIStore } from '@/store/aqiStore';
 
 import { loadGeoReferenceData } from '@/lib/coordinates';
-import { REGIONS } from '@/lib/regions';
-import { fetchCityRankings, fetchGrid } from '@/lib/api';
-import { useCitizenI18n } from '@/lib/i18n';
+import { fetchCityRankings } from '@/lib/api';
 import type { CityRanking } from '@/lib/schemas';
 
 /** The subset of a Nominatim search result this component reads. */
@@ -54,10 +52,185 @@ function measuredCities(): Promise<CityRanking[]> {
   return measuredCitiesPromise;
 }
 
+interface CityAliasEntry {
+  canonical: string;
+  aliases: string[];
+  canonicalDisplay: string;
+}
+
+const CITY_ALIASES: CityAliasEntry[] = [
+  {
+    canonical: "bengaluru",
+    aliases: ["bangalore", "banglore", "bengaluru urban", "bengaluru rural"],
+    canonicalDisplay: "Bengaluru (Bangalore)",
+  },
+  {
+    canonical: "mumbai",
+    aliases: ["bombay"],
+    canonicalDisplay: "Mumbai (Bombay)",
+  },
+  {
+    canonical: "kolkata",
+    aliases: ["calcutta"],
+    canonicalDisplay: "Kolkata (Calcutta)",
+  },
+  {
+    canonical: "chennai",
+    aliases: ["madras"],
+    canonicalDisplay: "Chennai (Madras)",
+  },
+  {
+    canonical: "gurugram",
+    aliases: ["gurgaon"],
+    canonicalDisplay: "Gurugram (Gurgaon)",
+  },
+  {
+    canonical: "prayagraj",
+    aliases: ["allahabad"],
+    canonicalDisplay: "Prayagraj (Allahabad)",
+  },
+  {
+    canonical: "varanasi",
+    aliases: ["benares", "banaras", "kashi"],
+    canonicalDisplay: "Varanasi (Benares)",
+  },
+  {
+    canonical: "puducherry",
+    aliases: ["pondicherry", "pondy"],
+    canonicalDisplay: "Puducherry (Pondicherry)",
+  },
+  {
+    canonical: "thiruvananthapuram",
+    aliases: ["trivandrum"],
+    canonicalDisplay: "Thiruvananthapuram (Trivandrum)",
+  },
+  {
+    canonical: "kozhikode",
+    aliases: ["calicut"],
+    canonicalDisplay: "Kozhikode (Calicut)",
+  },
+  {
+    canonical: "mysuru",
+    aliases: ["mysore"],
+    canonicalDisplay: "Mysuru (Mysore)",
+  },
+  {
+    canonical: "mangaluru",
+    aliases: ["mangalore"],
+    canonicalDisplay: "Mangaluru (Mangalore)",
+  },
+  {
+    canonical: "belgaum",
+    aliases: ["belagavi"],
+    canonicalDisplay: "Belgaum (Belagavi)",
+  },
+  {
+    canonical: "gulbarga",
+    aliases: ["kalaburagi"],
+    canonicalDisplay: "Gulbarga (Kalaburagi)",
+  },
+  {
+    canonical: "shimoga",
+    aliases: ["shivamogga"],
+    canonicalDisplay: "Shimoga (Shivamogga)",
+  },
+  {
+    canonical: "hubli-dharwad",
+    aliases: ["hubli", "hubballi", "dharwad"],
+    canonicalDisplay: "Hubli-Dharwad",
+  },
+  {
+    canonical: "vadodara",
+    aliases: ["baroda"],
+    canonicalDisplay: "Vadodara (Baroda)",
+  },
+  {
+    canonical: "visakhapatnam",
+    aliases: ["vizag", "waltair"],
+    canonicalDisplay: "Visakhapatnam (Vizag)",
+  },
+  {
+    canonical: "kochi",
+    aliases: ["cochin", "ernakulam"],
+    canonicalDisplay: "Kochi (Cochin)",
+  },
+  {
+    canonical: "panaji",
+    aliases: ["panjim"],
+    canonicalDisplay: "Panaji (Panjim)",
+  },
+  {
+    canonical: "delhi",
+    aliases: ["new delhi", "ncr", "dilli"],
+    canonicalDisplay: "Delhi",
+  },
+];
+
+function getCityDisplayAndAliases(cityName: string, extraAliases?: string[]): { displayName: string; allSearchNames: string[] } {
+  const cLower = cityName.toLowerCase();
+  const entry = CITY_ALIASES.find(
+    (e) => e.canonical === cLower || e.aliases.includes(cLower)
+  );
+  const searchNames = new Set<string>([cLower]);
+  if (entry) {
+    searchNames.add(entry.canonical);
+    for (const a of entry.aliases) searchNames.add(a);
+  }
+  if (extraAliases) {
+    for (const a of extraAliases) searchNames.add(a.toLowerCase());
+  }
+  return {
+    displayName: entry ? entry.canonicalDisplay : cityName,
+    allSearchNames: Array.from(searchNames),
+  };
+}
+
+function matchesSearchQuery(
+  rawQuery: string,
+  names: string[],
+  state: string = "",
+  stateCode?: string,
+  country: string = "India"
+): boolean {
+  const qClean = rawQuery.toLowerCase().trim();
+  if (!qClean) return false;
+
+  // Exact substring check on any name or state
+  if (names.some((n) => n.includes(qClean))) return true;
+  if (state && state.toLowerCase().includes(qClean)) return true;
+  if (stateCode && stateCode.toLowerCase() === qClean) return true;
+
+  // Multi-token check (e.g. "banglore in india", "bangalore karnataka", "delhi ncr")
+  const tokens = qClean
+    .split(/[\s,]+/)
+    .filter((t) => t && !["in", "of", "at", "near", "the", "city", "state"].includes(t));
+
+  if (tokens.length <= 1) return false;
+
+  const sLower = state.toLowerCase();
+  const scLower = (stateCode || "").toLowerCase();
+  const cLower = country.toLowerCase();
+
+  return tokens.every((token) => {
+    return (
+      names.some((n) => n.includes(token)) ||
+      (sLower && sLower.includes(token)) ||
+      (scLower && scLower === token) ||
+      (cLower && cLower.includes(token))
+    );
+  });
+}
+
+function scoreLocationMatch(rawQuery: string, allNames: string[]): number {
+  const qClean = rawQuery.toLowerCase().trim();
+  if (allNames.some((n) => n === qClean)) return 100;
+  if (allNames.some((n) => n.startsWith(qClean))) return 80;
+  if (allNames.some((n) => n.includes(qClean))) return 60;
+  return 40;
+}
+
 const MapControls: React.FC<Props> = ({ map }) => {
-  const { loadLocationData, locateMe, loading, loadGrid, setLoading, setLocationName, setLocationCoords } = useAQIStore();
-  const { t } = useCitizenI18n();
-  const [regionId, setRegionId] = useState("delhi-ncr");
+  const { loadLocationData, locateMe, loading } = useAQIStore();
   const [query, setQuery] = useState("");
   const [suggestions, setSuggestions] = useState<SuggestionItem[]>([]);
   const [searching, setSearching] = useState(false);
@@ -102,48 +275,88 @@ const MapControls: React.FC<Props> = ({ map }) => {
         return;
       }
       setSearching(true);
-      const qLower = query.toLowerCase().trim();
 
       // Places we actually measure come first.
-      //
-      // Search used to run only against the bundled reference list, which is a
-      // fixed set of 510 well-known places and does not include several cities
-      // that do have live stations -- Mandideep, Mandi Gobindgarh and Bhiwadi
-      // among them. A reader could not reach a real reading by typing its name.
       const measured = await measuredCities();
       const measuredMatches: SuggestionItem[] = measured
-        .filter((city) => city.city.toLowerCase().includes(qLower))
+        .filter((city) => {
+          const { allSearchNames } = getCityDisplayAndAliases(city.city);
+          return matchesSearchQuery(query, allSearchNames, "", undefined, "India");
+        })
+        .sort((a, b) => {
+          const aNames = getCityDisplayAndAliases(a.city).allSearchNames;
+          const bNames = getCityDisplayAndAliases(b.city).allSearchNames;
+          return scoreLocationMatch(query, bNames) - scoreLocationMatch(query, aNames);
+        })
         .slice(0, 8)
-        .map((city) => ({
-          display_name: city.city,
-          lat: city.lat,
-          lon: city.lon,
-          aqi: city.aqi,
-          stationCount: city.stationCount,
-        }));
+        .map((city) => {
+          const { displayName } = getCityDisplayAndAliases(city.city);
+          return {
+            display_name: displayName,
+            lat: city.lat,
+            lon: city.lon,
+            aqi: city.aqi,
+            stationCount: city.stationCount,
+          };
+        });
 
       // Fetched rather than bundled; see lib/coordinates.ts. Awaiting inside
-      // the debounced handler keeps the megabyte off the critical path: the
-      // first search pays for it, subsequent ones hit the cached promise.
-      const { cities } = await loadGeoReferenceData();
+      // the debounced handler keeps the megabyte off the critical path.
+      const { cities, states, countries } = await loadGeoReferenceData();
 
-      // Reference places, minus anything already offered as a measured match.
-      const alreadyOffered = new Set(measuredMatches.map((m) => m.display_name.toLowerCase()));
-      const localMatches: SuggestionItem[] = cities.filter((loc) =>
-        !alreadyOffered.has(loc.name.toLowerCase()) && (
-          loc.name.toLowerCase().includes(qLower) ||
-          loc.state.toLowerCase().includes(qLower) ||
-          (loc.stateCode && loc.stateCode.toLowerCase().includes(qLower))
-        )
-      ).slice(0, 10).map((loc) => ({
-        display_name: `${loc.name}, ${loc.state}`,
-        lat: loc.lat,
-        lon: loc.lon,
-      }));
+      const alreadyOffered = new Set(
+        measuredMatches.map((m) => m.display_name.split(",")[0].trim().toLowerCase())
+      );
+
+      const cityMatches: SuggestionItem[] = (cities || [])
+        .filter((loc) => {
+          const { allSearchNames } = getCityDisplayAndAliases(loc.name, loc.aliases);
+          return matchesSearchQuery(query, allSearchNames, loc.state, loc.stateCode, "India");
+        })
+        .sort((a, b) => {
+          const aNames = getCityDisplayAndAliases(a.name, a.aliases).allSearchNames;
+          const bNames = getCityDisplayAndAliases(b.name, b.aliases).allSearchNames;
+          return scoreLocationMatch(query, bNames) - scoreLocationMatch(query, aNames);
+        })
+        .map((loc) => {
+          const { displayName } = getCityDisplayAndAliases(loc.name, loc.aliases);
+          return {
+            display_name: `${displayName}, ${loc.state}`,
+            lat: loc.lat,
+            lon: loc.lon,
+          };
+        })
+        .filter((item) => !alreadyOffered.has(item.display_name.split(",")[0].trim().toLowerCase()));
+
+      // Reference states (e.g. user searching for "Karnataka" or "Maharashtra")
+      const stateMatches: SuggestionItem[] = (states || [])
+        .filter((s) => (s.country === "India" || !s.country) && matchesSearchQuery(query, [s.name.toLowerCase()], s.country || "India"))
+        .map((s) => ({
+          display_name: `${s.name}, ${s.country || "India"}`,
+          lat: s.lat,
+          lon: s.lon,
+        }))
+        .filter((item) => !alreadyOffered.has(item.display_name.split(",")[0].trim().toLowerCase()));
+
+      // Reference countries (e.g. user searching for "India")
+      const countryMatches: SuggestionItem[] = (countries || [])
+        .filter((c) => matchesSearchQuery(query, [c.name.toLowerCase()], ""))
+        .map((c) => ({
+          display_name: c.name,
+          lat: c.lat,
+          lon: c.lon,
+        }))
+        .filter((item) => !alreadyOffered.has(item.display_name.toLowerCase()));
+
+      const localMatches = [
+        ...cityMatches.slice(0, 8),
+        ...stateMatches.slice(0, 3),
+        ...countryMatches.slice(0, 1),
+      ];
 
       try {
         const controller = new AbortController();
-        const timeoutId = setTimeout(() => controller.abort(), 2500);
+        const timeoutId = setTimeout(() => controller.abort(), 3000);
 
         const res = await fetch(
           `https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(query)}&format=json&addressdetails=1&limit=5&countrycodes=in`,
@@ -163,27 +376,24 @@ const MapControls: React.FC<Props> = ({ map }) => {
           }));
 
           // Measured places lead, then reference places, then geocoder results.
-          // A geocoder hit near a place we already offer is dropped: the same
-          // point twice, once with a reading and once without, is worse than
-          // one entry.
+          // A geocoder hit near a place we already offer is dropped.
           const combined = [...measuredMatches, ...localMatches];
           for (const rm of remoteMatches) {
             if (!combined.some((c) => Math.abs(c.lat - rm.lat) < 0.05 && Math.abs(c.lon - rm.lon) < 0.05)) {
               combined.push(rm);
             }
           }
-          setSuggestions(combined.slice(0, 7));
-          setShowDropdown(true);
+          setSuggestions(combined.slice(0, 8));
+          setShowDropdown(combined.length > 0);
         } else {
           const combined = [...measuredMatches, ...localMatches];
-          setSuggestions(combined);
+          setSuggestions(combined.slice(0, 8));
           setShowDropdown(combined.length > 0);
         }
       } catch {
-        // The geocoder is optional. Losing it must not lose the places we
-        // actually measure.
+        // Geocoder is optional. Losing it must not lose the places we have locally.
         const combined = [...measuredMatches, ...localMatches];
-        setSuggestions(combined);
+        setSuggestions(combined.slice(0, 8));
         setShowDropdown(combined.length > 0);
       } finally {
         setSearching(false);
@@ -208,12 +418,15 @@ const MapControls: React.FC<Props> = ({ map }) => {
     }
   };
 
-  const selectRegion = async (id: string) => {
-    const region = REGIONS.find((item) => item.id === id);
-    if (!region) return;
-    setRegionId(id); setLoading(true); setLocationName(region.name); setLocationCoords({ lat: region.center[1], lng: region.center[0] });
-    map?.flyTo({ center: region.center, zoom: 6.3, essential: true });
-    try { loadGrid(await fetchGrid(region.bbox)); } catch (error) { console.error("Could not load region grid", error); } finally { setLoading(false); }
+  const selectLevel = (level: "country" | "state" | "city") => {
+    if (!map) return;
+    if (level === "country") {
+      map.flyTo({ center: [78.9629, 22.5937], zoom: 4.3, essential: true });
+    } else if (level === "state") {
+      map.flyTo({ zoom: 6.5, essential: true });
+    } else if (level === "city") {
+      map.flyTo({ zoom: 9.8, essential: true });
+    }
   };
 
   const handleToggleFullscreen = () => {
@@ -226,28 +439,33 @@ const MapControls: React.FC<Props> = ({ map }) => {
     }
   };
 
-  const markerLevel = zoom < 3 ? "Continents" : zoom < 5 ? "Countries" : zoom < 7 ? "States" : "Cities";
+  const currentLevel: "country" | "state" | "city" =
+    zoom < 5.2 ? "country" : zoom < 7.8 ? "state" : "city";
 
   return (
     <div
       ref={wrapperRef}
-      className="absolute top-4 right-4 z-30 flex flex-col sm:flex-row items-end sm:items-center gap-2 max-w-[calc(100vw-2rem)]"
+      className="absolute top-20 right-4 sm:right-6 z-30 flex flex-col sm:flex-row items-end sm:items-center gap-2.5 max-w-[calc(100vw-2rem)] transition-all"
     >
-      <label className="flex items-center gap-2 rounded-xl border border-white/15 bg-[#0a0f14]/90 px-3 py-2 text-xs font-mono text-slate-200 shadow-2xl backdrop-blur-xl">
-        <span className="text-slate-400">{t.regions}</span>
-        <select value={regionId} onChange={(event) => void selectRegion(event.target.value)} className="bg-transparent font-semibold text-teal-200 outline-none">
-          {REGIONS.map((region) => <option key={region.id} value={region.id} className="bg-slate-950">{region.name}</option>)}
+      {/* Level Selector: Country / State / City */}
+      <label className="flex items-center gap-2 rounded-xl border border-white/15 bg-[#0a0f14]/90 px-3.5 py-2 text-xs font-sans text-slate-200 shadow-2xl backdrop-blur-xl">
+        <span className="text-slate-400 font-medium">Level</span>
+        <select
+          value={currentLevel}
+          onChange={(event) => selectLevel(event.target.value as "country" | "state" | "city")}
+          className="bg-transparent font-semibold text-teal-300 outline-none cursor-pointer capitalize pr-1"
+        >
+          <option value="country" className="bg-slate-950 text-slate-100">Country</option>
+          <option value="state" className="bg-slate-950 text-slate-100">State</option>
+          <option value="city" className="bg-slate-950 text-slate-100">City</option>
         </select>
       </label>
-      <div className="rounded-lg border border-white/10 bg-[#080d12]/90 px-2.5 py-1.5 text-[10px] font-mono uppercase tracking-wider text-slate-300 shadow-xl backdrop-blur-xl">
-        Showing <span className="font-bold text-teal-300">{markerLevel}</span>
-      </div>
 
       {/* Search Input Container */}
-      <div className="relative w-72 sm:w-80">
-        <div className="flex items-center bg-[#0a0f14]/90 hover:bg-[#0d141b] focus-within:bg-[#0d141b] border border-white/15 focus-within:border-teal-500/60 rounded-xl px-3 py-2 shadow-2xl backdrop-blur-xl transition-all">
+      <div className="relative w-72 sm:w-80 md:w-96">
+        <div className="flex items-center bg-[#0a0f14]/90 hover:bg-[#0d141b] focus-within:bg-[#0d141b] border border-white/15 focus-within:border-teal-400 focus-within:ring-2 focus-within:ring-teal-500/20 rounded-xl px-3.5 py-2 shadow-2xl backdrop-blur-xl transition-all">
           <svg
-            className="w-4 h-4 text-slate-400 mr-2 flex-shrink-0"
+            className="w-4 h-4 text-teal-400 mr-2.5 flex-shrink-0"
             viewBox="0 0 24 24"
             fill="none"
             stroke="currentColor"
@@ -265,8 +483,8 @@ const MapControls: React.FC<Props> = ({ map }) => {
             onFocus={() => {
               if (suggestions.length > 0) setShowDropdown(true);
             }}
-            placeholder={t.search}
-            className="bg-transparent text-xs font-mono text-slate-100 placeholder-slate-400 focus:outline-none w-full"
+            placeholder="Search area, city, or district…"
+            className="bg-transparent text-xs font-sans text-slate-100 placeholder-slate-400 focus:outline-none w-full tracking-wide"
           />
           {searching && (
             <div className="w-3.5 h-3.5 border-2 border-teal-400 border-t-transparent rounded-full animate-spin ml-2 flex-shrink-0" />
@@ -278,7 +496,7 @@ const MapControls: React.FC<Props> = ({ map }) => {
                 setSuggestions([]);
                 setShowDropdown(false);
               }}
-              className="text-slate-400 hover:text-slate-200 text-xs ml-1 flex-shrink-0 px-1"
+              className="text-slate-400 hover:text-slate-200 text-xs ml-1 flex-shrink-0 px-1.5 py-0.5 rounded-md hover:bg-white/10 transition-colors"
               title="Clear search"
             >
               ✕
@@ -288,32 +506,30 @@ const MapControls: React.FC<Props> = ({ map }) => {
 
         {/* Suggestion Dropdown */}
         {showDropdown && suggestions.length > 0 && (
-          <div className="absolute top-full mt-1.5 left-0 right-0 bg-[#080d12]/95 border border-white/15 rounded-xl shadow-2xl backdrop-blur-2xl py-1.5 overflow-hidden z-40 max-h-60 overflow-y-auto">
-            <div className="px-3 py-1 text-[10px] font-mono uppercase tracking-wider text-slate-400 border-b border-white/5">
-              Locations
+          <div className="absolute top-full mt-2 left-0 right-0 bg-[#080d12]/95 border border-white/15 rounded-2xl shadow-2xl backdrop-blur-2xl py-1.5 overflow-hidden z-40 max-h-72 overflow-y-auto">
+            <div className="px-3.5 py-1.5 text-[10px] font-mono uppercase tracking-wider text-slate-400 border-b border-white/5 flex items-center justify-between">
+              <span>Locations & Areas</span>
+              <span className="text-teal-400/80">{suggestions.length} found</span>
             </div>
             {suggestions.map((item, idx) => (
               <button
                 key={idx}
                 onClick={() => handleSelectLocation(item)}
-                className="w-full text-left px-3 py-2 text-xs font-mono text-slate-200 hover:bg-teal-500/15 hover:text-teal-200 transition-colors flex items-start gap-2 border-b border-white/5 last:border-0"
+                className="w-full text-left px-3.5 py-2.5 text-xs font-sans text-slate-200 hover:bg-teal-500/15 hover:text-teal-100 transition-colors flex items-start gap-2.5 border-b border-white/5 last:border-0 group"
               >
-                <span className="text-teal-400 mt-0.5">📍</span>
+                <span className="text-teal-400 mt-0.5 group-hover:scale-110 transition-transform">📍</span>
                 <div className="min-w-0 flex-1">
-                  <div className="font-semibold truncate">
+                  <div className="font-semibold truncate text-slate-100 group-hover:text-white">
                     {item.display_name.split(",")[0]}
                   </div>
-                  <div className="text-[10px] text-slate-400 truncate">
-                    {/* A measured place says so, with what it measured. The
-                        alternative is two visually identical rows where one
-                        leads to a reading and the other to "no data". */}
+                  <div className="text-[11px] text-slate-400 truncate">
                     {item.aqi !== undefined
                       ? `AQI ${item.aqi} · ${item.stationCount === 1 ? "1 station" : `${item.stationCount} stations`}`
                       : item.display_name.split(",").slice(1).join(",").trim()}
                   </div>
                 </div>
                 {item.aqi !== undefined && (
-                  <span className="text-[9px] font-mono uppercase tracking-wider text-teal-400/80 mt-0.5 flex-shrink-0">
+                  <span className="text-[10px] font-mono font-medium uppercase tracking-wider text-teal-300 bg-teal-500/15 border border-teal-500/30 rounded-full px-2 py-0.5 mt-0.5 flex-shrink-0">
                     measured
                   </span>
                 )}
@@ -328,7 +544,7 @@ const MapControls: React.FC<Props> = ({ map }) => {
         <button
           onClick={handleLocateMe}
           disabled={locating || loading}
-          className="flex items-center gap-1.5 px-3 py-2 rounded-xl bg-[#0a0f14]/90 hover:bg-[#0d141b] active:scale-95 text-xs font-mono text-slate-200 border border-white/15 hover:border-white/30 backdrop-blur-xl shadow-2xl transition-all disabled:opacity-50"
+          className="flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-[#0a0f14]/90 hover:bg-[#0d141b] active:scale-95 text-xs font-sans font-medium text-slate-200 border border-white/15 hover:border-white/30 backdrop-blur-xl shadow-2xl transition-all disabled:opacity-50"
           title="Fly to current GPS location"
         >
           <span className={locating || loading ? "animate-spin text-teal-400" : "text-teal-400"}>

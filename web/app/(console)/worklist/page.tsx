@@ -19,7 +19,7 @@ export default async function WorklistPage() {
       {/* Header */}
       <div>
         <h1 className="text-xl font-bold tracking-tight text-slate-100 mb-1">
-          Fire Impact Worklist
+          Farm fires
         </h1>
         <p className="text-sm text-slate-400">
           Ranked by expected downwind population impact. Direction-95 eligible clusters

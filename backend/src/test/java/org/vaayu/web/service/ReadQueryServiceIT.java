@@ -18,6 +18,7 @@ import org.testcontainers.junit.jupiter.Testcontainers;
 @Testcontainers(disabledWithoutDocker = true)
 class ReadQueryServiceIT {
     @Container
+    @SuppressWarnings("resource")
     static final PostgreSQLContainer<?> POSTGIS = new PostgreSQLContainer<>(
             DockerImageName.parse("postgis/postgis:16-3.4").asCompatibleSubstituteFor("postgres"))
             .withDatabaseName("vaayu")

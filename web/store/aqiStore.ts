@@ -125,7 +125,7 @@ export const useAQIStore = create<AQIState>()(
     currentTab: 'aqi',
     loading: false,
     locationCoords: { lat: 28.6139, lng: 77.209 },
-    locationName: 'Delhi-NCR · Central Pilot',
+    locationName: 'Delhi NCR',
     lastUpdated: new Date().toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit' }) + ' IST',
     markerInfo: null,
     dataSource: 'NONE',

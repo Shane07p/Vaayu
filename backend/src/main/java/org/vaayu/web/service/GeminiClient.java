@@ -131,7 +131,6 @@ public class GeminiClient implements GeminiClassifier, GeminiTextGenerator {
         }
     }
 
-    @SuppressWarnings("unused")
     public GeminiAssessment unavailable(String photoUri, Throwable ignored) {
         return GeminiAssessment.unavailable();
     }
