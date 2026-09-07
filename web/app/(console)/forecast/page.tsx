@@ -21,7 +21,7 @@ export default async function ForecastPage() {
       <div>
         <div className="flex items-center gap-3 mb-1">
           <h1 className="text-xl font-bold tracking-tight text-slate-100">
-            Forecast Intelligence
+            Forecast
           </h1>
           {station && forecasts.length > 0 && (
             <SourceBadge source={forecasts[0].source} />

@@ -108,9 +108,6 @@ export function DataMap({ grid, stations, worklist }: DataMapProps) {
   // The label reads "PM2.5 Median" and this computed a mean. Now it is a median.
   const medianPm25 = grid.length ? Math.round(median(grid.map((g) => g.pm25Q50))) : null;
   const maxPm25 = grid.length ? Math.round(Math.max(...grid.map((g) => g.pm25Q50))) : null;
-  const avgCoverage = grid.length
-    ? Math.round((grid.reduce((sum, g) => sum + g.coverageFraction, 0) / grid.length) * 100)
-    : null;
 
   // Median of the AQI values the API computed with the CPCB scale. This was
   // Math.round(avgPm25 * 1.55), an invented linear conversion; the real scale is
@@ -471,7 +468,7 @@ export function DataMap({ grid, stations, worklist }: DataMapProps) {
       <div
         ref={container}
         className="w-full h-[640px] xl:h-[720px] bg-[#070a0e]"
-        aria-label="Air quality and fire impact map"
+        aria-label="Air quality and farm fire map"
       />
 
       {/* Map Error Notice */}
@@ -502,7 +499,7 @@ export function DataMap({ grid, stations, worklist }: DataMapProps) {
         </button>
         <div className={`space-y-3 px-4 pb-4 ${layersOpen ? "" : "hidden"}`}>
         {[
-          { label: "1 km Nowcast Surface", checked: showGrid, toggle: () => setShowGrid(!showGrid), color: "bg-emerald-400" },
+          { label: "Estimated map", checked: showGrid, toggle: () => setShowGrid(!showGrid), color: "bg-emerald-400" },
           { label: "Monitoring Stations", checked: showStations, toggle: () => setShowStations(!showStations), color: "bg-sky-400" },
           { label: "Fire Clusters", checked: showFires, toggle: () => setShowFires(!showFires), color: "bg-red-400" },
         ].map((layer) => (
@@ -572,30 +569,9 @@ export function DataMap({ grid, stations, worklist }: DataMapProps) {
                 </div>
               </div>
             </div>
-            <div className="grid grid-cols-2 gap-2">
-              <div className="p-2.5 rounded-xl bg-white/[0.04] border border-white/5">
-                <div className="text-[9px] font-mono text-slate-400">MAX PM2.5</div>
-                <div className="text-sm font-bold font-mono text-slate-200">{maxPm25}</div>
-              </div>
-              <div className="p-2.5 rounded-xl bg-white/[0.04] border border-white/5">
-                <div className="text-[9px] font-mono text-slate-400">AVG COVERAGE</div>
-                <div className="text-sm font-bold font-mono text-slate-200">{avgCoverage}%</div>
-              </div>
-            </div>
-          </div>
-
-          <div className="pt-2 border-t border-white/10 text-[10px] font-mono text-slate-400 space-y-1">
-            <div className="flex justify-between">
-              <span>Grid cells:</span>
-              <span className="text-slate-200">{grid.length}</span>
-            </div>
-            <div className="flex justify-between">
-              <span>Stations:</span>
-              <span className="text-slate-200">{stations.length}</span>
-            </div>
-            <div className="flex justify-between">
-              <span>Fire clusters:</span>
-              <span className="text-slate-200">{worklist.length}</span>
+            <div className="p-2.5 rounded-xl bg-white/[0.04] border border-white/5">
+              <div className="text-[9px] font-mono text-slate-400">MAX PM2.5</div>
+              <div className="text-sm font-bold font-mono text-slate-200">{maxPm25}</div>
             </div>
           </div>
         </div>
@@ -708,25 +684,6 @@ export function DataMap({ grid, stations, worklist }: DataMapProps) {
         </div>
       )}
 
-      {/* Intelligence Chain Strip */}
-      <div className="absolute bottom-4 left-4 z-20 flex items-center gap-1 p-2 rounded-2xl bg-[#070a0e]/85 border border-white/10 backdrop-blur-xl">
-        {["OBSERVE", "ESTIMATE", "FORECAST", "ATTRIBUTE", "ALERT", "ACT"].map(
-          (step, idx) => (
-            <div key={step} className="flex items-center gap-1">
-              <span
-                className={`px-2 py-0.5 rounded-lg text-[9px] font-mono font-medium ${
-                  step === "ESTIMATE"
-                    ? "bg-white/[0.12] text-white border border-white/20 font-bold"
-                    : "bg-white/[0.03] text-slate-400 border border-white/5"
-                }`}
-              >
-                {step}
-              </span>
-              {idx < 5 && <span className="text-slate-600 text-[9px]">→</span>}
-            </div>
-          )
-        )}
-      </div>
     </div>
   );
 }

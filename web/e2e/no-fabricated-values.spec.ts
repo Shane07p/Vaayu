@@ -42,6 +42,49 @@ const FABRICATIONS: { text: string; was: string }[] = [
     text: "seed-v0",
     was: "model_version from V900 seed data, shown on map and forecast pages",
   },
+  // Operational jargon removed by B3 (PLAN §4.3). Each of these was system
+  // language that no reader would say aloud. They are easy to reintroduce
+  // while making a page look professional, so they are ratcheted here.
+  {
+    text: "DELHI-NCR PILOT COMMAND",
+    was: "the topbar region label, styled as a military command name",
+  },
+  {
+    text: "Statutory Alerts",
+    was: "the sidebar and alerts page heading, replaced by Action notices",
+  },
+  {
+    text: "Mode: CACHED",
+    was: "the topbar data-mode badge, replaced by a plain last-updated time",
+  },
+  {
+    text: "Authority Console",
+    was: "the console entry point label, replaced by For officials",
+  },
+  {
+    text: "Situation Map",
+    was: "the map page navigation item, replaced by Map",
+  },
+  {
+    text: "Forecast Intelligence",
+    was: "the forecast navigation item, replaced by Forecast",
+  },
+  {
+    text: "Fire Worklist",
+    was: "the worklist navigation item, replaced by Farm fires",
+  },
+  {
+    text: "Check My Air",
+    was: "the citizen portal CTA, replaced by My air",
+  },
+  {
+    text: "Telemetry: Live Sync",
+    was: "the topbar telemetry strip",
+  },
+  {
+    text: "SYSTEM PROVENANCE",
+    was: "the provenance panel header, replaced by Where this comes from",
+  },
 ];
 
 test("the citizen surface states no unmeasured value", async ({ page }) => {

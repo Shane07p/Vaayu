@@ -38,7 +38,7 @@ export default async function AlertsPage() {
       {/* Header */}
       <div>
         <h1 className="text-xl font-bold tracking-tight text-slate-100 mb-1">
-          Statutory Alerts
+          Action notices
         </h1>
         <p className="text-sm text-slate-400">
           Every alert names a statute, jurisdiction, mandated actions, and GRAP stage.
@@ -198,7 +198,7 @@ export default async function AlertsPage() {
       ) : (
         <div className="rounded-xl border border-slate-800 bg-slate-950/60 p-8 text-center space-y-2">
           <div className="text-sm font-mono text-slate-400 uppercase tracking-wider">
-            No Active Statutory Alerts
+            No active action notices
           </div>
           <p className="text-xs text-slate-500 max-w-md mx-auto">
             No forecast currently meets the configured GRAP action threshold.

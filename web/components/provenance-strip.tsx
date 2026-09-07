@@ -93,7 +93,7 @@ export async function ProvenanceStrip({ className = "" }: { className?: string }
       <div className="flex flex-wrap items-center justify-between gap-4 px-4 py-2.5">
         <div className="flex flex-wrap items-center gap-x-5 gap-y-2">
           <span className="text-slate-500 uppercase tracking-wider text-[10px] font-bold">
-            System Provenance
+            Where this comes from
           </span>
           {feeds.map((feed) => (
             <FeedRow key={feed.source} feed={feed} />
