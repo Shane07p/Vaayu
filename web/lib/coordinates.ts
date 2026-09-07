@@ -60,6 +60,7 @@ export interface CityLocation {
   tier: number;
   lat: number;
   lon: number;
+  aliases?: string[];
 }
 
 /** Re-export with legacy name for backward compatibility. */

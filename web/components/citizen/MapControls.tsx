@@ -52,6 +52,183 @@ function measuredCities(): Promise<CityRanking[]> {
   return measuredCitiesPromise;
 }
 
+interface CityAliasEntry {
+  canonical: string;
+  aliases: string[];
+  canonicalDisplay: string;
+}
+
+const CITY_ALIASES: CityAliasEntry[] = [
+  {
+    canonical: "bengaluru",
+    aliases: ["bangalore", "banglore", "bengaluru urban", "bengaluru rural"],
+    canonicalDisplay: "Bengaluru (Bangalore)",
+  },
+  {
+    canonical: "mumbai",
+    aliases: ["bombay"],
+    canonicalDisplay: "Mumbai (Bombay)",
+  },
+  {
+    canonical: "kolkata",
+    aliases: ["calcutta"],
+    canonicalDisplay: "Kolkata (Calcutta)",
+  },
+  {
+    canonical: "chennai",
+    aliases: ["madras"],
+    canonicalDisplay: "Chennai (Madras)",
+  },
+  {
+    canonical: "gurugram",
+    aliases: ["gurgaon"],
+    canonicalDisplay: "Gurugram (Gurgaon)",
+  },
+  {
+    canonical: "prayagraj",
+    aliases: ["allahabad"],
+    canonicalDisplay: "Prayagraj (Allahabad)",
+  },
+  {
+    canonical: "varanasi",
+    aliases: ["benares", "banaras", "kashi"],
+    canonicalDisplay: "Varanasi (Benares)",
+  },
+  {
+    canonical: "puducherry",
+    aliases: ["pondicherry", "pondy"],
+    canonicalDisplay: "Puducherry (Pondicherry)",
+  },
+  {
+    canonical: "thiruvananthapuram",
+    aliases: ["trivandrum"],
+    canonicalDisplay: "Thiruvananthapuram (Trivandrum)",
+  },
+  {
+    canonical: "kozhikode",
+    aliases: ["calicut"],
+    canonicalDisplay: "Kozhikode (Calicut)",
+  },
+  {
+    canonical: "mysuru",
+    aliases: ["mysore"],
+    canonicalDisplay: "Mysuru (Mysore)",
+  },
+  {
+    canonical: "mangaluru",
+    aliases: ["mangalore"],
+    canonicalDisplay: "Mangaluru (Mangalore)",
+  },
+  {
+    canonical: "belgaum",
+    aliases: ["belagavi"],
+    canonicalDisplay: "Belgaum (Belagavi)",
+  },
+  {
+    canonical: "gulbarga",
+    aliases: ["kalaburagi"],
+    canonicalDisplay: "Gulbarga (Kalaburagi)",
+  },
+  {
+    canonical: "shimoga",
+    aliases: ["shivamogga"],
+    canonicalDisplay: "Shimoga (Shivamogga)",
+  },
+  {
+    canonical: "hubli-dharwad",
+    aliases: ["hubli", "hubballi", "dharwad"],
+    canonicalDisplay: "Hubli-Dharwad",
+  },
+  {
+    canonical: "vadodara",
+    aliases: ["baroda"],
+    canonicalDisplay: "Vadodara (Baroda)",
+  },
+  {
+    canonical: "visakhapatnam",
+    aliases: ["vizag", "waltair"],
+    canonicalDisplay: "Visakhapatnam (Vizag)",
+  },
+  {
+    canonical: "kochi",
+    aliases: ["cochin", "ernakulam"],
+    canonicalDisplay: "Kochi (Cochin)",
+  },
+  {
+    canonical: "panaji",
+    aliases: ["panjim"],
+    canonicalDisplay: "Panaji (Panjim)",
+  },
+  {
+    canonical: "delhi",
+    aliases: ["new delhi", "ncr", "dilli"],
+    canonicalDisplay: "Delhi",
+  },
+];
+
+function getCityDisplayAndAliases(cityName: string, extraAliases?: string[]): { displayName: string; allSearchNames: string[] } {
+  const cLower = cityName.toLowerCase();
+  const entry = CITY_ALIASES.find(
+    (e) => e.canonical === cLower || e.aliases.includes(cLower)
+  );
+  const searchNames = new Set<string>([cLower]);
+  if (entry) {
+    searchNames.add(entry.canonical);
+    for (const a of entry.aliases) searchNames.add(a);
+  }
+  if (extraAliases) {
+    for (const a of extraAliases) searchNames.add(a.toLowerCase());
+  }
+  return {
+    displayName: entry ? entry.canonicalDisplay : cityName,
+    allSearchNames: Array.from(searchNames),
+  };
+}
+
+function matchesSearchQuery(
+  rawQuery: string,
+  names: string[],
+  state: string = "",
+  stateCode?: string,
+  country: string = "India"
+): boolean {
+  const qClean = rawQuery.toLowerCase().trim();
+  if (!qClean) return false;
+
+  // Exact substring check on any name or state
+  if (names.some((n) => n.includes(qClean))) return true;
+  if (state && state.toLowerCase().includes(qClean)) return true;
+  if (stateCode && stateCode.toLowerCase() === qClean) return true;
+
+  // Multi-token check (e.g. "banglore in india", "bangalore karnataka", "delhi ncr")
+  const tokens = qClean
+    .split(/[\s,]+/)
+    .filter((t) => t && !["in", "of", "at", "near", "the", "city", "state"].includes(t));
+
+  if (tokens.length <= 1) return false;
+
+  const sLower = state.toLowerCase();
+  const scLower = (stateCode || "").toLowerCase();
+  const cLower = country.toLowerCase();
+
+  return tokens.every((token) => {
+    return (
+      names.some((n) => n.includes(token)) ||
+      (sLower && sLower.includes(token)) ||
+      (scLower && scLower === token) ||
+      (cLower && cLower.includes(token))
+    );
+  });
+}
+
+function scoreLocationMatch(rawQuery: string, allNames: string[]): number {
+  const qClean = rawQuery.toLowerCase().trim();
+  if (allNames.some((n) => n === qClean)) return 100;
+  if (allNames.some((n) => n.startsWith(qClean))) return 80;
+  if (allNames.some((n) => n.includes(qClean))) return 60;
+  return 40;
+}
+
 const MapControls: React.FC<Props> = ({ map }) => {
   const { loadLocationData, locateMe, loading } = useAQIStore();
   const [query, setQuery] = useState("");
@@ -98,48 +275,88 @@ const MapControls: React.FC<Props> = ({ map }) => {
         return;
       }
       setSearching(true);
-      const qLower = query.toLowerCase().trim();
 
       // Places we actually measure come first.
-      //
-      // Search used to run only against the bundled reference list, which is a
-      // fixed set of 510 well-known places and does not include several cities
-      // that do have live stations -- Mandideep, Mandi Gobindgarh and Bhiwadi
-      // among them. A reader could not reach a real reading by typing its name.
       const measured = await measuredCities();
       const measuredMatches: SuggestionItem[] = measured
-        .filter((city) => city.city.toLowerCase().includes(qLower))
+        .filter((city) => {
+          const { allSearchNames } = getCityDisplayAndAliases(city.city);
+          return matchesSearchQuery(query, allSearchNames, "", undefined, "India");
+        })
+        .sort((a, b) => {
+          const aNames = getCityDisplayAndAliases(a.city).allSearchNames;
+          const bNames = getCityDisplayAndAliases(b.city).allSearchNames;
+          return scoreLocationMatch(query, bNames) - scoreLocationMatch(query, aNames);
+        })
         .slice(0, 8)
-        .map((city) => ({
-          display_name: city.city,
-          lat: city.lat,
-          lon: city.lon,
-          aqi: city.aqi,
-          stationCount: city.stationCount,
-        }));
+        .map((city) => {
+          const { displayName } = getCityDisplayAndAliases(city.city);
+          return {
+            display_name: displayName,
+            lat: city.lat,
+            lon: city.lon,
+            aqi: city.aqi,
+            stationCount: city.stationCount,
+          };
+        });
 
       // Fetched rather than bundled; see lib/coordinates.ts. Awaiting inside
-      // the debounced handler keeps the megabyte off the critical path: the
-      // first search pays for it, subsequent ones hit the cached promise.
-      const { cities } = await loadGeoReferenceData();
+      // the debounced handler keeps the megabyte off the critical path.
+      const { cities, states, countries } = await loadGeoReferenceData();
 
-      // Reference places, minus anything already offered as a measured match.
-      const alreadyOffered = new Set(measuredMatches.map((m) => m.display_name.toLowerCase()));
-      const localMatches: SuggestionItem[] = cities.filter((loc) =>
-        !alreadyOffered.has(loc.name.toLowerCase()) && (
-          loc.name.toLowerCase().includes(qLower) ||
-          loc.state.toLowerCase().includes(qLower) ||
-          (loc.stateCode && loc.stateCode.toLowerCase().includes(qLower))
-        )
-      ).slice(0, 10).map((loc) => ({
-        display_name: `${loc.name}, ${loc.state}`,
-        lat: loc.lat,
-        lon: loc.lon,
-      }));
+      const alreadyOffered = new Set(
+        measuredMatches.map((m) => m.display_name.split(",")[0].trim().toLowerCase())
+      );
+
+      const cityMatches: SuggestionItem[] = (cities || [])
+        .filter((loc) => {
+          const { allSearchNames } = getCityDisplayAndAliases(loc.name, loc.aliases);
+          return matchesSearchQuery(query, allSearchNames, loc.state, loc.stateCode, "India");
+        })
+        .sort((a, b) => {
+          const aNames = getCityDisplayAndAliases(a.name, a.aliases).allSearchNames;
+          const bNames = getCityDisplayAndAliases(b.name, b.aliases).allSearchNames;
+          return scoreLocationMatch(query, bNames) - scoreLocationMatch(query, aNames);
+        })
+        .map((loc) => {
+          const { displayName } = getCityDisplayAndAliases(loc.name, loc.aliases);
+          return {
+            display_name: `${displayName}, ${loc.state}`,
+            lat: loc.lat,
+            lon: loc.lon,
+          };
+        })
+        .filter((item) => !alreadyOffered.has(item.display_name.split(",")[0].trim().toLowerCase()));
+
+      // Reference states (e.g. user searching for "Karnataka" or "Maharashtra")
+      const stateMatches: SuggestionItem[] = (states || [])
+        .filter((s) => (s.country === "India" || !s.country) && matchesSearchQuery(query, [s.name.toLowerCase()], s.country || "India"))
+        .map((s) => ({
+          display_name: `${s.name}, ${s.country || "India"}`,
+          lat: s.lat,
+          lon: s.lon,
+        }))
+        .filter((item) => !alreadyOffered.has(item.display_name.split(",")[0].trim().toLowerCase()));
+
+      // Reference countries (e.g. user searching for "India")
+      const countryMatches: SuggestionItem[] = (countries || [])
+        .filter((c) => matchesSearchQuery(query, [c.name.toLowerCase()], ""))
+        .map((c) => ({
+          display_name: c.name,
+          lat: c.lat,
+          lon: c.lon,
+        }))
+        .filter((item) => !alreadyOffered.has(item.display_name.toLowerCase()));
+
+      const localMatches = [
+        ...cityMatches.slice(0, 8),
+        ...stateMatches.slice(0, 3),
+        ...countryMatches.slice(0, 1),
+      ];
 
       try {
         const controller = new AbortController();
-        const timeoutId = setTimeout(() => controller.abort(), 2500);
+        const timeoutId = setTimeout(() => controller.abort(), 3000);
 
         const res = await fetch(
           `https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(query)}&format=json&addressdetails=1&limit=5&countrycodes=in`,
@@ -159,27 +376,24 @@ const MapControls: React.FC<Props> = ({ map }) => {
           }));
 
           // Measured places lead, then reference places, then geocoder results.
-          // A geocoder hit near a place we already offer is dropped: the same
-          // point twice, once with a reading and once without, is worse than
-          // one entry.
+          // A geocoder hit near a place we already offer is dropped.
           const combined = [...measuredMatches, ...localMatches];
           for (const rm of remoteMatches) {
             if (!combined.some((c) => Math.abs(c.lat - rm.lat) < 0.05 && Math.abs(c.lon - rm.lon) < 0.05)) {
               combined.push(rm);
             }
           }
-          setSuggestions(combined.slice(0, 7));
-          setShowDropdown(true);
+          setSuggestions(combined.slice(0, 8));
+          setShowDropdown(combined.length > 0);
         } else {
           const combined = [...measuredMatches, ...localMatches];
-          setSuggestions(combined);
+          setSuggestions(combined.slice(0, 8));
           setShowDropdown(combined.length > 0);
         }
       } catch {
-        // The geocoder is optional. Losing it must not lose the places we
-        // actually measure.
+        // Geocoder is optional. Losing it must not lose the places we have locally.
         const combined = [...measuredMatches, ...localMatches];
-        setSuggestions(combined);
+        setSuggestions(combined.slice(0, 8));
         setShowDropdown(combined.length > 0);
       } finally {
         setSearching(false);

@@ -26,9 +26,11 @@ class CitizenReportServiceTest {
     void insertsAPendingReport() throws Exception {
         ResultSet resultSet = org.mockito.Mockito.mock(ResultSet.class);
         when(resultSet.getLong("id")).thenReturn(42L);
-        when(resultSet.getObject("submitted_at", OffsetDateTime.class)).thenReturn(OffsetDateTime.parse("2026-08-21T10:00:00Z"));
+        when(resultSet.getObject("submitted_at", OffsetDateTime.class))
+                .thenReturn(OffsetDateTime.parse("2026-08-21T10:00:00Z"));
         when(resultSet.getString("status")).thenReturn("PENDING");
-        when(jdbc.queryForObject(any(String.class), any(SqlParameterSource.class), any(RowMapper.class)))
+        when(jdbc.queryForObject(any(String.class), any(SqlParameterSource.class),
+                org.mockito.ArgumentMatchers.<RowMapper<Object>>any()))
                 .thenAnswer(invocation -> ((RowMapper<?>) invocation.getArgument(2)).mapRow(resultSet, 0));
     }
 
@@ -81,7 +83,6 @@ class CitizenReportServiceTest {
                 .thenReturn(GeminiAssessment.unavailable());
 
         var response = service.submit(new CitizenReportRequest(28.6, 77.2, "https://storage.example/report.jpg"));
-
         assertThat(response.status()).isEqualTo("PENDING");
         assertThat(response.sourceUnavailable()).isTrue();
         verify(jdbc, never()).update(contains("gemini_band"), anyMap());
