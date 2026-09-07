@@ -6,9 +6,7 @@ import type { Map } from 'maplibre-gl';
 import { useAQIStore } from '@/store/aqiStore';
 
 import { loadGeoReferenceData } from '@/lib/coordinates';
-import { REGIONS } from '@/lib/regions';
-import { fetchCityRankings, fetchGrid } from '@/lib/api';
-import { useCitizenI18n } from '@/lib/i18n';
+import { fetchCityRankings } from '@/lib/api';
 import type { CityRanking } from '@/lib/schemas';
 
 /** The subset of a Nominatim search result this component reads. */
@@ -55,9 +53,7 @@ function measuredCities(): Promise<CityRanking[]> {
 }
 
 const MapControls: React.FC<Props> = ({ map }) => {
-  const { loadLocationData, locateMe, loading, loadGrid, setLoading, setLocationName, setLocationCoords } = useAQIStore();
-  const { t } = useCitizenI18n();
-  const [regionId, setRegionId] = useState("delhi-ncr");
+  const { loadLocationData, locateMe, loading } = useAQIStore();
   const [query, setQuery] = useState("");
   const [suggestions, setSuggestions] = useState<SuggestionItem[]>([]);
   const [searching, setSearching] = useState(false);
@@ -208,12 +204,15 @@ const MapControls: React.FC<Props> = ({ map }) => {
     }
   };
 
-  const selectRegion = async (id: string) => {
-    const region = REGIONS.find((item) => item.id === id);
-    if (!region) return;
-    setRegionId(id); setLoading(true); setLocationName(region.name); setLocationCoords({ lat: region.center[1], lng: region.center[0] });
-    map?.flyTo({ center: region.center, zoom: 6.3, essential: true });
-    try { loadGrid(await fetchGrid(region.bbox)); } catch (error) { console.error("Could not load region grid", error); } finally { setLoading(false); }
+  const selectLevel = (level: "country" | "state" | "city") => {
+    if (!map) return;
+    if (level === "country") {
+      map.flyTo({ center: [78.9629, 22.5937], zoom: 4.3, essential: true });
+    } else if (level === "state") {
+      map.flyTo({ zoom: 6.5, essential: true });
+    } else if (level === "city") {
+      map.flyTo({ zoom: 9.8, essential: true });
+    }
   };
 
   const handleToggleFullscreen = () => {
@@ -226,22 +225,27 @@ const MapControls: React.FC<Props> = ({ map }) => {
     }
   };
 
-  const markerLevel = zoom < 3 ? "Continents" : zoom < 5 ? "Countries" : zoom < 7 ? "States" : "Cities";
+  const currentLevel: "country" | "state" | "city" =
+    zoom < 5.2 ? "country" : zoom < 7.8 ? "state" : "city";
 
   return (
     <div
       ref={wrapperRef}
       className="absolute top-20 right-4 sm:right-6 z-30 flex flex-col sm:flex-row items-end sm:items-center gap-2.5 max-w-[calc(100vw-2rem)] transition-all"
     >
-      <label className="flex items-center gap-2 rounded-xl border border-white/15 bg-[#0a0f14]/90 px-3 py-2 text-xs font-mono text-slate-200 shadow-2xl backdrop-blur-xl">
-        <span className="text-slate-400">{t.regions}</span>
-        <select value={regionId} onChange={(event) => void selectRegion(event.target.value)} className="bg-transparent font-semibold text-teal-200 outline-none cursor-pointer">
-          {REGIONS.map((region) => <option key={region.id} value={region.id} className="bg-slate-950">{region.name}</option>)}
+      {/* Level Selector: Country / State / City */}
+      <label className="flex items-center gap-2 rounded-xl border border-white/15 bg-[#0a0f14]/90 px-3.5 py-2 text-xs font-sans text-slate-200 shadow-2xl backdrop-blur-xl">
+        <span className="text-slate-400 font-medium">Level</span>
+        <select
+          value={currentLevel}
+          onChange={(event) => selectLevel(event.target.value as "country" | "state" | "city")}
+          className="bg-transparent font-semibold text-teal-300 outline-none cursor-pointer capitalize pr-1"
+        >
+          <option value="country" className="bg-slate-950 text-slate-100">Country</option>
+          <option value="state" className="bg-slate-950 text-slate-100">State</option>
+          <option value="city" className="bg-slate-950 text-slate-100">City</option>
         </select>
       </label>
-      <div className="rounded-xl border border-white/10 bg-[#080d12]/90 px-3 py-2 text-[10px] font-mono uppercase tracking-wider text-slate-300 shadow-xl backdrop-blur-xl">
-        Showing <span className="font-bold text-teal-300">{markerLevel}</span>
-      </div>
 
       {/* Search Input Container */}
       <div className="relative w-72 sm:w-80 md:w-96">
