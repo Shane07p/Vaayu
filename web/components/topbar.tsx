@@ -3,10 +3,21 @@
 import Link from "next/link";
 
 interface TopbarProps {
-  lastUpdated?: string;
+  /**
+   * When the newest live feed last ran, already formatted.
+   *
+   * Null when nothing has run or provenance could not be read, and the line is
+   * then omitted rather than filled in. This defaulted to the literal string
+   * "40 minutes ago" and the only caller passed nothing, so every console page
+   * claimed a freshness it had never checked. That is the same defect as the
+   * hardcoded "Updated: 22 AUG 2026 · 14:51 IST" removed from the citizen hero,
+   * and harder to catch: a relative phrase always reads as current, where an
+   * absolute timestamp eventually looks obviously wrong.
+   */
+  lastUpdated?: string | null;
 }
 
-export function Topbar({ lastUpdated = "40 minutes ago" }: TopbarProps) {
+export function Topbar({ lastUpdated = null }: TopbarProps) {
   return (
     <header className="sticky top-0 z-30 h-14 bg-[#070a0e]/80 backdrop-blur-xl border-b border-white/10 px-6 flex items-center justify-between">
       {/* Left: Region Context */}
@@ -17,10 +28,14 @@ export function Topbar({ lastUpdated = "40 minutes ago" }: TopbarProps) {
             Delhi NCR
           </span>
         </div>
-        <div className="h-4 w-[1px] bg-white/10 hidden sm:block" />
-        <div className="hidden sm:flex items-center gap-2 text-xs font-mono text-slate-400">
-          <span>Last updated {lastUpdated}</span>
-        </div>
+        {lastUpdated && (
+          <>
+            <div className="h-4 w-[1px] bg-white/10 hidden sm:block" />
+            <div className="hidden sm:flex items-center gap-2 text-xs font-mono text-slate-400">
+              <span>Last updated {lastUpdated}</span>
+            </div>
+          </>
+        )}
       </div>
 
       {/* Right: Actions */}

@@ -7,11 +7,6 @@ import { bandName } from "@/lib/guidance";
 import { useCitizenI18n } from "@/lib/i18n";
 import { useAQIStore } from "@/store/aqiStore";
 import type { CityRankings, CityRanking } from "@/lib/schemas";
-import {
-  BASELINE_COUNTRIES,
-  BASELINE_STATES,
-  BASELINE_CITIES,
-} from "@/lib/rankings-data";
 
 /** How long ago a reading was measured */
 function ago(iso: string, justNow: string): string {
@@ -38,16 +33,28 @@ export function RankingsView({ rankings }: { rankings: CityRankings | null }) {
   } = useAQIStore();
 
   const [scope, setScope] = useState<RankingScope>("city");
-  const [selectedState, setSelectedState] = useState<string>("all");
   const [sortBy, setSortBy] = useState<"worst" | "best">("worst");
   const [searchQuery, setSearchQuery] = useState("");
 
   // Determine user's current area AQI & info
+  /**
+   * The reader's own area, when we actually know it.
+   *
+   * Every field may be null. A previous revision ended this chain with
+   * `aqi = 168; pm25 = 84.5; stationName = "Anand Vihar (Reference)"` -- a
+   * fabricated reading attributed to a real DPCC station, shown whenever
+   * nothing else matched. It also matched the typed location against a
+   * hand-written table of city AQIs. Both are the failure this project exists
+   * to prevent, and the second is worse for being plausible.
+   *
+   * The honest answer for a place we have not measured is that we have not
+   * measured it, so the card renders a dash and offers to locate the reader.
+   */
   const userAreaInfo = useMemo(() => {
     let aqi: number | null = null;
     let pm25: number | null = null;
     let stationName: string | null = null;
-    let source: "nearest" | "grid" | "cityMatch" | "default" = "default";
+    let source: "nearest" | "grid" | "cityMatch" | "none" = "none";
 
     if (nearestStation) {
       aqi = nearestStation.aqi;
@@ -57,54 +64,46 @@ export function RankingsView({ rankings }: { rankings: CityRankings | null }) {
     } else if (selectedCellData) {
       aqi = selectedCellData.aqi;
       pm25 = selectedCellData.pm25Q50;
-      stationName = "Local Grid Cell";
+      stationName = "Local grid cell";
       source = "grid";
     } else {
-      // Check if locationName matches any known city in baseline or rankings
+      // Only the ranking the API actually returned. No local table.
       const locLower = (locationName || "").toLowerCase();
-      const matchedCity =
-        (rankings?.cities || []).find((c) =>
-          locLower.includes(c.city.toLowerCase())
-        ) ||
-        BASELINE_CITIES.find(
-          (c) =>
-            locLower.includes(c.city.toLowerCase()) ||
-            c.city.toLowerCase().includes(locLower)
-        );
-
-      if (matchedCity) {
-        aqi = matchedCity.aqi;
-        pm25 = matchedCity.pm25;
-        stationName = matchedCity.worstStation;
+      const matched = (rankings?.cities || []).find((c) =>
+        locLower.includes(c.city.toLowerCase()),
+      );
+      if (matched) {
+        aqi = matched.aqi;
+        pm25 = matched.pm25;
+        stationName = matched.worstStation;
         source = "cityMatch";
-      } else {
-        // Fallback default (e.g. Delhi NCR)
-        aqi = 168;
-        pm25 = 84.5;
-        stationName = "Anand Vihar (Reference)";
       }
     }
 
     return {
-      name: locationName || "Delhi NCR",
+      name: locationName || null,
       aqi,
       pm25,
       stationName,
       source,
-      coords: locationCoords || { lat: 28.6139, lng: 77.209 },
+      coords: locationCoords,
     };
   }, [locationName, locationCoords, nearestStation, selectedCellData, rankings]);
 
-  // Combined / baseline city rankings
-  const allCities = useMemo(() => {
-    if (rankings && rankings.cities.length > 0) {
-      // Map API cities into unified structure
-      return rankings.cities.map((c: CityRanking) => ({
+  /**
+   * Ranked cities, from the API alone.
+   *
+   * This used to fall back to a 28-entry hand-written table when the API
+   * returned nothing, each row carrying a synthetic `measuredAt` recomputed on
+   * every page load so invented figures always read as minutes old. lib/api.ts
+   * deliberately gives fetchCityRankings no seed fallback for exactly this
+   * reason: a fabricated ranking of the country's worst air is a claim about
+   * real places. An empty list renders the empty state.
+   */
+  const allCities = useMemo(
+    () =>
+      (rankings?.cities ?? []).map((c: CityRanking) => ({
         city: c.city,
-        state:
-          BASELINE_CITIES.find(
-            (bc) => bc.city.toLowerCase() === c.city.toLowerCase()
-          )?.state || "India",
         aqi: c.aqi,
         pm25: c.pm25,
         worstStation: c.worstStation,
@@ -112,83 +111,53 @@ export function RankingsView({ rankings }: { rankings: CityRankings | null }) {
         lat: c.lat,
         lon: c.lon,
         measuredAt: c.measuredAt,
-      }));
-    }
-    return BASELINE_CITIES;
-  }, [rankings]);
+      })),
+    [rankings],
+  );
 
-  // Available unique states for filter
-  const stateOptions = useMemo(() => {
-    const states = new Set<string>();
-    BASELINE_STATES.forEach((s) => states.add(s.state));
-    allCities.forEach((c) => {
-      if (c.state && c.state !== "India") states.add(c.state);
-    });
-    return Array.from(states).sort();
-  }, [allCities]);
+  /*
+   * The state filter is gone with the table that fed it. cityRankingSchema has
+   * no state field, and openaq_latest sets station.state to None on purpose --
+   * deriving a state from an operator suffix such as DPCC would encode a guess
+   * as a fact. Grouping by state needs point-in-polygon against boundary
+   * geometry, which we do not yet load.
+   */
 
   // Filtered & Sorted City List
   const filteredCities = useMemo(() => {
     let list = [...allCities];
-
-    if (selectedState !== "all") {
-      list = list.filter(
-        (c) => c.state.toLowerCase() === selectedState.toLowerCase()
-      );
-    }
 
     if (searchQuery.trim()) {
       const q = searchQuery.toLowerCase().trim();
       list = list.filter(
         (c) =>
           c.city.toLowerCase().includes(q) ||
-          c.state.toLowerCase().includes(q) ||
           c.worstStation.toLowerCase().includes(q)
       );
     }
 
     list.sort((a, b) => (sortBy === "worst" ? b.aqi - a.aqi : a.aqi - b.aqi));
     return list;
-  }, [allCities, selectedState, searchQuery, sortBy]);
+  }, [allCities, searchQuery, sortBy]);
 
-  // Filtered & Sorted State List
-  const filteredStates = useMemo(() => {
-    let list = [...BASELINE_STATES];
-    if (searchQuery.trim()) {
-      const q = searchQuery.toLowerCase().trim();
-      list = list.filter(
-        (s) =>
-          s.state.toLowerCase().includes(q) ||
-          s.worstCity.toLowerCase().includes(q)
-      );
-    }
-    list.sort((a, b) => (sortBy === "worst" ? b.aqi - a.aqi : a.aqi - b.aqi));
-    return list;
-  }, [searchQuery, sortBy]);
-
-  // Filtered & Sorted Country List
-  const filteredCountries = useMemo(() => {
-    let list = [...BASELINE_COUNTRIES];
-    if (searchQuery.trim()) {
-      const q = searchQuery.toLowerCase().trim();
-      list = list.filter((c) => c.country.toLowerCase().includes(q));
-    }
-    list.sort((a, b) => (sortBy === "worst" ? b.aqi - a.aqi : a.aqi - b.aqi));
-    return list;
-  }, [searchQuery, sortBy]);
+  /*
+   * There is no filteredStates or filteredCountries any more.
+   *
+   * Both were built from hand-written tables: eleven countries with invented
+   * national AQIs attributed to named networks (EPA AirNow, AURN, Soramame),
+   * and twenty Indian states with invented figures attributed to named
+   * stations. Neither has a data source. We ingest India only, and no station
+   * record carries a state.
+   *
+   * The tabs remain, because the reader's question is a fair one. They now say
+   * what we would need in order to answer it.
+   */
 
   // Checks whether a city matches the user's location
   const isUserAreaCity = (cityName: string) => {
     const loc = (userAreaInfo.name || "").toLowerCase();
     const c = cityName.toLowerCase();
     return loc.includes(c) || c.includes(loc);
-  };
-
-  // Checks whether a state matches the user's location
-  const isUserState = (stateName: string) => {
-    const loc = (userAreaInfo.name || "").toLowerCase();
-    const s = stateName.toLowerCase();
-    return loc.includes(s);
   };
 
   const handleLocateUser = async () => {
@@ -229,11 +198,14 @@ export function RankingsView({ rankings }: { rankings: CityRankings | null }) {
             </div>
 
             <h2 className="text-lg sm:text-xl font-bold text-white truncate">
-              {userAreaInfo.name}
+              {userAreaInfo.name ?? "Where you are"}
             </h2>
 
             <div className="text-xs text-slate-400 mt-0.5 flex flex-wrap items-center gap-2">
-              <span>{userAreaInfo.stationName}</span>
+              <span>
+                {userAreaInfo.stationName ??
+                  "No measurement near here yet. Use your location, or open a city below."}
+              </span>
               {nearestStation?.distanceKm && (
                 <>
                   <span className="text-slate-600">·</span>
@@ -245,34 +217,49 @@ export function RankingsView({ rankings }: { rankings: CityRankings | null }) {
 
           {/* Current Area AQI Display & Actions */}
           <div className="flex items-center gap-4 self-end sm:self-center">
+            {/* A dash, not a colour. `colorFor(aqi ?? 150)` painted an amber
+                "Moderate" badge for a reading that did not exist, which is a
+                claim about the air made out of a default argument. */}
             <div className="text-right">
-              <div
-                className="font-mono text-3xl sm:text-4xl font-black leading-none drop-shadow-sm"
-                style={{ color: colorFor(userAreaInfo.aqi ?? 150) }}
-              >
-                {userAreaInfo.aqi}
-              </div>
-              <div
-                className="text-[11px] font-semibold mt-1"
-                style={{ color: colorFor(userAreaInfo.aqi ?? 150) }}
-              >
-                {bandName(bandFor(userAreaInfo.aqi ?? 150), language)}
-              </div>
-              {userAreaInfo.pm25 !== null && (
-                <div className="text-[10px] font-mono text-slate-400">
-                  {userAreaInfo.pm25} µg/m³
+              {userAreaInfo.aqi === null ? (
+                <div className="font-mono text-3xl sm:text-4xl font-black leading-none text-slate-600">
+                  —
                 </div>
+              ) : (
+                <>
+                  <div
+                    className="font-mono text-3xl sm:text-4xl font-black leading-none drop-shadow-sm"
+                    style={{ color: colorFor(userAreaInfo.aqi) }}
+                  >
+                    {userAreaInfo.aqi}
+                  </div>
+                  <div
+                    className="text-[11px] font-semibold mt-1"
+                    style={{ color: colorFor(userAreaInfo.aqi) }}
+                  >
+                    {bandName(bandFor(userAreaInfo.aqi), language)}
+                  </div>
+                  {userAreaInfo.pm25 !== null && (
+                    <div className="text-[10px] font-mono text-slate-400">
+                      {userAreaInfo.pm25} µg/m³
+                    </div>
+                  )}
+                </>
               )}
             </div>
 
             <div className="flex flex-col gap-1.5 border-l border-white/10 pl-3.5">
-              <Link
-                href={`/aqi?lat=${userAreaInfo.coords.lat}&lon=${userAreaInfo.coords.lng}&name=${encodeURIComponent(userAreaInfo.name)}`}
-                className="inline-flex items-center gap-1 rounded-lg border border-teal-500/30 bg-teal-500/10 px-2.5 py-1 text-[11px] font-medium text-teal-200 hover:bg-teal-500/20 hover:border-teal-400 transition-all active:scale-95"
-              >
-                <span>View Map</span>
-                <span className="text-[10px]">↗</span>
-              </Link>
+              {userAreaInfo.coords && (
+                <Link
+                  href={`/aqi?lat=${userAreaInfo.coords.lat}&lon=${userAreaInfo.coords.lng}${
+                    userAreaInfo.name ? `&name=${encodeURIComponent(userAreaInfo.name)}` : ""
+                  }`}
+                  className="inline-flex items-center gap-1 rounded-lg border border-teal-500/30 bg-teal-500/10 px-2.5 py-1 text-[11px] font-medium text-teal-200 hover:bg-teal-500/20 hover:border-teal-400 transition-all active:scale-95"
+                >
+                  <span>View map</span>
+                  <span className="text-[10px]">↗</span>
+                </Link>
+              )}
               <button
                 onClick={handleLocateUser}
                 disabled={locating}
@@ -316,9 +303,6 @@ export function RankingsView({ rankings }: { rankings: CityRankings | null }) {
           >
             <span>🗺️</span>
             <span>{t.stateWise}</span>
-            <span className="ml-1 rounded-full bg-black/20 px-1.5 py-0.2 text-[10px]">
-              {filteredStates.length}
-            </span>
           </button>
 
           <button
@@ -331,9 +315,6 @@ export function RankingsView({ rankings }: { rankings: CityRankings | null }) {
           >
             <span>🌍</span>
             <span>{t.countryWise}</span>
-            <span className="ml-1 rounded-full bg-black/20 px-1.5 py-0.2 text-[10px]">
-              {filteredCountries.length}
-            </span>
           </button>
         </div>
 
@@ -353,39 +334,13 @@ export function RankingsView({ rankings }: { rankings: CityRankings | null }) {
 
       {/* ───── Secondary Filters: State Selector (For City view) & Search Bar ───── */}
       <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3">
-        {/* State Filter dropdown when in City view */}
-        {scope === "city" && (
-          <div className="flex-shrink-0">
-            <select
-              value={selectedState}
-              onChange={(e) => setSelectedState(e.target.value)}
-              className="w-full sm:w-auto rounded-xl border border-white/15 bg-slate-900/90 px-3.5 py-2 text-xs font-medium text-slate-200 focus:border-teal-400 focus:outline-none cursor-pointer"
-            >
-              <option value="all" className="bg-slate-950 text-slate-100">
-                {t.allStates}
-              </option>
-              {stateOptions.map((st) => (
-                <option key={st} value={st} className="bg-slate-950 text-slate-100">
-                  {st}
-                </option>
-              ))}
-            </select>
-          </div>
-        )}
-
         {/* Search filter input */}
         <div className="relative flex-1">
           <input
             type="text"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            placeholder={
-              scope === "city"
-                ? "Search city or station…"
-                : scope === "state"
-                ? "Search Indian state…"
-                : "Search country…"
-            }
+            placeholder="Search city or station…"
             className="w-full rounded-xl border border-white/15 bg-slate-900/90 px-3.5 py-2 text-xs text-slate-200 placeholder-slate-500 focus:border-teal-400 focus:outline-none transition-all"
           />
           {searchQuery && (
@@ -437,9 +392,6 @@ export function RankingsView({ rankings }: { rankings: CityRankings | null }) {
                           <span className="font-mono text-sm font-semibold text-slate-100 group-hover:text-white truncate">
                             {item.city}
                           </span>
-                          <span className="text-[11px] text-slate-400 font-sans truncate">
-                            ({item.state})
-                          </span>
                           {isUserCity && (
                             <span className="inline-flex items-center gap-1 rounded-full bg-teal-500/20 border border-teal-400/50 px-2 py-0.5 text-[10px] font-mono uppercase tracking-wide text-teal-200">
                               ★ {t.yourArea}
@@ -487,160 +439,45 @@ export function RankingsView({ rankings }: { rankings: CityRankings | null }) {
         </div>
       )}
 
-      {/* 2. STATE-WISE RANKING */}
+      {/* 2. STATE-WISE RANKING -- not available, and why */}
       {scope === "state" && (
-        <div className="space-y-2.5">
-          {filteredStates.length === 0 ? (
-            <div className="rounded-2xl border border-white/10 bg-white/[0.02] p-8 text-center text-sm text-slate-400">
-              {t.rankingsEmpty}
-            </div>
-          ) : (
-            <ol className="space-y-2">
-              {filteredStates.map((st, index) => {
-                const isUserStateMatch = isUserState(st.state);
-                return (
-                  <li key={st.state}>
-                    <Link
-                      href={`/aqi?lat=${st.lat}&lon=${st.lon}&name=${encodeURIComponent(st.state)}`}
-                      className={`flex items-center gap-3.5 rounded-2xl px-4 py-3.5 transition-all group ${
-                        isUserStateMatch
-                          ? "border-2 border-teal-400/90 bg-teal-950/25 shadow-[0_0_25px_rgba(20,184,166,0.18)] hover:bg-teal-900/30"
-                          : "border border-white/10 bg-white/[0.03] hover:bg-white/[0.06] hover:border-white/20"
-                      }`}
-                    >
-                      <span
-                        className={`w-7 text-right font-mono text-xs font-bold ${
-                          isUserStateMatch ? "text-teal-300" : "text-slate-500"
-                        }`}
-                      >
-                        #{index + 1}
-                      </span>
-
-                      <div className="min-w-0 flex-1">
-                        <div className="flex items-center gap-2">
-                          <span className="font-mono text-sm font-semibold text-slate-100 group-hover:text-white truncate">
-                            {st.state}
-                          </span>
-                          <span className="text-[10px] font-mono text-slate-500">
-                            [{st.code}]
-                          </span>
-                          {isUserStateMatch && (
-                            <span className="inline-flex items-center gap-1 rounded-full bg-teal-500/20 border border-teal-400/50 px-2 py-0.5 text-[10px] font-mono uppercase tracking-wide text-teal-200">
-                              ★ {t.yourState}
-                            </span>
-                          )}
-                        </div>
-
-                        <div className="text-[11px] text-slate-400 truncate mt-0.5">
-                          Most polluted: <span className="text-slate-200">{st.worstCity}</span> ({st.worstStation})
-                        </div>
-
-                        <div className="text-[10px] font-mono text-slate-500 mt-0.5">
-                          {st.stationCount} monitoring stations active
-                        </div>
-                      </div>
-
-                      <div className="text-right flex-shrink-0">
-                        <div
-                          className="font-mono text-2xl font-black leading-none"
-                          style={{ color: colorFor(st.aqi) }}
-                        >
-                          {st.aqi}
-                        </div>
-                        <div
-                          className="text-[11px] font-semibold leading-tight mt-0.5"
-                          style={{ color: colorFor(st.aqi) }}
-                        >
-                          {bandName(bandFor(st.aqi), language)}
-                        </div>
-                        <div className="text-[10px] font-mono text-slate-500 mt-0.5">
-                          {st.pm25} µg/m³
-                        </div>
-                      </div>
-                    </Link>
-                  </li>
-                );
-              })}
-            </ol>
-          )}
+        <div className="rounded-2xl border border-white/10 bg-white/[0.02] p-8 space-y-3">
+          <p className="text-sm text-slate-200">
+            We cannot rank Indian states yet.
+          </p>
+          <p className="text-[12px] leading-relaxed text-slate-400">
+            No monitoring station we ingest records which state it sits in.
+            OpenAQ gives us a country and sometimes a city, never a state, and
+            reading one off an operator name such as DPCC or TNPCB would be a
+            guess wearing the appearance of a fact. Grouping honestly needs each
+            station&apos;s coordinates matched against state boundary geometry,
+            which is not loaded yet.
+          </p>
+          <p className="text-[12px] leading-relaxed text-slate-400">
+            City rankings below are real measurements, from named stations, with
+            the time each was taken.
+          </p>
         </div>
       )}
 
-      {/* 3. COUNTRY-WISE RANKING */}
+      {/* 3. COUNTRY-WISE RANKING -- not available, and why */}
       {scope === "country" && (
-        <div className="space-y-2.5">
-          {filteredCountries.length === 0 ? (
-            <div className="rounded-2xl border border-white/10 bg-white/[0.02] p-8 text-center text-sm text-slate-400">
-              {t.rankingsEmpty}
-            </div>
-          ) : (
-            <ol className="space-y-2">
-              {filteredCountries.map((c, index) => {
-                const isIndia = c.code === "IN";
-                return (
-                  <li key={c.country}>
-                    <div
-                      className={`flex items-center gap-3.5 rounded-2xl px-4 py-3.5 transition-all ${
-                        isIndia
-                          ? "border-2 border-emerald-400/90 bg-emerald-950/25 shadow-[0_0_25px_rgba(16,185,129,0.18)]"
-                          : "border border-white/10 bg-white/[0.03] hover:bg-white/[0.06] hover:border-white/20"
-                      }`}
-                    >
-                      <span
-                        className={`w-7 text-right font-mono text-xs font-bold ${
-                          isIndia ? "text-emerald-300" : "text-slate-500"
-                        }`}
-                      >
-                        #{index + 1}
-                      </span>
-
-                      <div className="min-w-0 flex-1">
-                        <div className="flex items-center gap-2">
-                          <span className="text-base">{c.flag}</span>
-                          <span className="font-mono text-sm font-semibold text-slate-100 truncate">
-                            {c.country}
-                          </span>
-                          {isIndia && (
-                            <span className="inline-flex items-center gap-1 rounded-full bg-emerald-500/20 border border-emerald-400/50 px-2 py-0.5 text-[10px] font-mono uppercase tracking-wide text-emerald-200">
-                              ★ {t.yourCountry}
-                            </span>
-                          )}
-                        </div>
-
-                        <div className="text-[11px] text-slate-400 truncate mt-0.5">
-                          Key benchmark station: {c.keyStation}
-                        </div>
-
-                        <div className="text-[10px] font-mono text-slate-500 mt-0.5">
-                          {c.coverage} · {c.stationCount} stations
-                        </div>
-                      </div>
-
-                      <div className="text-right flex-shrink-0">
-                        <div
-                          className="font-mono text-2xl font-black leading-none"
-                          style={{ color: colorFor(c.aqi) }}
-                        >
-                          {c.aqi}
-                        </div>
-                        <div
-                          className="text-[11px] font-semibold leading-tight mt-0.5"
-                          style={{ color: colorFor(c.aqi) }}
-                        >
-                          {bandName(bandFor(c.aqi), language)}
-                        </div>
-                        <div className="text-[10px] font-mono text-slate-500 mt-0.5">
-                          {c.pm25} µg/m³
-                        </div>
-                      </div>
-                    </div>
-                  </li>
-                );
-              })}
-            </ol>
-          )}
+        <div className="rounded-2xl border border-white/10 bg-white/[0.02] p-8 space-y-3">
+          <p className="text-sm text-slate-200">
+            We only measure India.
+          </p>
+          <p className="text-[12px] leading-relaxed text-slate-400">
+            Every station we ingest is inside India, so we have nothing to
+            compare other countries against. A table of national figures we had
+            not measured would be a claim about places we have never looked at.
+          </p>
+          <p className="text-[12px] leading-relaxed text-slate-400">
+            City rankings below are real measurements, from named stations, with
+            the time each was taken.
+          </p>
         </div>
       )}
+
 
       {/* Attribution & Provenance footer note */}
       <div className="border-t border-white/10 pt-4 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2 text-[11px] font-mono text-slate-400">
@@ -653,7 +490,7 @@ export function RankingsView({ rankings }: { rankings: CityRankings | null }) {
           ) : (
             <span className="text-amber-400/90 flex items-center gap-1.5">
               <span className="h-1.5 w-1.5 rounded-full bg-amber-400" />
-              Baseline monitoring telemetry · Live ingestion stream connecting
+              No ranking available. Nothing is shown in its place.
             </span>
           )}
         </div>
