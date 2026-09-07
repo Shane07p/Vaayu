@@ -191,7 +191,7 @@ function CitizenChrome({ children }: { children: React.ReactNode }) {
       {/* Static footer only for document pages (rankings / report) */}
       {!isAqiMap && (
         <footer className="mx-auto max-w-3xl border-t border-white/10 px-5 py-8 text-center text-[11px] font-mono text-slate-400">
-          VAAYU · 1 km intelligence · Multi-region demonstration
+          VAAYU · Clean Air Intelligence · India
         </footer>
       )}
     </div>

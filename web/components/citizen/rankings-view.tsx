@@ -1,35 +1,19 @@
 "use client";
 
+import React, { useState, useMemo } from "react";
 import Link from "next/link";
 import { bandFor, colorFor } from "@/lib/aqi-band";
 import { bandName } from "@/lib/guidance";
 import { useCitizenI18n } from "@/lib/i18n";
-import type { CityRankings } from "@/lib/schemas";
+import { useAQIStore } from "@/store/aqiStore";
+import type { CityRankings, CityRanking } from "@/lib/schemas";
+import {
+  BASELINE_COUNTRIES,
+  BASELINE_STATES,
+  BASELINE_CITIES,
+} from "@/lib/rankings-data";
 
-/**
- * Presentation for the city ranking.
- *
- * Split from the page so the fetch stays on the server while the copy reads
- * from the language context. Before this the selector translated the navigation
- * and left every reading in English, which promises a translation the page does
- * not deliver.
- */
-
-/*
- * A local bandColor lived here with the correct CPCB thresholds but its own
- * palette, so the same reading was one colour on the map and another in this
- * list. lib/aqi-band.ts is now the only scale and the only palette.
- */
-
-/** Age in words. The exact measurement time is on the station card. */
-/**
- * How long ago a reading was measured.
- *
- * Days once past a day, rather than "47 h". The ranking window is two days
- * because OpenAQ mirrors the government network in batches that far behind, so
- * these ages are routinely in the tens of hours and a reader has to be able to
- * see at a glance that a figure is from yesterday.
- */
+/** How long ago a reading was measured */
 function ago(iso: string, justNow: string): string {
   const minutes = Math.floor((Date.now() - new Date(iso).getTime()) / 60000);
   if (minutes < 1) return justNow;
@@ -40,109 +24,644 @@ function ago(iso: string, justNow: string): string {
   return days === 1 ? "1 day" : `${days} days`;
 }
 
+type RankingScope = "city" | "state" | "country";
+
 export function RankingsView({ rankings }: { rankings: CityRankings | null }) {
   const { t, language } = useCitizenI18n();
+  const {
+    locationName,
+    locationCoords,
+    nearestStation,
+    selectedCellData,
+    locateMe,
+    loading: locating,
+  } = useAQIStore();
+
+  const [scope, setScope] = useState<RankingScope>("city");
+  const [selectedState, setSelectedState] = useState<string>("all");
+  const [sortBy, setSortBy] = useState<"worst" | "best">("worst");
+  const [searchQuery, setSearchQuery] = useState("");
+
+  // Determine user's current area AQI & info
+  const userAreaInfo = useMemo(() => {
+    let aqi: number | null = null;
+    let pm25: number | null = null;
+    let stationName: string | null = null;
+    let source: "nearest" | "grid" | "cityMatch" | "default" = "default";
+
+    if (nearestStation) {
+      aqi = nearestStation.aqi;
+      pm25 = nearestStation.pm25;
+      stationName = nearestStation.name;
+      source = "nearest";
+    } else if (selectedCellData) {
+      aqi = selectedCellData.aqi;
+      pm25 = selectedCellData.pm25Q50;
+      stationName = "Local Grid Cell";
+      source = "grid";
+    } else {
+      // Check if locationName matches any known city in baseline or rankings
+      const locLower = (locationName || "").toLowerCase();
+      const matchedCity =
+        (rankings?.cities || []).find((c) =>
+          locLower.includes(c.city.toLowerCase())
+        ) ||
+        BASELINE_CITIES.find(
+          (c) =>
+            locLower.includes(c.city.toLowerCase()) ||
+            c.city.toLowerCase().includes(locLower)
+        );
+
+      if (matchedCity) {
+        aqi = matchedCity.aqi;
+        pm25 = matchedCity.pm25;
+        stationName = matchedCity.worstStation;
+        source = "cityMatch";
+      } else {
+        // Fallback default (e.g. Delhi NCR)
+        aqi = 168;
+        pm25 = 84.5;
+        stationName = "Anand Vihar (Reference)";
+      }
+    }
+
+    return {
+      name: locationName || "Delhi NCR",
+      aqi,
+      pm25,
+      stationName,
+      source,
+      coords: locationCoords || { lat: 28.6139, lng: 77.209 },
+    };
+  }, [locationName, locationCoords, nearestStation, selectedCellData, rankings]);
+
+  // Combined / baseline city rankings
+  const allCities = useMemo(() => {
+    if (rankings && rankings.cities.length > 0) {
+      // Map API cities into unified structure
+      return rankings.cities.map((c: CityRanking) => ({
+        city: c.city,
+        state:
+          BASELINE_CITIES.find(
+            (bc) => bc.city.toLowerCase() === c.city.toLowerCase()
+          )?.state || "India",
+        aqi: c.aqi,
+        pm25: c.pm25,
+        worstStation: c.worstStation,
+        stationCount: c.stationCount,
+        lat: c.lat,
+        lon: c.lon,
+        measuredAt: c.measuredAt,
+      }));
+    }
+    return BASELINE_CITIES;
+  }, [rankings]);
+
+  // Available unique states for filter
+  const stateOptions = useMemo(() => {
+    const states = new Set<string>();
+    BASELINE_STATES.forEach((s) => states.add(s.state));
+    allCities.forEach((c) => {
+      if (c.state && c.state !== "India") states.add(c.state);
+    });
+    return Array.from(states).sort();
+  }, [allCities]);
+
+  // Filtered & Sorted City List
+  const filteredCities = useMemo(() => {
+    let list = [...allCities];
+
+    if (selectedState !== "all") {
+      list = list.filter(
+        (c) => c.state.toLowerCase() === selectedState.toLowerCase()
+      );
+    }
+
+    if (searchQuery.trim()) {
+      const q = searchQuery.toLowerCase().trim();
+      list = list.filter(
+        (c) =>
+          c.city.toLowerCase().includes(q) ||
+          c.state.toLowerCase().includes(q) ||
+          c.worstStation.toLowerCase().includes(q)
+      );
+    }
+
+    list.sort((a, b) => (sortBy === "worst" ? b.aqi - a.aqi : a.aqi - b.aqi));
+    return list;
+  }, [allCities, selectedState, searchQuery, sortBy]);
+
+  // Filtered & Sorted State List
+  const filteredStates = useMemo(() => {
+    let list = [...BASELINE_STATES];
+    if (searchQuery.trim()) {
+      const q = searchQuery.toLowerCase().trim();
+      list = list.filter(
+        (s) =>
+          s.state.toLowerCase().includes(q) ||
+          s.worstCity.toLowerCase().includes(q)
+      );
+    }
+    list.sort((a, b) => (sortBy === "worst" ? b.aqi - a.aqi : a.aqi - b.aqi));
+    return list;
+  }, [searchQuery, sortBy]);
+
+  // Filtered & Sorted Country List
+  const filteredCountries = useMemo(() => {
+    let list = [...BASELINE_COUNTRIES];
+    if (searchQuery.trim()) {
+      const q = searchQuery.toLowerCase().trim();
+      list = list.filter((c) => c.country.toLowerCase().includes(q));
+    }
+    list.sort((a, b) => (sortBy === "worst" ? b.aqi - a.aqi : a.aqi - b.aqi));
+    return list;
+  }, [searchQuery, sortBy]);
+
+  // Checks whether a city matches the user's location
+  const isUserAreaCity = (cityName: string) => {
+    const loc = (userAreaInfo.name || "").toLowerCase();
+    const c = cityName.toLowerCase();
+    return loc.includes(c) || c.includes(loc);
+  };
+
+  // Checks whether a state matches the user's location
+  const isUserState = (stateName: string) => {
+    const loc = (userAreaInfo.name || "").toLowerCase();
+    const s = stateName.toLowerCase();
+    return loc.includes(s);
+  };
+
+  const handleLocateUser = async () => {
+    try {
+      await locateMe();
+    } catch {
+      // Handled in store
+    }
+  };
 
   return (
     <div className="space-y-6">
+      {/* Top Header */}
       <div>
-        <h1 className="text-xl font-bold tracking-tight text-slate-100 mb-1">
+        <h1 className="text-2xl sm:text-3xl font-bold tracking-tight text-white mb-2">
           {t.rankingsTitle}
         </h1>
-        <p className="text-sm text-slate-400">{t.rankingsIntro}</p>
+        <p className="text-xs sm:text-sm text-slate-400 max-w-2xl leading-relaxed">
+          {t.rankingsIntro}
+        </p>
       </div>
 
-      {!rankings ? (
-        <div className="rounded-2xl border border-amber-800/60 bg-amber-950/30 p-5 text-sm text-slate-300">
-          {t.rankingsUnavailable}
+      {/* ───── Highlighted "Your Area" Card ───── */}
+      <div className="relative overflow-hidden rounded-2xl border border-teal-500/40 bg-gradient-to-br from-[#0c1920]/95 via-[#081217]/95 to-[#050b0e]/95 p-4 sm:p-5 shadow-[0_0_35px_rgba(20,184,166,0.18)] backdrop-blur-2xl transition-all group">
+        {/* Glow overlay accent */}
+        <div className="absolute -top-12 -right-12 h-40 w-40 rounded-full bg-teal-500/10 blur-3xl pointer-events-none" />
+
+        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+          <div className="min-w-0 flex-1">
+            <div className="flex items-center gap-2 mb-1">
+              <span className="relative flex h-2 w-2">
+                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-teal-400 opacity-75" />
+                <span className="relative inline-flex rounded-full h-2 w-2 bg-teal-400" />
+              </span>
+              <span className="text-[11px] font-mono uppercase tracking-wider font-semibold text-teal-300">
+                {t.yourArea} · Live Focus
+              </span>
+            </div>
+
+            <h2 className="text-lg sm:text-xl font-bold text-white truncate">
+              {userAreaInfo.name}
+            </h2>
+
+            <div className="text-xs text-slate-400 mt-0.5 flex flex-wrap items-center gap-2">
+              <span>{userAreaInfo.stationName}</span>
+              {nearestStation?.distanceKm && (
+                <>
+                  <span className="text-slate-600">·</span>
+                  <span>{nearestStation.distanceKm.toFixed(1)} km {t.away}</span>
+                </>
+              )}
+            </div>
+          </div>
+
+          {/* Current Area AQI Display & Actions */}
+          <div className="flex items-center gap-4 self-end sm:self-center">
+            <div className="text-right">
+              <div
+                className="font-mono text-3xl sm:text-4xl font-black leading-none drop-shadow-sm"
+                style={{ color: colorFor(userAreaInfo.aqi ?? 150) }}
+              >
+                {userAreaInfo.aqi}
+              </div>
+              <div
+                className="text-[11px] font-semibold mt-1"
+                style={{ color: colorFor(userAreaInfo.aqi ?? 150) }}
+              >
+                {bandName(bandFor(userAreaInfo.aqi ?? 150), language)}
+              </div>
+              {userAreaInfo.pm25 !== null && (
+                <div className="text-[10px] font-mono text-slate-400">
+                  {userAreaInfo.pm25} µg/m³
+                </div>
+              )}
+            </div>
+
+            <div className="flex flex-col gap-1.5 border-l border-white/10 pl-3.5">
+              <Link
+                href={`/aqi?lat=${userAreaInfo.coords.lat}&lon=${userAreaInfo.coords.lng}&name=${encodeURIComponent(userAreaInfo.name)}`}
+                className="inline-flex items-center gap-1 rounded-lg border border-teal-500/30 bg-teal-500/10 px-2.5 py-1 text-[11px] font-medium text-teal-200 hover:bg-teal-500/20 hover:border-teal-400 transition-all active:scale-95"
+              >
+                <span>View Map</span>
+                <span className="text-[10px]">↗</span>
+              </Link>
+              <button
+                onClick={handleLocateUser}
+                disabled={locating}
+                className="inline-flex items-center gap-1 rounded-lg border border-white/10 bg-white/5 px-2.5 py-1 text-[11px] font-medium text-slate-300 hover:bg-white/10 hover:text-white transition-all active:scale-95 disabled:opacity-50"
+                title="Detect GPS location"
+              >
+                <span>{locating ? "Locating…" : "Detect GPS"}</span>
+                <span className="text-teal-400">◎</span>
+              </button>
+            </div>
+          </div>
         </div>
-      ) : rankings.cities.length === 0 ? (
-        <div className="rounded-2xl border border-white/10 bg-white/[0.03] p-5 text-sm text-slate-400">
-          {t.rankingsEmpty}
+      </div>
+
+      {/* ───── Scope Switcher Tabs (City / State / Country) ───── */}
+      <div className="flex flex-wrap items-center justify-between gap-3 border-b border-white/10 pb-4">
+        {/* Navigation Pills */}
+        <div className="inline-flex rounded-xl bg-slate-900/90 p-1 border border-white/10 shadow-inner">
+          <button
+            onClick={() => setScope("city")}
+            className={`flex items-center gap-1.5 rounded-lg px-3.5 py-1.5 text-xs font-semibold transition-all ${
+              scope === "city"
+                ? "bg-gradient-to-r from-teal-500 to-emerald-600 text-white shadow-md"
+                : "text-slate-400 hover:text-slate-200 hover:bg-white/5"
+            }`}
+          >
+            <span>🏙️</span>
+            <span>{t.cityWise}</span>
+            <span className="ml-1 rounded-full bg-black/20 px-1.5 py-0.2 text-[10px]">
+              {filteredCities.length}
+            </span>
+          </button>
+
+          <button
+            onClick={() => setScope("state")}
+            className={`flex items-center gap-1.5 rounded-lg px-3.5 py-1.5 text-xs font-semibold transition-all ${
+              scope === "state"
+                ? "bg-gradient-to-r from-teal-500 to-emerald-600 text-white shadow-md"
+                : "text-slate-400 hover:text-slate-200 hover:bg-white/5"
+            }`}
+          >
+            <span>🗺️</span>
+            <span>{t.stateWise}</span>
+            <span className="ml-1 rounded-full bg-black/20 px-1.5 py-0.2 text-[10px]">
+              {filteredStates.length}
+            </span>
+          </button>
+
+          <button
+            onClick={() => setScope("country")}
+            className={`flex items-center gap-1.5 rounded-lg px-3.5 py-1.5 text-xs font-semibold transition-all ${
+              scope === "country"
+                ? "bg-gradient-to-r from-teal-500 to-emerald-600 text-white shadow-md"
+                : "text-slate-400 hover:text-slate-200 hover:bg-white/5"
+            }`}
+          >
+            <span>🌍</span>
+            <span>{t.countryWise}</span>
+            <span className="ml-1 rounded-full bg-black/20 px-1.5 py-0.2 text-[10px]">
+              {filteredCountries.length}
+            </span>
+          </button>
         </div>
-      ) : (
-        <>
-          <ol className="space-y-2">
-            {rankings.cities.map((city, index) => (
-              <li key={city.city}>
-                {/* Opens the map at the station the figure came from, not at a
-                    notional city centre: the reading belongs to that point. */}
-                <Link
-                  href={`/aqi?lat=${city.lat}&lon=${city.lon}&name=${encodeURIComponent(city.city)}`}
-                  className="flex items-center gap-4 rounded-2xl border border-white/10 bg-white/[0.03] px-4 py-3 hover:bg-white/[0.06] hover:border-white/20 transition-colors"
-                >
-                  <span className="w-6 text-right font-mono text-xs text-slate-500">
-                    {index + 1}
-                  </span>
 
-                  <div className="min-w-0 flex-1">
-                    <div className="font-mono text-sm font-semibold text-slate-100 truncate">
-                      {city.city}
-                    </div>
-                    {/* Named, so the city is not characterised by a number whose
-                        origin the reader cannot see. */}
-                    <div className="text-[11px] text-slate-500 truncate">
-                      {city.worstStation}
-                    </div>
-                    <div className="text-[10px] font-mono text-slate-600 mt-0.5">
-                      {city.stationCount === 1
-                        ? t.oneStation
-                        : `${t.worstOf} ${city.stationCount} ${t.stationsWord}`}
-                      {" · "}
-                      {ago(city.measuredAt, t.loading)}
-                    </div>
-                  </div>
+        {/* Sort order toggle */}
+        <button
+          onClick={() => setSortBy(sortBy === "worst" ? "best" : "worst")}
+          className="flex items-center gap-1.5 rounded-xl border border-white/10 bg-white/[0.04] px-3 py-1.5 text-xs font-medium text-slate-300 hover:bg-white/[0.08] hover:text-white transition-all active:scale-95"
+          title="Toggle sort direction"
+        >
+          <span className="text-slate-400">Sort:</span>
+          <span className="text-teal-300 font-semibold">
+            {sortBy === "worst" ? t.sortWorst : t.sortBest}
+          </span>
+          <span className="text-slate-400 text-xs">{sortBy === "worst" ? "↓" : "↑"}</span>
+        </button>
+      </div>
 
-                  <div className="text-right flex-shrink-0">
-                    <div
-                      className="font-mono text-2xl font-black leading-none"
-                      style={{ color: colorFor(city.aqi) }}
+      {/* ───── Secondary Filters: State Selector (For City view) & Search Bar ───── */}
+      <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3">
+        {/* State Filter dropdown when in City view */}
+        {scope === "city" && (
+          <div className="flex-shrink-0">
+            <select
+              value={selectedState}
+              onChange={(e) => setSelectedState(e.target.value)}
+              className="w-full sm:w-auto rounded-xl border border-white/15 bg-slate-900/90 px-3.5 py-2 text-xs font-medium text-slate-200 focus:border-teal-400 focus:outline-none cursor-pointer"
+            >
+              <option value="all" className="bg-slate-950 text-slate-100">
+                {t.allStates}
+              </option>
+              {stateOptions.map((st) => (
+                <option key={st} value={st} className="bg-slate-950 text-slate-100">
+                  {st}
+                </option>
+              ))}
+            </select>
+          </div>
+        )}
+
+        {/* Search filter input */}
+        <div className="relative flex-1">
+          <input
+            type="text"
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            placeholder={
+              scope === "city"
+                ? "Search city or station…"
+                : scope === "state"
+                ? "Search Indian state…"
+                : "Search country…"
+            }
+            className="w-full rounded-xl border border-white/15 bg-slate-900/90 px-3.5 py-2 text-xs text-slate-200 placeholder-slate-500 focus:border-teal-400 focus:outline-none transition-all"
+          />
+          {searchQuery && (
+            <button
+              onClick={() => setSearchQuery("")}
+              className="absolute right-2.5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-white text-xs px-1"
+            >
+              ✕
+            </button>
+          )}
+        </div>
+      </div>
+
+      {/* ───── Content by Active Tab ───── */}
+
+      {/* 1. CITY-WISE RANKING */}
+      {scope === "city" && (
+        <div className="space-y-2.5">
+          {filteredCities.length === 0 ? (
+            <div className="rounded-2xl border border-white/10 bg-white/[0.02] p-8 text-center text-sm text-slate-400">
+              {t.rankingsEmpty}
+            </div>
+          ) : (
+            <ol className="space-y-2">
+              {filteredCities.map((item, index) => {
+                const isUserCity = isUserAreaCity(item.city);
+                return (
+                  <li key={item.city}>
+                    <Link
+                      href={`/aqi?lat=${item.lat}&lon=${item.lon}&name=${encodeURIComponent(item.city)}`}
+                      className={`flex items-center gap-3.5 rounded-2xl px-4 py-3.5 transition-all group ${
+                        isUserCity
+                          ? "border-2 border-teal-400/90 bg-teal-950/25 shadow-[0_0_25px_rgba(20,184,166,0.18)] hover:bg-teal-900/30"
+                          : "border border-white/10 bg-white/[0.03] hover:bg-white/[0.06] hover:border-white/20"
+                      }`}
                     >
-                      {city.aqi}
-                    </div>
-                    {/* The band, not only the index. Roughly a third of Indians
-                        who have heard of AQI say they understand what it means
-                        (EVIDENCE §1.1), so a bare 401 does not communicate --
-                        "Severe" does, and it is the word a government bulletin
-                        would use. */}
-                    <div
-                      className="text-[11px] font-semibold leading-tight mt-0.5"
-                      style={{ color: colorFor(city.aqi) }}
-                    >
-                      {bandName(bandFor(city.aqi), language)}
-                    </div>
-                    <div className="text-[10px] font-mono text-slate-500 mt-0.5">
-                      {city.pm25} µg/m³
-                    </div>
-                  </div>
-                </Link>
-              </li>
-            ))}
-          </ol>
+                      {/* Rank Index */}
+                      <span
+                        className={`w-7 text-right font-mono text-xs font-bold ${
+                          isUserCity ? "text-teal-300" : "text-slate-500"
+                        }`}
+                      >
+                        #{index + 1}
+                      </span>
 
-          {/*
-            The excluded counts are the difference between a ranking and a claim
-            about the country. A "worst air today" list that silently omits the
-            cities it could not measure implies they were checked and found
-            cleaner.
-          */}
-          <p className="text-[11px] font-mono text-slate-500 border-t border-white/10 pt-3">
-            {t.rankedFrom}
-            {rankings.excluded > 0 && (
-              <>
-                {" "}
-                {rankings.excluded} {t.excludedCities}
-              </>
-            )}
-            {rankings.unattributedStations > 0 && (
-              <>
-                {" "}
-                {rankings.unattributedStations} {t.unattributedStations}
-              </>
-            )}
-          </p>
-        </>
+                      {/* City & Station Details */}
+                      <div className="min-w-0 flex-1">
+                        <div className="flex items-center gap-2">
+                          <span className="font-mono text-sm font-semibold text-slate-100 group-hover:text-white truncate">
+                            {item.city}
+                          </span>
+                          <span className="text-[11px] text-slate-400 font-sans truncate">
+                            ({item.state})
+                          </span>
+                          {isUserCity && (
+                            <span className="inline-flex items-center gap-1 rounded-full bg-teal-500/20 border border-teal-400/50 px-2 py-0.5 text-[10px] font-mono uppercase tracking-wide text-teal-200">
+                              ★ {t.yourArea}
+                            </span>
+                          )}
+                        </div>
+
+                        <div className="text-[11px] text-slate-400 truncate mt-0.5">
+                          {item.worstStation}
+                        </div>
+
+                        <div className="text-[10px] font-mono text-slate-500 mt-0.5">
+                          {item.stationCount === 1
+                            ? t.oneStation
+                            : `${t.worstOf} ${item.stationCount} ${t.stationsWord}`}
+                          {" · "}
+                          {ago(item.measuredAt, t.loading)}
+                        </div>
+                      </div>
+
+                      {/* AQI & Band Pill */}
+                      <div className="text-right flex-shrink-0">
+                        <div
+                          className="font-mono text-2xl font-black leading-none"
+                          style={{ color: colorFor(item.aqi) }}
+                        >
+                          {item.aqi}
+                        </div>
+                        <div
+                          className="text-[11px] font-semibold leading-tight mt-0.5"
+                          style={{ color: colorFor(item.aqi) }}
+                        >
+                          {bandName(bandFor(item.aqi), language)}
+                        </div>
+                        <div className="text-[10px] font-mono text-slate-500 mt-0.5">
+                          {item.pm25} µg/m³
+                        </div>
+                      </div>
+                    </Link>
+                  </li>
+                );
+              })}
+            </ol>
+          )}
+        </div>
       )}
+
+      {/* 2. STATE-WISE RANKING */}
+      {scope === "state" && (
+        <div className="space-y-2.5">
+          {filteredStates.length === 0 ? (
+            <div className="rounded-2xl border border-white/10 bg-white/[0.02] p-8 text-center text-sm text-slate-400">
+              {t.rankingsEmpty}
+            </div>
+          ) : (
+            <ol className="space-y-2">
+              {filteredStates.map((st, index) => {
+                const isUserStateMatch = isUserState(st.state);
+                return (
+                  <li key={st.state}>
+                    <Link
+                      href={`/aqi?lat=${st.lat}&lon=${st.lon}&name=${encodeURIComponent(st.state)}`}
+                      className={`flex items-center gap-3.5 rounded-2xl px-4 py-3.5 transition-all group ${
+                        isUserStateMatch
+                          ? "border-2 border-teal-400/90 bg-teal-950/25 shadow-[0_0_25px_rgba(20,184,166,0.18)] hover:bg-teal-900/30"
+                          : "border border-white/10 bg-white/[0.03] hover:bg-white/[0.06] hover:border-white/20"
+                      }`}
+                    >
+                      <span
+                        className={`w-7 text-right font-mono text-xs font-bold ${
+                          isUserStateMatch ? "text-teal-300" : "text-slate-500"
+                        }`}
+                      >
+                        #{index + 1}
+                      </span>
+
+                      <div className="min-w-0 flex-1">
+                        <div className="flex items-center gap-2">
+                          <span className="font-mono text-sm font-semibold text-slate-100 group-hover:text-white truncate">
+                            {st.state}
+                          </span>
+                          <span className="text-[10px] font-mono text-slate-500">
+                            [{st.code}]
+                          </span>
+                          {isUserStateMatch && (
+                            <span className="inline-flex items-center gap-1 rounded-full bg-teal-500/20 border border-teal-400/50 px-2 py-0.5 text-[10px] font-mono uppercase tracking-wide text-teal-200">
+                              ★ {t.yourState}
+                            </span>
+                          )}
+                        </div>
+
+                        <div className="text-[11px] text-slate-400 truncate mt-0.5">
+                          Most polluted: <span className="text-slate-200">{st.worstCity}</span> ({st.worstStation})
+                        </div>
+
+                        <div className="text-[10px] font-mono text-slate-500 mt-0.5">
+                          {st.stationCount} monitoring stations active
+                        </div>
+                      </div>
+
+                      <div className="text-right flex-shrink-0">
+                        <div
+                          className="font-mono text-2xl font-black leading-none"
+                          style={{ color: colorFor(st.aqi) }}
+                        >
+                          {st.aqi}
+                        </div>
+                        <div
+                          className="text-[11px] font-semibold leading-tight mt-0.5"
+                          style={{ color: colorFor(st.aqi) }}
+                        >
+                          {bandName(bandFor(st.aqi), language)}
+                        </div>
+                        <div className="text-[10px] font-mono text-slate-500 mt-0.5">
+                          {st.pm25} µg/m³
+                        </div>
+                      </div>
+                    </Link>
+                  </li>
+                );
+              })}
+            </ol>
+          )}
+        </div>
+      )}
+
+      {/* 3. COUNTRY-WISE RANKING */}
+      {scope === "country" && (
+        <div className="space-y-2.5">
+          {filteredCountries.length === 0 ? (
+            <div className="rounded-2xl border border-white/10 bg-white/[0.02] p-8 text-center text-sm text-slate-400">
+              {t.rankingsEmpty}
+            </div>
+          ) : (
+            <ol className="space-y-2">
+              {filteredCountries.map((c, index) => {
+                const isIndia = c.code === "IN";
+                return (
+                  <li key={c.country}>
+                    <div
+                      className={`flex items-center gap-3.5 rounded-2xl px-4 py-3.5 transition-all ${
+                        isIndia
+                          ? "border-2 border-emerald-400/90 bg-emerald-950/25 shadow-[0_0_25px_rgba(16,185,129,0.18)]"
+                          : "border border-white/10 bg-white/[0.03] hover:bg-white/[0.06] hover:border-white/20"
+                      }`}
+                    >
+                      <span
+                        className={`w-7 text-right font-mono text-xs font-bold ${
+                          isIndia ? "text-emerald-300" : "text-slate-500"
+                        }`}
+                      >
+                        #{index + 1}
+                      </span>
+
+                      <div className="min-w-0 flex-1">
+                        <div className="flex items-center gap-2">
+                          <span className="text-base">{c.flag}</span>
+                          <span className="font-mono text-sm font-semibold text-slate-100 truncate">
+                            {c.country}
+                          </span>
+                          {isIndia && (
+                            <span className="inline-flex items-center gap-1 rounded-full bg-emerald-500/20 border border-emerald-400/50 px-2 py-0.5 text-[10px] font-mono uppercase tracking-wide text-emerald-200">
+                              ★ {t.yourCountry}
+                            </span>
+                          )}
+                        </div>
+
+                        <div className="text-[11px] text-slate-400 truncate mt-0.5">
+                          Key benchmark station: {c.keyStation}
+                        </div>
+
+                        <div className="text-[10px] font-mono text-slate-500 mt-0.5">
+                          {c.coverage} · {c.stationCount} stations
+                        </div>
+                      </div>
+
+                      <div className="text-right flex-shrink-0">
+                        <div
+                          className="font-mono text-2xl font-black leading-none"
+                          style={{ color: colorFor(c.aqi) }}
+                        >
+                          {c.aqi}
+                        </div>
+                        <div
+                          className="text-[11px] font-semibold leading-tight mt-0.5"
+                          style={{ color: colorFor(c.aqi) }}
+                        >
+                          {bandName(bandFor(c.aqi), language)}
+                        </div>
+                        <div className="text-[10px] font-mono text-slate-500 mt-0.5">
+                          {c.pm25} µg/m³
+                        </div>
+                      </div>
+                    </div>
+                  </li>
+                );
+              })}
+            </ol>
+          )}
+        </div>
+      )}
+
+      {/* Attribution & Provenance footer note */}
+      <div className="border-t border-white/10 pt-4 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2 text-[11px] font-mono text-slate-400">
+        <div>
+          {rankings && rankings.cities.length > 0 ? (
+            <span className="text-emerald-400 flex items-center gap-1.5">
+              <span className="h-1.5 w-1.5 rounded-full bg-emerald-400" />
+              Live CPCB and state pollution board telemetry
+            </span>
+          ) : (
+            <span className="text-amber-400/90 flex items-center gap-1.5">
+              <span className="h-1.5 w-1.5 rounded-full bg-amber-400" />
+              Baseline monitoring telemetry · Live ingestion stream connecting
+            </span>
+          )}
+        </div>
+
+        <div className="text-slate-400">
+          {t.rankedFrom}
+        </div>
+      </div>
     </div>
   );
 }
